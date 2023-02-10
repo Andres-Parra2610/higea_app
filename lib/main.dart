@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:higea_app/screens/screens.dart';
+import 'package:higea_app/styles/app_theme.dart';
 
 void main(){
   runApp(const MyApp());
@@ -15,10 +16,11 @@ class MyApp extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Higea Fundation Aplication',
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      theme: AppTheme.lightTheme,
+      home: const LoginScreen(),
     );
   }
 
