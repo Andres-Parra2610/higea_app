@@ -1,8 +1,8 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:higea_app/screens/screens.dart';
 import 'package:higea_app/styles/app_theme.dart';
+import 'package:higea_app/screens/screens.dart';
 
 void main(){
   runApp(const MyApp());
@@ -20,7 +20,12 @@ class MyApp extends StatelessWidget{
       title: 'Higea Fundation Aplication',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const LoginScreen(),
+      initialRoute: 'login',
+      routes: {
+        'login': (_) => const LoginScreen(),
+        'register': (_) => const RegisterScreen(),
+        'confirm': (_) => const ConfirmEmailScreen()
+      },
     );
   }
 
