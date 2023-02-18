@@ -62,7 +62,7 @@ class _LoginForm extends StatelessWidget {
 
     return Form(
       child: Padding(
-        padding:  const EdgeInsets.symmetric(horizontal: AppTheme.formPadding),
+        padding:  const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
         child: Column(
           children: [
             TextFormField(
@@ -98,7 +98,7 @@ class _LoginForm extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: (){}, 
+                onPressed: () => Navigator.pushReplacementNamed(context, 'home-client'), 
                 child: const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text('Ingresar'),),
               ),
             )

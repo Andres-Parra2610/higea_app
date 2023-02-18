@@ -14,7 +14,7 @@ const ConfirmEmailScreen({ Key? key }) : super(key: key);
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.formPadding),
+          padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

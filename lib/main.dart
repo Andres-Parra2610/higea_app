@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget{
       routes: {
         'login': (_) => const LoginScreen(),
         'register': (_) => const RegisterScreen(),
-        'confirm': (_) => const ConfirmEmailScreen()
+        'confirm': (_) => const ConfirmEmailScreen(),
+        'home-client': (_) => const PageTabScreen(),
       },
     );
   }

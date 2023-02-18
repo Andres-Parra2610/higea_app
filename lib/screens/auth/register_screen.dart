@@ -17,7 +17,7 @@ const RegisterScreen({ Key? key }) : super(key: key);
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.formPadding),
+          padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

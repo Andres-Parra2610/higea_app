@@ -7,7 +7,7 @@ class AppTheme{
 
   static const int primaryColor = 0xff005CB9;
   static const int secondaryColor = 0xffE1251B;
-  static const double formPadding = 30;
+  static const double horizontalPadding = 30;
 
   static final ThemeData lightTheme = ThemeData(
 
@@ -37,6 +37,9 @@ class AppTheme{
         fontWeight: FontWeight.w900,
         color: Colors.black
       ),
+      headline6: TextStyle(
+        fontWeight: FontWeight.bold
+      ),
       subtitle2: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold
@@ -46,4 +49,13 @@ class AppTheme{
 
     
   );
+
+  //GradientDecoration
+  static BoxDecoration BoxGradient() {
+    return BoxDecoration(
+      gradient: LinearGradient(
+        colors: [const Color(AppTheme.primaryColor), const Color(AppTheme.primaryColor).withOpacity(0.6)]
+      )
+    );
+  }
 }
