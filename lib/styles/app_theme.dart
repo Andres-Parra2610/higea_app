@@ -51,10 +51,13 @@ class AppTheme{
   );
 
   //GradientDecoration
-  static BoxDecoration BoxGradient() {
+  static BoxDecoration BoxGradient({double fOpacity = 1, double sOpacity = 0.6}) {
     return BoxDecoration(
       gradient: LinearGradient(
-        colors: [const Color(AppTheme.primaryColor), const Color(AppTheme.primaryColor).withOpacity(0.6)]
+        colors: [
+          const Color(AppTheme.primaryColor).withOpacity(fOpacity), 
+          const Color(AppTheme.primaryColor).withOpacity(sOpacity)
+        ]
       )
     );
   }

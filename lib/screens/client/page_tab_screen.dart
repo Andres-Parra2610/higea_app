@@ -15,14 +15,14 @@ class _PageTabScreenState extends State<PageTabScreen> {
 
   @override
   Widget build(BuildContext context){
-    print('renderizo');
     return Scaffold(
       body: PageView(
         controller: controller,
         physics: const NeverScrollableScrollPhysics(),
         children: [
           const HomeClientScreen(),
-          Container()
+          Container(),
+          Container(),
         ],
       ),
 

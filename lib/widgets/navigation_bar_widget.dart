@@ -32,7 +32,12 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
           icon: const Icon(Icons.history),
           activeIcon: _iconActive(Icons.history),
           label: 'Historial'
-        )
+        ),
+        BottomNavigationBarItem(
+          icon: const Icon(Icons.person),
+          activeIcon: _iconActive(Icons.person),
+          label: 'Perfil'
+        ),
       ]
     );
   }
