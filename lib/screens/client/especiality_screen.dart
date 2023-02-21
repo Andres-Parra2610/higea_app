@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:higea_app/screens/screens.dart';
 import 'package:higea_app/styles/app_theme.dart';
 
 class EspecialityScreen extends StatelessWidget {
@@ -44,7 +45,6 @@ class _EspecialistAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.all(0),
         title:  Container(
-          /* padding: const EdgeInsets.symmetric(vertical: 5, horizontal: AppTheme.horizontalPadding), */
           alignment: Alignment.bottomCenter,
           decoration: AppTheme.BoxGradient(fOpacity: 0.5, sOpacity: 0.2),
           width: double.infinity,
@@ -82,47 +82,40 @@ class _EspecialistList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        childCount: 3,
+        childCount: 50,
         (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTheme.horizontalPadding, 
-            vertical: 0
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: ListTile(
-                  leading: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/doctor-avatar.jpg'),
-                    radius: 30,
-                  ),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const[
-                      Text('Dr. Andrés Parra',style: TextStyle(
-                        color: Color(AppTheme.primaryColor),
-                        fontWeight: FontWeight.bold
-                      )),
-                      Text('Pediatra')
-                    ],
-                  ),
-                  trailing: Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('Horario'),
-                        Text('8:00 am - 12:00 pm')
-                      ],
-                    ),
-                  ),
+        return Column(
+          children: [
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppointmentScreen())),
+              leading: const CircleAvatar(
+                backgroundImage: AssetImage('assets/doctor-avatar.jpg'),
+                radius: 30,
+              ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const[
+                  Text('Dr. Andrés Parra',style: TextStyle(
+                    color: Color(AppTheme.primaryColor),
+                    fontWeight: FontWeight.bold
+                  )),
+                  Text('Pediatra')
+                ],
+              ),
+              trailing: Container(
+                margin: const EdgeInsets.only(top: 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Horario'),
+                    Text('8:00 am - 12:00 pm')
+                  ],
                 ),
               ),
-              const Divider()
-            ],
-          ),
+            ),
+            const Divider()
+          ],
         );
       })
     );
