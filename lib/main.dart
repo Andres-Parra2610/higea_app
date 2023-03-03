@@ -1,15 +1,34 @@
 
-
 import 'package:flutter/material.dart';
+import 'package:higea_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/screens/screens.dart';
 
-void main(){
-  runApp(const MyApp());
+void main() async{
+
+  await dotenv.load(fileName: '.env');
+  runApp(const MyAppState());
 }
 
 
+class MyAppState extends StatelessWidget{
+  const MyAppState({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider())
+      ],
+      child: const MyApp(),
+    );
+  }
+
+}
 
 class MyApp extends StatelessWidget{
   const MyApp({super.key});
@@ -20,6 +39,7 @@ class MyApp extends StatelessWidget{
       title: 'Higea Fundation Aplication',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      scaffoldMessengerKey: SnackBarWidget.scaffoldKey,
       initialRoute: 'login',
       routes: {
         'login': (_) => const LoginScreen(),

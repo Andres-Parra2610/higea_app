@@ -29,7 +29,15 @@ class AppTheme{
       focusedBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Color(primaryColor)),
         borderRadius:  BorderRadius.circular(10)
-      )
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(secondaryColor)),
+        borderRadius:  BorderRadius.circular(10)
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(secondaryColor)),
+        borderRadius:  BorderRadius.circular(10)
+      ),
     ),
 
     textTheme: const TextTheme(
