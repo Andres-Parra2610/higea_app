@@ -52,9 +52,7 @@ class AuthProvider extends ChangeNotifier{
 
     if(data.containsKey('user')){
       final user = jsonEncode(data['user']);
-
       UserPreferences.setUser = user;
-
       return true;
     }
 
@@ -75,7 +73,6 @@ class AuthProvider extends ChangeNotifier{
 
   Future confirmEmail(String codeVerication) async{
 
-
     formRegisterValues['codeVerification'] = codeVerication;
 
     Map<String, dynamic> data = await AuthService.confirmEmail(formRegisterValues);
@@ -84,6 +81,8 @@ class AuthProvider extends ChangeNotifier{
       return false;
     }
     
+    final user = jsonEncode(data['user']);
+    UserPreferences.setUser = user;
     return true;
     
   }

@@ -160,11 +160,12 @@ class _RegisterForm extends StatelessWidget {
                 final navigator = Navigator.of(context);
                 final res = await registerProvider.registerUser();
                 
+                registerProvider.loading = true;
+                
                 !res 
                   ? SnackBarWidget.showSnackBar('Usuario ya registrado')
                   : navigator.pushNamed('confirm');
                
-                registerProvider.loading = true;
               }, 
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15), 

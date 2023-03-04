@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:higea_app/providers/auth_provider.dart';
+import 'package:higea_app/screens/screens.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -70,15 +71,17 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                 onPressed: () async{
                   if(!_textKey.currentState!.validate()) return;
                   final navigator = Navigator.of(context);
+                  
                   final res = await registerProvider.confirmEmail(codeValidation);
                   
                   if(!res){
                     SnackBarWidget.showSnackBar('Código de verificación inválido');
-                    return;
+                  }else{
+                    navigator.pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const PageTabScreen()), 
+                      (route) => false
+                    );
                   }
-
-                  navigator.pushNamedAndRemoveUntil('home-client', (route) => false);
-                  
                 }, 
                 child: const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text('Confirmar'),),
               ),
