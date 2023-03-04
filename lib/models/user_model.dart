@@ -6,10 +6,8 @@ class User {
         required this.nombrePaciente,
         required this.apellidoPaciente,
         required this.correoPaciente,
-        required this.sexoPaciente,
         required this.telefonoPaciente,
         required this.fechaNacimientoPaciente,
-        required this.contrasenaPaciente,
         this.activo,
         this.idRol,
     });
@@ -18,10 +16,8 @@ class User {
     final String nombrePaciente;
     final String apellidoPaciente;
     final String correoPaciente;
-    final String sexoPaciente;
     final String telefonoPaciente;
     final DateTime fechaNacimientoPaciente;
-    final String contrasenaPaciente;
     final int? activo;
     final int? idRol;
 
@@ -34,10 +30,8 @@ class User {
         nombrePaciente: json["nombre_paciente"],
         apellidoPaciente: json["apellido_paciente"],
         correoPaciente: json["correo_paciente"],
-        sexoPaciente: json["sexo_paciente"],
         telefonoPaciente: json["telefono_paciente"],
         fechaNacimientoPaciente: DateTime.parse(json["fecha_nacimiento_paciente"]),
-        contrasenaPaciente: json["contrasena_paciente"],
         activo: json["activo"],
         idRol: json["id_rol"],
     );
@@ -47,10 +41,8 @@ class User {
         "nombre_paciente": nombrePaciente,
         "apellido_paciente": apellidoPaciente,
         "correo_paciente": correoPaciente,
-        "sexo_paciente": sexoPaciente,
         "telefono_paciente": telefonoPaciente,
         "fecha_nacimiento_paciente": fechaNacimientoPaciente.toIso8601String(),
-        "contrasena_paciente": contrasenaPaciente,
         "activo": activo,
         "id_rol": idRol,
     };

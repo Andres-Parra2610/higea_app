@@ -1,5 +1,5 @@
+export 'package:higea_app/screens/session_screen.dart';
 export 'package:higea_app/screens/client/history_screen.dart';
-
 export 'package:higea_app/screens/client/appointment_screen.dart';
 export 'package:higea_app/screens/client/especiality_screen.dart';
 export 'package:higea_app/screens/client/page_tab_screen.dart';

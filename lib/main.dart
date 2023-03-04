@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:higea_app/services/services.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,7 +11,12 @@ import 'package:higea_app/screens/screens.dart';
 
 void main() async{
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await UserPreferences.initPreferences();
   await dotenv.load(fileName: '.env');
+
+
   runApp(const MyAppState());
 }
 
@@ -40,12 +46,13 @@ class MyApp extends StatelessWidget{
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       scaffoldMessengerKey: SnackBarWidget.scaffoldKey,
-      initialRoute: 'login',
+      initialRoute: 'session',
       routes: {
         'login': (_) => const LoginScreen(),
         'register': (_) => const RegisterScreen(),
         'confirm': (_) => const ConfirmEmailScreen(),
         'home-client': (_) => const PageTabScreen(),
+        'session': (_) => const SessionScreen() 
       },
     );
   }

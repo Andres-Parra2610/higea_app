@@ -93,7 +93,7 @@ class _LoginForm extends StatelessWidget {
               formValues: formValues, 
               labelText: 'Cédula', 
               mapKey: 'ci', 
-              formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]$')) ],
+              formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$')) ],
               validate: (value){
                 if(value!.length < 7 || value.length > 8) return 'Debe ser una cédula válida';
                 return null;
@@ -125,7 +125,7 @@ class _LoginForm extends StatelessWidget {
                   : () async{
                     if(!loginProvider.formLoginKey.currentState!.validate()) return;
                     FocusScope.of(context).unfocus();
-
+                    final navigator = Navigator.of(context);
                     loginProvider.loading = true;
 
                     final res = await loginProvider.loginUser();
@@ -134,7 +134,10 @@ class _LoginForm extends StatelessWidget {
 
                     if(!res){
                       SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
+                    }else{
+                      navigator.push(MaterialPageRoute(builder: (context) => const HomeClientScreen()));
                     }
+
                   }, 
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15), 

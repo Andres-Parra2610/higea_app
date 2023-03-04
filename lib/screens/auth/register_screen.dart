@@ -100,7 +100,7 @@ class _RegisterForm extends StatelessWidget {
             formValues: registerProvider.formRegisterValues, 
             labelText: 'Cédula', 
             mapKey: 'ci', 
-            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]$')) ],
+            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$')) ],
             validate: (value){
               if(value!.length < 7 || value.length > 8) return 'Debe ser una cédula válida';
               return null;
@@ -153,18 +153,18 @@ class _RegisterForm extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async{
                 if(!registerProvider.formRegisterKey.currentState!.validate()) return;
-
+                
+                registerProvider.loading = true;
                 FocusScope.of(context).unfocus();
 
                 final navigator = Navigator.of(context);
                 final res = await registerProvider.registerUser();
                 
-                if(!res){
-                  SnackBarWidget.showSnackBar('Usuario ya registrado');
-                  return;
-                }
-
-                navigator.pushNamed('confirm');
+                !res 
+                  ? SnackBarWidget.showSnackBar('Usuario ya registrado')
+                  : navigator.pushNamed('confirm');
+               
+                registerProvider.loading = true;
               }, 
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15), 
@@ -172,7 +172,7 @@ class _RegisterForm extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(child: Center(
-                      child: registerProvider.loadingRegister
+                      child: registerProvider.loading
                         ? const CircularProgressIndicator.adaptive(
                           backgroundColor: Colors.white,
                         )

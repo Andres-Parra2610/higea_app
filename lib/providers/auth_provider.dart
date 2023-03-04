@@ -1,7 +1,10 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
+
 
 
 class AuthProvider extends ChangeNotifier{
@@ -26,14 +29,11 @@ class AuthProvider extends ChangeNotifier{
     'password': ''
   };
 
-  late User user;
 
   bool _loading = false;
-  bool _loadingRegister = false;
 
 
   bool get loading => _loading;
-  bool get loadingRegister => _loadingRegister; 
 
 
   set loading(bool value){
@@ -51,7 +51,10 @@ class AuthProvider extends ChangeNotifier{
 
 
     if(data.containsKey('user')){
-      user = User.fromJson(data['user']);
+      final user = jsonEncode(data['user']);
+
+      UserPreferences.setUser = user;
+
       return true;
     }
 
@@ -60,15 +63,10 @@ class AuthProvider extends ChangeNotifier{
 
 
   Future registerUser() async{
-    
-    _loadingRegister = true;
-    notifyListeners();
 
     Map<String, dynamic> data = await AuthService.registerUser(formRegisterValues);
 
     if(data['ok'] == false){
-      _loadingRegister = false;
-      notifyListeners();
       return false;
     }
 
