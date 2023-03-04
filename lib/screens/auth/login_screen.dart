@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:higea_app/providers/providers.dart';
+import 'package:higea_app/screens/screens.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginScreen extends StatelessWidget {
 const LoginScreen({ Key? key }) : super(key: key);
@@ -19,11 +22,16 @@ const LoginScreen({ Key? key }) : super(key: key);
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Image(image: AssetImage('assets/logo-higea.png')),
+
+              SvgPicture.asset(
+                'assets/logo-higea.svg',
+                width: 110,
+              ),
+              
           
               const SizedBox(height: 30),
           
-              Text('Iniciar sesión', style: textTheme.headline5),
+              Text('Iniciar sesión', style: textTheme.headlineSmall),
           
               const SizedBox(height: 30),
           
@@ -33,16 +41,20 @@ const LoginScreen({ Key? key }) : super(key: key);
           
               GestureDetector(
                 onTap: (){
-                  Navigator.pushNamed(context, 'register');
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const RegisterScreen(), maintainState: false)
+                  );
+                  FocusScope.of(context).unfocus();
                   loginProvider.formLoginKey.currentState!.reset();
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('¿No posees cuenta? ', style: textTheme.subtitle2,),
+                    Text('¿No posees cuenta? ', style: textTheme.titleSmall,),
                     Text('Regístrate', style: TextStyle(
-                      fontSize: textTheme.subtitle2!.fontSize,
-                      fontWeight: textTheme.subtitle2!.fontWeight,
+                      fontSize: textTheme.titleSmall!.fontSize,
+                      fontWeight: textTheme.titleSmall!.fontWeight,
                       color: const Color(AppTheme.secondaryColor)
                     ))
                   ],
@@ -68,50 +80,29 @@ class _LoginForm extends StatelessWidget {
     final loginProvider = Provider.of<AuthProvider>(context);
     final formValues = loginProvider.formLoginValues;
     final textTheme = Theme.of(context).textTheme;
-
-    print('Este es el login y me estoy renderizando');
-
+  
     return Form(
       key: loginProvider.formLoginKey,
       child: Padding(
         padding:  const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
         child: Column(
           children: [
-            TextFormField(
-              toolbarOptions: const ToolbarOptions(
-                paste: false,
-                copy: true
-              ),
+
+            HigeaTextField(
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Cédula de identidad'
-              ),
-              onChanged: (value) => formValues['ci'] = value,
-              validator: (value){
+              formValues: formValues, 
+              labelText: 'Cédula', 
+              mapKey: 'ci', 
+              formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]$')) ],
+              validate: (value){
                 if(value!.length < 7 || value.length > 8) return 'Debe ser una cédula válida';
-                
                 return null;
               },
             ),
 
             const SizedBox(height: 20),
-            TextFormField(
-              obscureText: !loginProvider.showPassword,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                suffixIcon: IconButton(
-                  onPressed: () => loginProvider.showPassword = !loginProvider.showPassword, 
-                  icon: loginProvider.showPassword 
-                    ? const Icon(Icons.visibility_off_outlined)
-                    : const Icon(Icons.visibility)
-                )
-              ),
-              onChanged: (value) => formValues['password'] = value,
-              validator: (value){
-                if(value!.trim().isEmpty) return 'Debe colocar una contraseña';
-                return null;
-              },
-            ),
+
+            HigeaTextFieldPassword(formValues: formValues),
 
             const SizedBox(height: 20),
 
@@ -119,8 +110,8 @@ class _LoginForm extends StatelessWidget {
               '¿Olvidó su contraseña?',
               style: TextStyle(
                 color: const Color(AppTheme.secondaryColor),
-                fontSize: textTheme.subtitle2!.fontSize,
-                fontWeight: textTheme.subtitle2!.fontWeight,
+                fontSize: textTheme.titleSmall!.fontSize,
+                fontWeight: textTheme.titleSmall!.fontWeight,
               ),
             ),
 
@@ -129,12 +120,17 @@ class _LoginForm extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: loginProvider.loadingLogin
+                onPressed: loginProvider.loading
                   ? null 
                   : () async{
-                    if(loginProvider.formLoginKey.currentState!.validate() == false) return;
+                    if(!loginProvider.formLoginKey.currentState!.validate()) return;
                     FocusScope.of(context).unfocus();
+
+                    loginProvider.loading = true;
+
                     final res = await loginProvider.loginUser();
+
+                    loginProvider.loading = false;
 
                     if(!res){
                       SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
@@ -142,7 +138,7 @@ class _LoginForm extends StatelessWidget {
                   }, 
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15), 
-                  child: loginProvider.loadingLogin
+                  child: loginProvider.loading
                     ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
                     : const Text('Ingresar')
                 ),

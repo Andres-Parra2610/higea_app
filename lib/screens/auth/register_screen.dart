@@ -62,21 +62,18 @@ class _RegisterForm extends StatelessWidget {
 
     final registerProvider = Provider.of<AuthProvider>(context);
 
-    print('Este es el register y me estoy renderizando');
 
     return Form(
       key: registerProvider.formRegisterKey,
       child: Column(
         children: [
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Nombres'
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$'))
-            ],
-            onChanged: (value) => registerProvider.formRegisterValues['name'] = value,
-            validator: (value){
+
+          HigeaTextField(
+            formValues: registerProvider.formRegisterValues, 
+            labelText: 'Nombres', 
+            mapKey: 'name', 
+            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$')) ],
+            validate: (value){
               if(value!.trim().isEmpty) return 'Debe colocar un nombre';
               return null;
             },
@@ -84,65 +81,57 @@ class _RegisterForm extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Apellidos'
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$'))
-            ],
-            onChanged: (value) => registerProvider.formRegisterValues['lastName'] = value,
-            validator: (value){
+          HigeaTextField(
+            formValues: registerProvider.formRegisterValues, 
+            labelText: 'Apellidos', 
+            mapKey: 'lastName', 
+            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$')) ],
+            validate: (value){
               if(value!.trim().isEmpty) return 'Debe colocar un apellido';
               return null;
             },
           ),
 
+
           const SizedBox(height: 20),
 
-          TextFormField(
-            toolbarOptions: const ToolbarOptions(
-              paste: false,
-              copy: true
-            ),
+          HigeaTextField(
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Cédula'
-            ),
-            onChanged: (value) => registerProvider.formRegisterValues['ci'] = value,
-            validator: (value){
+            formValues: registerProvider.formRegisterValues, 
+            labelText: 'Cédula', 
+            mapKey: 'ci', 
+            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]$')) ],
+            validate: (value){
               if(value!.length < 7 || value.length > 8) return 'Debe ser una cédula válida';
               return null;
             },
           ),
 
-          const SizedBox(height: 20),
 
-          TextFormField(
-            decoration: const InputDecoration(
-              labelText: 'Correo'
-            ),
-            onChanged: (value) => registerProvider.formRegisterValues['email'] = value,
-            validator: (value){
+          const SizedBox(height: 20),
+          
+          HigeaTextField(
+            labelText: 'Correo',
+            mapKey: 'email',
+            formValues: registerProvider.formRegisterValues,
+            validate: (value){
               if(value!.trim().isEmpty) return 'Debe colocar un email';
               if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) return 'Debe ser un email válido';
               return null;
             },
           ),
+          
 
           const SizedBox(height: 20),
 
-          TextFormField(
+          HigeaTextField(
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(10)
-            ],
-            decoration: const InputDecoration(
-              labelText: 'Teléfono',
-              prefixText: '0-',
-            ),
-            onChanged: (value) => registerProvider.formRegisterValues['phone'] = value,
-            validator: (value) {
+            formValues: registerProvider.formRegisterValues, 
+            labelText: 'Teléfono', 
+            prefixText: '0-',
+            mapKey: 'phone', 
+            formatter: [ LengthLimitingTextInputFormatter(10) ],
+            validate: (value){
               if(value!.trim().isEmpty) return 'Ingrese un teléfono';
               if(value.trim().startsWith('0')) return 'El número no debe empezar con 0';
               return null;
@@ -153,7 +142,9 @@ class _RegisterForm extends StatelessWidget {
 
           const _TextFormDate(),
 
-          const _SelectGenderRadio(),
+          const SizedBox(height: 20),
+
+          HigeaTextFieldPassword(formValues: registerProvider.formRegisterValues),
 
           const SizedBox(height: 20),
 
@@ -161,11 +152,11 @@ class _RegisterForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () async{
-                if(registerProvider.formRegisterKey.currentState!.validate() == false) return;
+                if(!registerProvider.formRegisterKey.currentState!.validate()) return;
+
                 FocusScope.of(context).unfocus();
 
                 final navigator = Navigator.of(context);
-
                 final res = await registerProvider.registerUser();
                 
                 if(!res){
@@ -181,7 +172,7 @@ class _RegisterForm extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(child: Center(
-                      child: registerProvider.loadingRegister 
+                      child: registerProvider.loadingRegister
                         ? const CircularProgressIndicator.adaptive(
                           backgroundColor: Colors.white,
                         )
@@ -251,53 +242,6 @@ class _TextFormDateState extends State<_TextFormDate> {
 
         return null; 
       },
-    );
-  }
-}
-
-
-
-class _SelectGenderRadio extends StatefulWidget {
-  const _SelectGenderRadio({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<_SelectGenderRadio> createState() => _SelectGenderRadioState();
-}
-
-class _SelectGenderRadioState extends State<_SelectGenderRadio> {
-
-  String selectedGender = '';
-
-  @override
-  Widget build(BuildContext context) {
-
-    final registerFormValues = Provider.of<AuthProvider>(context, listen: false).formRegisterValues;
-  
-    return Column(
-      children: [
-
-        RadioListTile(
-          title: const Text('Masculino'),
-          value: 'M', 
-          groupValue: selectedGender, 
-          onChanged: (value){
-            setState(()=> selectedGender = value!);
-            registerFormValues['gender'] = value;
-          } 
-        ),
-
-        RadioListTile(
-          title: const Text('Femenino'),
-          value: 'F', 
-          groupValue: selectedGender, 
-          onChanged: (value){
-            setState(()=> selectedGender = value!);
-            registerFormValues['gender'] = value;
-          } 
-        ),
-      ],
     );
   }
 }

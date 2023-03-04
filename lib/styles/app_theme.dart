@@ -41,14 +41,14 @@ class AppTheme{
     ),
 
     textTheme: const TextTheme(
-      headline5: TextStyle(
+      headlineSmall: TextStyle(
         fontWeight: FontWeight.w900,
-        color: Colors.black
+        color: Colors.black,
       ),
-      headline6: TextStyle(
+      titleLarge: TextStyle(
         fontWeight: FontWeight.bold
       ),
-      subtitle2: TextStyle(
+      titleSmall: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold
       )
