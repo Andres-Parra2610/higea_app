@@ -6,6 +6,13 @@ class DoctorProvider extends ChangeNotifier{
 
   List<Speciality> specialities = [];
   List<Doctor> doctors = [];
+  String _searchSpeciality = '';
+
+  String get searchSpeciality => _searchSpeciality;
+  set searchSpeciality(String q){
+    _searchSpeciality = q;
+    notifyListeners();
+  }
 
   Future<List<Speciality>> getSpecialities() async{
     final Map<String, dynamic> response = await SpecialityServices.getAllSpecialities();

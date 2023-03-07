@@ -9,8 +9,10 @@ import 'package:higea_app/widgets/widgets.dart';
 
 
 
+
 class HomeClientScreen extends StatelessWidget {
-const HomeClientScreen({ Key? key }) : super(key: key);
+
+  const HomeClientScreen({super.key});  
 
   @override
   Widget build(BuildContext context){
@@ -38,7 +40,7 @@ class _Especialities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+    final doctorProvider = Provider.of<DoctorProvider>(context);
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.horizontalPadding),
@@ -48,18 +50,28 @@ class _Especialities extends StatelessWidget {
         children: [
           Text('Todas las especialidades', style: textTheme.titleLarge,),
 
-
           FutureBuilder(
             future: doctorProvider.getSpecialities(),
             builder: (context, AsyncSnapshot<List<Speciality>> snapshot){
-              
+          
               if(!snapshot.hasData){
                 return const Center(
                   heightFactor: 10,
                   child: CircularProgressIndicator.adaptive()
                 );
               }
-
+          
+              List<Speciality> specialities = snapshot.data!;
+          
+              if(doctorProvider.searchSpeciality.isNotEmpty){
+                final txt = doctorProvider.searchSpeciality.toLowerCase();
+                specialities = specialities.where((speciality) => 
+                  speciality.nombreEspecialidad.toLowerCase().contains(txt)
+                ).toList();
+              }
+          
+              if(specialities.isEmpty) return const NotFoundWidget();
+          
               return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -69,9 +81,9 @@ class _Especialities extends StatelessWidget {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10
                 ), 
-                itemCount: snapshot.data!.length, //snapshot.data!.length,
+                itemCount: specialities.length, //snapshot.data!.length,
                 itemBuilder: (_, index){
-                  final Speciality speciality = snapshot.data![index];
+                  final Speciality speciality = specialities[index];
                   return CardWidget(speciality: speciality);
                 }
               );
@@ -84,9 +96,11 @@ class _Especialities extends StatelessWidget {
 }
 
 class _CustomHeader extends StatelessWidget {
+  
   const _CustomHeader({
     Key? key,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +171,9 @@ class _SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+
     return SizedBox(
       width: double.infinity * 0.1,
       height: 50,
@@ -169,6 +186,7 @@ class _SearchField extends StatelessWidget {
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0)
         ),
+        onFieldSubmitted: (value) => doctorProvider.searchSpeciality = value ,
       ),
     );
   }
