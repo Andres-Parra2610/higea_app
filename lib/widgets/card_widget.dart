@@ -1,31 +1,38 @@
 
 import 'package:flutter/material.dart';
+import 'package:higea_app/models/models.dart';
 import 'package:higea_app/screens/screens.dart';
 
 class CardWidget extends StatelessWidget {
-const CardWidget({ Key? key }) : super(key: key);
+  const CardWidget({
+    Key? key, 
+    required this.speciality
+  }) : super(key: key);
+
+  final Speciality speciality;
 
   @override
   Widget build(BuildContext context){
+
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const EspecialityScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EspecialityScreen(speciality: speciality)));
       },
       child: Card(
         elevation: 1,
         child: Column(
           children: [
-            const ClipRRect(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
               child: Image(
-                image: AssetImage('assets/doctor-avatar.jpg'),
+                image: NetworkImage(speciality.imagenEspecialidad!),
                 height: 110,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 10),
-            Text('Pediatría', style: Theme.of(context).textTheme.subtitle1,)
+            Text(speciality.nombreEspecialidad, style: Theme.of(context).textTheme.titleMedium,)
           ],
         ),
       ),

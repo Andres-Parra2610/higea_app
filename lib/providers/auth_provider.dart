@@ -1,6 +1,4 @@
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
@@ -29,6 +27,7 @@ class AuthProvider extends ChangeNotifier{
     'password': ''
   };
 
+  late User currentUser;
 
   bool _loading = false;
 
@@ -52,7 +51,9 @@ class AuthProvider extends ChangeNotifier{
 
     if(data.containsKey('user')){
       final user = jsonEncode(data['user']);
-      UserPreferences.setUser = user;
+      final preferences = UserPreferences.setUser = user;
+      final createGlobalUser = User.fromRawJson(preferences);
+      currentUser = createGlobalUser;
       return true;
     }
 
@@ -80,9 +81,10 @@ class AuthProvider extends ChangeNotifier{
     if(data['ok'] == false){
       return false;
     }
-    
     final user = jsonEncode(data['user']);
-    UserPreferences.setUser = user;
+    final preferences = UserPreferences.setUser = user;
+    final createGlobalUser = User.fromRawJson(preferences);
+    currentUser = createGlobalUser;
     return true;
     
   }

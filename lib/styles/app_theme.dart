@@ -19,6 +19,7 @@ class AppTheme{
     ),
 
     inputDecorationTheme: InputDecorationTheme(
+      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
       labelStyle: TextStyle(color: Colors.grey[600]),
       floatingLabelStyle: const TextStyle(color: Color(primaryColor)),
       border: const OutlineInputBorder(),
@@ -44,12 +45,13 @@ class AppTheme{
       headlineSmall: TextStyle(
         fontWeight: FontWeight.w900,
         color: Colors.black,
+        fontSize: 20
       ),
       titleLarge: TextStyle(
-        fontWeight: FontWeight.bold
+        fontWeight: FontWeight.bold,
       ),
       titleSmall: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.bold
       )
 

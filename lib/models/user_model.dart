@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class User {
     User({
-        required this.idpaciente,
+        required this.cedulaPaciente,
         required this.nombrePaciente,
         required this.apellidoPaciente,
         required this.correoPaciente,
@@ -12,7 +12,7 @@ class User {
         this.idRol,
     });
 
-    final int idpaciente;
+    final int cedulaPaciente;
     final String nombrePaciente;
     final String apellidoPaciente;
     final String correoPaciente;
@@ -26,7 +26,7 @@ class User {
     String toRawJson() => json.encode(toJson());
 
     factory User.fromJson(Map<String, dynamic> json) => User(
-        idpaciente: json["idpaciente"],
+        cedulaPaciente: json["cedula_paciente"],
         nombrePaciente: json["nombre_paciente"],
         apellidoPaciente: json["apellido_paciente"],
         correoPaciente: json["correo_paciente"],
@@ -37,7 +37,7 @@ class User {
     );
 
     Map<String, dynamic> toJson() => {
-        "idpaciente": idpaciente,
+        "idpaciente": cedulaPaciente,
         "nombre_paciente": nombrePaciente,
         "apellido_paciente": apellidoPaciente,
         "correo_paciente": correoPaciente,
