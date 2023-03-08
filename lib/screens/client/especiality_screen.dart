@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/screens/screens.dart';
@@ -118,7 +119,9 @@ class _EspecialistList extends StatelessWidget {
           delegate: SliverChildBuilderDelegate(
             childCount: snapshot.data!.length,
             (context, index) {
-
+              
+              final startTime = TransForm.transformDate(snapshot.data![index].horaInicio);
+              final endTime = TransForm.transformDate(snapshot.data![index].horaFin);
               final name = snapshot.data![index].nombreMedico.split(' ')[0];
               final lastName = snapshot.data![index].apellidoMedico.split(' ')[0];
               final prefix = snapshot.data![index].sexoMedico == 'F' ? 'Dra.' : 'Dr';
@@ -149,9 +152,9 @@ class _EspecialistList extends StatelessWidget {
                       margin: const EdgeInsets.only(top: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text('Horario'),
-                          Text('8:00 am - 12:00 pm')
+                        children: [
+                          const Text('Horario'),
+                          Text('$startTime - $endTime')
                         ],
                       ),
                     ),
