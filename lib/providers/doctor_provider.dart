@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:higea_app/services/speciality_services.dart';
+import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
 
 class DoctorProvider extends ChangeNotifier{
 
   List<Speciality> specialities = [];
   List<Doctor> doctors = [];
+  late Doctor doctor;
   String _searchSpeciality = '';
 
   String get searchSpeciality => _searchSpeciality;
@@ -14,8 +15,8 @@ class DoctorProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future<List<Speciality>> getSpecialities() async{
-    final Map<String, dynamic> response = await SpecialityServices.getAllSpecialities();
+  Future<List<Speciality>> showSpecialities() async{
+    final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
     
     if(response['ok'] == false) return specialities = [];
 
@@ -23,11 +24,21 @@ class DoctorProvider extends ChangeNotifier{
     return specialities =  List<Speciality>.from(results.map((x) => Speciality.fromJson(x)));
   }
 
-  Future<List<Doctor>> getDoctorBySpeciality(id) async{
-    final Map<String, dynamic> response = await SpecialityServices.getDoctorBySpeciality(id);
+  Future<List<Doctor>> showDoctorBySpeciality(id) async{
+    final Map<String, dynamic> response = await DoctorServices.getDoctorBySpeciality(id);
     if(response['ok'] == false) return doctors = [];
 
     final results = response['results'] as List<dynamic>;
     return doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
   }
+
+  Future<Doctor> showDoctorDatesWork(ci) async{
+    final Map<String, dynamic> response = await DoctorServices.getDoctorDatesWork(ci);
+    
+    
+    doctor = Doctor.fromJson(response['results']);
+
+    return doctor;
+  }
+
 }

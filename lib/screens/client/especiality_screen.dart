@@ -16,8 +16,6 @@ class EspecialityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context){
 
-    print('Render');
-
     return  Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -103,7 +101,7 @@ class _EspecialistList extends StatelessWidget {
     final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
 
     return FutureBuilder(
-      future: doctorProvider.getDoctorBySpeciality(id),
+      future: doctorProvider.showDoctorBySpeciality(id),
       builder: (context, AsyncSnapshot<List<Doctor>> snapshot){
         
         if(!snapshot.hasData){
@@ -120,8 +118,8 @@ class _EspecialistList extends StatelessWidget {
             childCount: snapshot.data!.length,
             (context, index) {
               
-              final startTime = TransForm.transformDate(snapshot.data![index].horaInicio);
-              final endTime = TransForm.transformDate(snapshot.data![index].horaFin);
+              final startTime = Helpers.transformDate(snapshot.data![index].horaInicio);
+              final endTime = Helpers.transformDate(snapshot.data![index].horaFin);
               final name = snapshot.data![index].nombreMedico.split(' ')[0];
               final lastName = snapshot.data![index].apellidoMedico.split(' ')[0];
               final prefix = snapshot.data![index].sexoMedico == 'F' ? 'Dra.' : 'Dr';
@@ -133,7 +131,9 @@ class _EspecialistList extends StatelessWidget {
                 children: [
                   ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> const AppointmentScreen())),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: snapshot.data![index])));
+                    },
                     leading: CircleAvatar(
                       backgroundImage: AssetImage(img),
                       radius: 30,

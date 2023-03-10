@@ -51,7 +51,7 @@ class _Especialities extends StatelessWidget {
           Text('Todas las especialidades', style: textTheme.titleLarge,),
 
           FutureBuilder(
-            future: doctorProvider.getSpecialities(),
+            future: doctorProvider.showSpecialities(),
             builder: (context, AsyncSnapshot<List<Speciality>> snapshot){
           
               if(!snapshot.hasData){

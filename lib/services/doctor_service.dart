@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-class SpecialityServices {
+class DoctorServices {
 
   static final server = dotenv.env['SERVER_PATH'];
 
@@ -21,6 +21,14 @@ class SpecialityServices {
       'id': '$id'
     });
 
+    final response = await http.get(url);
+    final data =  jsonDecode(response.body) as Map<String, dynamic>;
+    return data;
+  }
+
+  static Future getDoctorDatesWork(ci) async {
+
+    final url = Uri.parse('$server/speciality/doctor/$ci');
     final response = await http.get(url);
     final data =  jsonDecode(response.body) as Map<String, dynamic>;
     return data;

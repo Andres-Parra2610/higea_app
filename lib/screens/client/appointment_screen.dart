@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:higea_app/models/models.dart';
+import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 
 class AppointmentScreen extends StatelessWidget {
-  const AppointmentScreen({Key? key}) : super(key: key);
+  const AppointmentScreen({
+    Key? key,
+    required this.doctor
+  }) : super(key: key);
+
+  final Doctor doctor;
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Expanded(
             flex: 1, 
-            child: _AppointMentAppBar()
+            child: _AppointMentAppBar(doctor: doctor)
           ),
 
           
           Expanded(
             flex: 1, 
-            child:  _AppoinmentDates()
+            child:  _AppoinmentDates(ci: doctor.cedulaMedico)
           ),
 
-           Expanded(
+           const Expanded(
             flex: 3,
              child: _AppointmentHours(),
            )
@@ -38,11 +50,23 @@ class AppointmentScreen extends StatelessWidget {
 
 class _AppointMentAppBar extends StatelessWidget {
   const _AppointMentAppBar({
-    Key? key,
+    Key? key, 
+    required this.doctor,
   }) : super(key: key);
+
+
+  final Doctor doctor;
 
   @override
   Widget build(BuildContext context) {
+
+    final name = doctor.nombreMedico.split(' ')[0];
+    final lastName = doctor.apellidoMedico.split(' ')[0];
+    final prefix = doctor.sexoMedico == 'F' ? 'Dra.' : 'Dr';
+    final img = doctor.sexoMedico == 'F' 
+          ? 'assets/doctora-avatar.jpg'
+          : 'assets/doctor-avatar.jpg'; 
+
     return Container(
       padding: const EdgeInsets.only(right: AppTheme.horizontalPadding, left: 15),
       height: MediaQuery.of(context).size.height * 0.2,
@@ -56,16 +80,16 @@ class _AppointMentAppBar extends StatelessWidget {
               iconSize: 30,
               onPressed: () => Navigator.pop(context),
             ),
-            const Expanded(
-              child: _TextHeader(),
+            Expanded(
+              child: _TextHeader(name: name, lastName: lastName, prefix: prefix),
             ),
             CircleAvatar(
               radius: 40,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: const Image(
+                child: Image(
                   width: double.infinity,
-                  image: AssetImage('assets/doctor-avatar.jpg'),
+                  image: AssetImage(img),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -79,26 +103,29 @@ class _AppointMentAppBar extends StatelessWidget {
 
 class _TextHeader extends StatelessWidget {
   const _TextHeader({
-    Key? key,
+    Key? key, 
+    required this.name, 
+    required this.lastName, 
+    required this.prefix,
   }) : super(key: key);
+
+  final String name;
+  final String lastName;
+  final String prefix;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children:[
         Text(
-          'Dr Andrés Parra',
-          style: TextStyle(
+          '$prefix $name $lastName',
+          style: const TextStyle(
               color: Color(AppTheme.primaryColor),
               fontSize: 22,
               fontWeight: FontWeight.bold),
         ),
-        Text(
-          'Pediatra',
-          style: TextStyle(fontSize: 18),
-        )
       ],
     );
   }
@@ -108,55 +135,97 @@ class _TextHeader extends StatelessWidget {
 
 class _AppoinmentDates extends StatelessWidget {
   const _AppoinmentDates({
-    Key? key,
+    Key? key, 
+    required this.ci,
   }) : super(key: key);
+
+  final int ci;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
 
+    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
-          child: Text('Febrero', style: Theme.of(context).textTheme.headline6),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
+          child: Text(''),
         ),
         SizedBox(
           width: double.infinity,
-          height: 65,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 50,
-              itemBuilder: (context, index) {
-                double dateMargin;
-                if (index == 0) {
-                  dateMargin = AppTheme.horizontalPadding;
-                } else {
-                  dateMargin = 5;
-                }
-                return Container(
-                  width: 65,
-                  margin: EdgeInsets.only(
-                      top: 0, bottom: 0, right: 5, left: dateMargin),
-                  decoration: const BoxDecoration(
-                      color: Colors.blue, shape: BoxShape.circle),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('Lun',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
-                      Text('19',
-                          style:
-                              TextStyle(fontSize: 18, color: Colors.white))
-                    ],
-                  ),
-                );
+          height: 85,
+          child: FutureBuilder(
+            future: doctorProvider.showDoctorDatesWork(ci),
+            builder: (context, AsyncSnapshot<Doctor>snapshot){
+
+              if(!snapshot.hasData){
+                return const Center(child: CircularProgressIndicator.adaptive());
               }
-            ),
+
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.fechas!.length,
+                itemBuilder: (context, index) {
+
+                  final String date = snapshot.data!.fechas![index];
+                  return _Dates(index, date);
+                }
+              );
+            }
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Dates extends StatelessWidget {
+  const _Dates(
+    this.index,
+    this.date
+  );
+
+  final int index;
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+
+    initializeDateFormatting('es_ES');
+    List<String> dateArray = date.split(' ');
+    final String nameDay = dateArray[0][0].toUpperCase() + dateArray[0].substring(1,3);
+    final String day = dateArray[1].split('/')[0];
+    final DateTime parsedDate = DateFormat('dd/MM/yy').parse(dateArray[1]);
+    final String monthName =  DateFormat('MMMM', 'es_ES').format(parsedDate);
+    final double dateMargin = index == 0 ? AppTheme.horizontalPadding : 5;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
+          child: Text(monthName, style: const TextStyle(fontSize: 12))
+        ),
+        Container(
+          width: 60,
+          margin: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
+          padding: const EdgeInsets.all(5),
+          decoration: const BoxDecoration( color: Colors.blue, shape: BoxShape.circle),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(nameDay,
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+              Text(day,
+                  style: const TextStyle(fontSize: 18, color: Colors.white))
+            ],
+          ),
         ),
       ],
     );
@@ -178,7 +247,7 @@ class _AppointmentHours extends StatelessWidget {
          child: Column(
            crossAxisAlignment: CrossAxisAlignment.start,
            children: [
-             Text('Lista de horarios', style: Theme.of(context).textTheme.headline6),
+             Text('Lista de horarios', style: Theme.of(context).textTheme.titleLarge),
              const Text('Lunes 19 de febrero'),
                     
              ListView.builder(
