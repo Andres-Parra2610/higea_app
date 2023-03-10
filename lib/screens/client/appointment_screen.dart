@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:higea_app/helpers/helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -17,30 +18,37 @@ class AppointmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
 
-
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 1, 
-            child: _AppointMentAppBar(doctor: doctor)
-          ),
-
-          
-          Expanded(
-            flex: 1, 
-            child:  _AppoinmentDates(ci: doctor.cedulaMedico)
-          ),
-
-           const Expanded(
-            flex: 3,
-             child: _AppointmentHours(),
-           )
-        ],
+    return WillPopScope(
+      onWillPop: () async{
+        appoimentProvider.currentDay = '';
+        appoimentProvider.currentDoctor = 0;  
+        return true;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.white,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 1, 
+              child: _AppointMentAppBar(doctor: doctor)
+            ),
+    
+            
+            Expanded(
+              flex: 1, 
+              child:  _AppoinmentDates(ci: doctor.cedulaMedico)
+            ),
+    
+             const Expanded(
+              flex: 3,
+               child: _AppointmentHours(),
+             )
+          ],
+        ),
       ),
     );
   }
@@ -60,6 +68,8 @@ class _AppointMentAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
+
     final name = doctor.nombreMedico.split(' ')[0];
     final lastName = doctor.apellidoMedico.split(' ')[0];
     final prefix = doctor.sexoMedico == 'F' ? 'Dra.' : 'Dr';
@@ -78,7 +88,11 @@ class _AppointMentAppBar extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.arrow_back),
               iconSize: 30,
-              onPressed: () => Navigator.pop(context),
+              onPressed: (){
+                appoimentProvider.currentDay = '';
+                appoimentProvider.currentDoctor = 0;
+                Navigator.pop(context);
+              }
             ),
             Expanded(
               child: _TextHeader(name: name, lastName: lastName, prefix: prefix),
@@ -144,7 +158,7 @@ class _AppoinmentDates extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+    final appimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +172,7 @@ class _AppoinmentDates extends StatelessWidget {
           width: double.infinity,
           height: 85,
           child: FutureBuilder(
-            future: doctorProvider.showDoctorDatesWork(ci),
+            future: appimentProvider.showDoctorDatesWork(ci),
             builder: (context, AsyncSnapshot<Doctor>snapshot){
 
               if(!snapshot.hasData){
@@ -169,9 +183,8 @@ class _AppoinmentDates extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data!.fechas!.length,
                 itemBuilder: (context, index) {
-
                   final String date = snapshot.data!.fechas![index];
-                  return _Dates(index, date);
+                  return _Dates(index, date, ci);
                 }
               );
             }
@@ -185,14 +198,18 @@ class _AppoinmentDates extends StatelessWidget {
 class _Dates extends StatelessWidget {
   const _Dates(
     this.index,
-    this.date
+    this.date,
+    this.doctorCi
   );
 
   final int index;
+  final int doctorCi;
   final String date;
 
   @override
   Widget build(BuildContext context) {
+
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
 
     initializeDateFormatting('es_ES');
     List<String> dateArray = date.split(' ');
@@ -202,6 +219,7 @@ class _Dates extends StatelessWidget {
     final String monthName =  DateFormat('MMMM', 'es_ES').format(parsedDate);
     final double dateMargin = index == 0 ? AppTheme.horizontalPadding : 5;
 
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -209,22 +227,28 @@ class _Dates extends StatelessWidget {
           padding: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
           child: Text(monthName, style: const TextStyle(fontSize: 12))
         ),
-        Container(
-          width: 60,
-          margin: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
-          padding: const EdgeInsets.all(5),
-          decoration: const BoxDecoration( color: Colors.blue, shape: BoxShape.circle),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(nameDay,
-                  style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              Text(day,
-                  style: const TextStyle(fontSize: 18, color: Colors.white))
-            ],
+        GestureDetector(
+          onTap: (){
+            appoimentProvider.currentDay = DateFormat('yyyy-MM-dd').format(parsedDate);
+            appoimentProvider.currentDoctor = doctorCi;
+          },
+          child: Container(
+            width: 60,
+            margin: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
+            padding: const EdgeInsets.all(5),
+            decoration: const BoxDecoration( color: Colors.blue, shape: BoxShape.circle),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(nameDay,
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                Text(day,
+                    style: const TextStyle(fontSize: 18, color: Colors.white))
+              ],
+            ),
           ),
         ),
       ],
@@ -250,49 +274,89 @@ class _AppointmentHours extends StatelessWidget {
              Text('Lista de horarios', style: Theme.of(context).textTheme.titleLarge),
              const Text('Lunes 19 de febrero'),
                     
-             ListView.builder(
-               shrinkWrap: true,
-               physics: const NeverScrollableScrollPhysics(),
-               itemCount: 50,
-               itemBuilder: (context, index){
-                 return Container(
-                   margin: const EdgeInsets.only(bottom: 20),
-                   child: Row(
-                     children: [
-                       Container(
-                         decoration: BoxDecoration(
-                           color: const Color(AppTheme.primaryColor).withOpacity(0.05),
-                           borderRadius: BorderRadius.circular(10)
-                         ),
-                         padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
-                         child: const Text('8:00 am', style: TextStyle(fontSize: 16)),
-                       ),
-
-                       const SizedBox(width: 20),
-                       Expanded(
-                         child: GestureDetector(
-                          onTap: () => showDialog(context: context, builder: (context) => const ShowDialogWidget() ),
-                           child: Container(
-                             decoration: BoxDecoration(
-                               color: const Color(AppTheme.primaryColor).withOpacity(0.8),
-                               borderRadius: BorderRadius.circular(10)
-                             ),
-                             padding: const EdgeInsets.symmetric(vertical:15),
-                             child: const Center(
-                               child: Text('Disponible', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
-                             ),
-                           ),
-                         ),
-                       )
-                     ],
-                   ),
-                 );
-               }
-             )
+             const _AviableAppoiments()
                     
            ],
          ),
        ),
      );
+  }
+}
+
+class _AviableAppoiments extends StatelessWidget {
+  const _AviableAppoiments();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final appoimentProvider = Provider.of<AppoimentProvider>(context);
+
+    if(appoimentProvider.currentDay.isEmpty){
+      return const Text('Por favor selecciona una fecha');
+    }
+
+    return FutureBuilder(
+      future: appoimentProvider.showAppoiment(),
+      builder: (context, AsyncSnapshot<List<Appoiment>> snapshot){
+
+        if(!snapshot.hasData){
+          return const Center(child: CircularProgressIndicator.adaptive());
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index){
+
+            final appoiment = snapshot.data![index];
+            final hour = Helpers.transformHour(appoiment.horaCita);
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(
+                        appoiment.citaEstado == "Ocupada"
+                          ? AppTheme.secondaryColor 
+                          : AppTheme.primaryColor
+                      ).withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
+                    child: Text(hour, style: TextStyle(fontSize: 16)),
+                  ),
+          
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: GestureDetector(
+                    onTap: () => showDialog(context: context, builder: (context) => const ShowDialogWidget() ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(
+                          appoiment.citaEstado == "Ocupada"
+                            ? AppTheme.secondaryColor 
+                            : AppTheme.primaryColor
+                        ).withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical:15),
+                        child: Center(
+                          child: Text(
+                            appoiment.citaEstado, 
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+        );
+      },
+    );
   }
 }

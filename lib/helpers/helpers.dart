@@ -2,7 +2,7 @@
 
 class Helpers{
 
-  static String transformDate(String date){
+  static String transformHour(String date){
 
     String modifiedDate = date;
     String format = 'am';

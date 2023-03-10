@@ -8,7 +8,6 @@ class DoctorServices {
 
 
   static Future getAllSpecialities() async{
-
     final url = Uri.parse('$server/speciality');
     final response = await http.get(url);
     final data =  jsonDecode(response.body) as Map<String, dynamic>;
@@ -17,7 +16,7 @@ class DoctorServices {
 
   static Future getDoctorBySpeciality(id) async{
     
-    final url = Uri.http("192.168.1.100:3001", '/speciality/doctors', {
+    final url = Uri.http("192.168.1.101:3001", '/speciality/doctors', {
       'id': '$id'
     });
 

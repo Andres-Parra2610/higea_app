@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DoctorProvider extends ChangeNotifier{
 
@@ -17,6 +20,7 @@ class DoctorProvider extends ChangeNotifier{
 
   Future<List<Speciality>> showSpecialities() async{
     final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
+
     
     if(response['ok'] == false) return specialities = [];
 
@@ -32,13 +36,5 @@ class DoctorProvider extends ChangeNotifier{
     return doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
   }
 
-  Future<Doctor> showDoctorDatesWork(ci) async{
-    final Map<String, dynamic> response = await DoctorServices.getDoctorDatesWork(ci);
-    
-    
-    doctor = Doctor.fromJson(response['results']);
-
-    return doctor;
-  }
 
 }

@@ -118,8 +118,8 @@ class _EspecialistList extends StatelessWidget {
             childCount: snapshot.data!.length,
             (context, index) {
               
-              final startTime = Helpers.transformDate(snapshot.data![index].horaInicio);
-              final endTime = Helpers.transformDate(snapshot.data![index].horaFin);
+              final startTime = Helpers.transformHour(snapshot.data![index].horaInicio);
+              final endTime = Helpers.transformHour(snapshot.data![index].horaFin);
               final name = snapshot.data![index].nombreMedico.split(' ')[0];
               final lastName = snapshot.data![index].apellidoMedico.split(' ')[0];
               final prefix = snapshot.data![index].sexoMedico == 'F' ? 'Dra.' : 'Dr';
