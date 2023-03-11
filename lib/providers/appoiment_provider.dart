@@ -1,28 +1,15 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 
 class AppoimentProvider extends ChangeNotifier{
 
-  String _currentDay = '';
-  int _currentDoctor = 0;
   List<Appoiment> appoiments = [];
-
-  String get currentDay => _currentDay;
-  int get currentDoctor => _currentDoctor;
-
-  set currentDay(String value){
-    _currentDay = value;
-    notifyListeners();
-  }
-
-  set currentDoctor(int value){
-    _currentDoctor = value;
-    notifyListeners();
-  }
-
+  bool loading = false;
+  String date = '';
 
   Future<Doctor> showDoctorDatesWork(ci) async{
 
@@ -30,15 +17,28 @@ class AppoimentProvider extends ChangeNotifier{
 
     final doctor = Doctor.fromJson(response['results']);
 
+    final currentDay = Helpers.parsedDate(doctor.fechas![0].split(' ')[1]);
+    final showCompleteDate = Helpers.completeDate(doctor.fechas![0]);
+    
+    await showAppoiment(ci, currentDay, showCompleteDate);
+    
+
     return doctor;
   }
 
-  Future<List<Appoiment>> showAppoiment() async{
-    final Map<String, dynamic> res = await AppoimentService.getAppoiments(currentDoctor, currentDay);
+  Future showAppoiment(doctorCi, day, completeDate) async{
+
+    loading = true;
+    notifyListeners();
+
+    final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi, day);
 
     final result = res["results"] as List<dynamic>;
     
-    return appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+    appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+    date = completeDate;
+    loading = false;
+    notifyListeners();
   }
 
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
@@ -18,12 +17,12 @@ class AppointmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
 
     return WillPopScope(
       onWillPop: () async{
-        appoimentProvider.currentDay = '';
-        appoimentProvider.currentDoctor = 0;  
+        appoimentProvider.appoiments = [];
         return true;
       },
       child: Scaffold(
@@ -44,7 +43,7 @@ class AppointmentScreen extends StatelessWidget {
             ),
     
              const Expanded(
-              flex: 3,
+              flex: 4,
                child: _AppointmentHours(),
              )
           ],
@@ -89,8 +88,7 @@ class _AppointMentAppBar extends StatelessWidget {
               icon: const Icon(Icons.arrow_back),
               iconSize: 30,
               onPressed: (){
-                appoimentProvider.currentDay = '';
-                appoimentProvider.currentDoctor = 0;
+                appoimentProvider.appoiments = [];
                 Navigator.pop(context);
               }
             ),
@@ -170,7 +168,7 @@ class _AppoinmentDates extends StatelessWidget {
         ),
         SizedBox(
           width: double.infinity,
-          height: 85,
+          height: 50,
           child: FutureBuilder(
             future: appimentProvider.showDoctorDatesWork(ci),
             builder: (context, AsyncSnapshot<Doctor>snapshot){
@@ -179,14 +177,9 @@ class _AppoinmentDates extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator.adaptive());
               }
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data!.fechas!.length,
-                itemBuilder: (context, index) {
-                  final String date = snapshot.data!.fechas![index];
-                  return _Dates(index, date, ci);
-                }
-              );
+              final dates = snapshot.data!.fechas;
+
+              return _DatesListView(dates: dates!, ci: ci);
             }
           ),
         ),
@@ -195,23 +188,81 @@ class _AppoinmentDates extends StatelessWidget {
   }
 }
 
+class _DatesListView extends StatefulWidget {
+  const _DatesListView({
+    required this.dates,
+    required this.ci,
+  });
+
+  final List<String> dates;
+  final int ci;
+
+  @override
+  State<_DatesListView> createState() => _DatesListViewState();
+}
+
+class _DatesListViewState extends State<_DatesListView> {
+
+  late int currentIndex;
+
+  @override
+  void initState() {
+    currentIndex = 0;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: widget.dates.length,
+      itemBuilder: (context, index) {
+        final String date = widget.dates[index];
+        return _Dates(
+          index: index, 
+          date: date, 
+          doctorCi: widget.ci,
+          currentIndex: currentIndex,
+          updateIndex: (int index){
+            setState(()=> currentIndex = index);
+          },
+        );
+      }
+    );
+  }
+}
+
 class _Dates extends StatelessWidget {
-  const _Dates(
-    this.index,
-    this.date,
-    this.doctorCi
+  const _Dates({
+    required this.index,
+    required this.date,
+    required this.doctorCi,
+    required this.currentIndex,
+    required this.updateIndex
+  }
   );
 
   final int index;
   final int doctorCi;
   final String date;
+  final int currentIndex;
+  final Function updateIndex;
 
   @override
   Widget build(BuildContext context) {
 
     final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
+    int bgColor;
+    int textColor;
 
-    initializeDateFormatting('es_ES');
+    if(currentIndex == index){
+      bgColor = AppTheme.primaryColor;
+      textColor = 0xFFFFFFFF;
+    }else{
+      bgColor = 0xFFEEEEEE;
+      textColor = AppTheme.primaryColor;
+    }
+
     List<String> dateArray = date.split(' ');
     final String nameDay = dateArray[0][0].toUpperCase() + dateArray[0].substring(1,3);
     final String day = dateArray[1].split('/')[0];
@@ -220,38 +271,31 @@ class _Dates extends StatelessWidget {
     final double dateMargin = index == 0 ? AppTheme.horizontalPadding : 5;
 
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          padding: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
-          child: Text(monthName, style: const TextStyle(fontSize: 12))
+    return GestureDetector(
+      onTap: currentIndex == index 
+        ? null 
+        : () async{
+          final currentDay = DateFormat('yyyy-MM-dd').format(parsedDate);
+          final showCompleteDate = Helpers.completeDate(date);
+          updateIndex(index);
+          await appoimentProvider.showAppoiment(doctorCi, currentDay, showCompleteDate);
+        },
+      child: Container(
+        margin: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Color(bgColor),
+          borderRadius: BorderRadius.circular(10),
         ),
-        GestureDetector(
-          onTap: (){
-            appoimentProvider.currentDay = DateFormat('yyyy-MM-dd').format(parsedDate);
-            appoimentProvider.currentDoctor = doctorCi;
-          },
-          child: Container(
-            width: 60,
-            margin: EdgeInsets.only( top: 0, bottom: 0, right: 5, left: dateMargin),
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration( color: Colors.blue, shape: BoxShape.circle),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(nameDay,
-                    style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-                Text(day,
-                    style: const TextStyle(fontSize: 18, color: Colors.white))
-              ],
-            ),
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('$monthName: ', style: TextStyle(fontSize: 16,color: Color(textColor), fontWeight: FontWeight.bold)),
+            Text('$nameDay ', style: TextStyle(fontSize: 16,color: Color(textColor))),
+            Text(day, style: TextStyle(fontSize: 16, color: Color(textColor)))
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -272,7 +316,8 @@ class _AppointmentHours extends StatelessWidget {
            crossAxisAlignment: CrossAxisAlignment.start,
            children: [
              Text('Lista de horarios', style: Theme.of(context).textTheme.titleLarge),
-             const Text('Lunes 19 de febrero'),
+
+             const _ShowAppoimentDate(),
                     
              const _AviableAppoiments()
                     
@@ -280,6 +325,23 @@ class _AppointmentHours extends StatelessWidget {
          ),
        ),
      );
+  }
+}
+
+class _ShowAppoimentDate extends StatelessWidget {
+  const _ShowAppoimentDate();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final appoimentProvider = Provider.of<AppoimentProvider>(context);
+
+
+    if(appoimentProvider.date.isEmpty){
+      return Container();
+    }
+
+    return Text(appoimentProvider.date);
   }
 }
 
@@ -291,72 +353,64 @@ class _AviableAppoiments extends StatelessWidget {
 
     final appoimentProvider = Provider.of<AppoimentProvider>(context);
 
-    if(appoimentProvider.currentDay.isEmpty){
-      return const Text('Por favor selecciona una fecha');
+    if(appoimentProvider.loading){
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
 
-    return FutureBuilder(
-      future: appoimentProvider.showAppoiment(),
-      builder: (context, AsyncSnapshot<List<Appoiment>> snapshot){
 
-        if(!snapshot.hasData){
-          return const Center(child: CircularProgressIndicator.adaptive());
-        }
+    final List<Appoiment> appoiments = appoimentProvider.appoiments;
 
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index){
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: appoiments.length,
+      itemBuilder: (context, index){
 
-            final appoiment = snapshot.data![index];
-            final hour = Helpers.transformHour(appoiment.horaCita);
-
-            return Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                children: [
-                  Container(
+        final Appoiment appoiment = appoiments[index];
+        final String appoimentHour = Helpers.transformHour(appoiment.horaCita);
+        return Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(
+                    appoiment.citaEstado == "Ocupada"
+                      ? AppTheme.secondaryColor 
+                      : AppTheme.primaryColor
+                  ).withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
+                child: Text(appoimentHour, style: const TextStyle(fontSize: 16)),
+              ),
+      
+              const SizedBox(width: 20),
+              Expanded(
+                child: GestureDetector(
+                onTap: () => showDialog(context: context, builder: (context) => const ShowDialogWidget() ),
+                  child: Container(
                     decoration: BoxDecoration(
                       color: Color(
-                        appoiment.citaEstado == "Ocupada"
-                          ? AppTheme.secondaryColor 
-                          : AppTheme.primaryColor
-                      ).withOpacity(0.05),
+                      appoiment.citaEstado == "Ocupada"
+                        ? AppTheme.secondaryColor 
+                        : AppTheme.primaryColor
+                    ).withOpacity(0.8),
                       borderRadius: BorderRadius.circular(10)
                     ),
-                    padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
-                    child: Text(hour, style: TextStyle(fontSize: 16)),
-                  ),
-          
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: GestureDetector(
-                    onTap: () => showDialog(context: context, builder: (context) => const ShowDialogWidget() ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color(
-                          appoiment.citaEstado == "Ocupada"
-                            ? AppTheme.secondaryColor 
-                            : AppTheme.primaryColor
-                        ).withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(10)
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical:15),
-                        child: Center(
-                          child: Text(
-                            appoiment.citaEstado, 
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
-                        ),
-                      ),
+                    padding: const EdgeInsets.symmetric(vertical:15),
+                    child: Center(
+                      child: Text(
+                        appoiment.citaEstado, 
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
                     ),
-                  )
-                ],
-              ),
-            );
-          }
+                  ),
+                ),
+              )
+            ],
+          ),
         );
-      },
+      }
     );
   }
 }
