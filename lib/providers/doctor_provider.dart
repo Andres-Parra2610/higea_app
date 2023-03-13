@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class DoctorProvider extends ChangeNotifier{
 
@@ -13,6 +10,7 @@ class DoctorProvider extends ChangeNotifier{
   String _searchSpeciality = '';
 
   String get searchSpeciality => _searchSpeciality;
+
   set searchSpeciality(String q){
     _searchSpeciality = q;
     notifyListeners();

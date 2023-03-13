@@ -6,10 +6,6 @@ import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 
-
-
-
-
 class HomeClientScreen extends StatelessWidget {
 
   const HomeClientScreen({super.key});  

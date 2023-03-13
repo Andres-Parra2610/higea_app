@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:higea_app/helpers/helpers.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
@@ -42,10 +42,10 @@ class AppointmentScreen extends StatelessWidget {
               child:  _AppoinmentDates(ci: doctor.cedulaMedico)
             ),
     
-             const Expanded(
+            const Expanded(
               flex: 4,
-               child: _AppointmentHours(),
-             )
+              child: _AppointmentHours(),
+            ),
           ],
         ),
       ),
@@ -367,6 +367,7 @@ class _AviableAppoiments extends StatelessWidget {
       itemBuilder: (context, index){
 
         final Appoiment appoiment = appoiments[index];
+
         final String appoimentHour = Helpers.transformHour(appoiment.horaCita);
         return Container(
           margin: const EdgeInsets.only(bottom: 20),
@@ -387,8 +388,19 @@ class _AviableAppoiments extends StatelessWidget {
       
               const SizedBox(width: 20),
               Expanded(
-                child: GestureDetector(
-                onTap: () => showDialog(context: context, builder: (context) => const ShowDialogWidget() ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  splashColor: Colors.black,
+                  onTap: appoiment.citaEstado == "Ocupada" 
+                    ? null
+                    : () async {
+                      final result = await showDialog(context: context, builder: (context) => ShowDialogWidget(appoiment: appoiment));
+                      
+                      if(result == null) return;
+
+                      
+                      SnackBarWidget.showSnackBar('La cita fué reservada exitosamente', AppTheme.primaryColor);
+                    },
                   child: Container(
                     decoration: BoxDecoration(
                       color: Color(
@@ -401,7 +413,7 @@ class _AviableAppoiments extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical:15),
                     child: Center(
                       child: Text(
-                        appoiment.citaEstado, 
+                        appoiment.citaEstado ?? ' ', 
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
                     ),
                   ),

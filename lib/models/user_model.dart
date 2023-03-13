@@ -23,7 +23,6 @@ class User {
 
     factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
-    String toRawJson() => json.encode(toJson());
 
     factory User.fromJson(Map<String, dynamic> json) => User(
         cedulaPaciente: json["cedula_paciente"],
@@ -36,14 +35,5 @@ class User {
         idRol: json["id_rol"],
     );
 
-    Map<String, dynamic> toJson() => {
-        "idpaciente": cedulaPaciente,
-        "nombre_paciente": nombrePaciente,
-        "apellido_paciente": apellidoPaciente,
-        "correo_paciente": correoPaciente,
-        "telefono_paciente": telefonoPaciente,
-        "fecha_nacimiento_paciente": fechaNacimientoPaciente.toIso8601String(),
-        "activo": activo,
-        "id_rol": idRol,
-    };
+
 }
