@@ -352,6 +352,7 @@ class _AviableAppoiments extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final appoimentProvider = Provider.of<AppoimentProvider>(context);
+    final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser;
 
     if(appoimentProvider.loading){
       return const Center(child: CircularProgressIndicator.adaptive());
@@ -368,61 +369,85 @@ class _AviableAppoiments extends StatelessWidget {
 
         final Appoiment appoiment = appoiments[index];
 
-        final String appoimentHour = Helpers.transformHour(appoiment.horaCita);
-        return Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          child: Row(
-            children: [
-              Container(
+        return _AppoimentStatus(appoiment: appoiment);
+      }
+    );
+  }
+}
+
+class _AppoimentStatus extends StatelessWidget {
+  const _AppoimentStatus({
+    super.key,
+    required this.appoiment,
+  });
+
+  final Appoiment appoiment;
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser;
+
+    final String appoimentHour = Helpers.transformHour(appoiment.horaCita);
+    String text;
+    int bgColor;
+
+    if((currentUser.cedulaPaciente == appoiment.cedulaPaciente) && appoiment.citaEstado == "Ocupada"){
+      text = "Reservada";
+      bgColor = 0xFF45BB1B;
+    }else if(appoiment.citaEstado == "Ocupada"){
+      text = "Ocupada";
+      bgColor = AppTheme.secondaryColor;
+    }else{
+      text = "Diponible";
+      bgColor = AppTheme.primaryColor;
+    }
+
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Color(bgColor).withOpacity(0.05),
+              borderRadius: BorderRadius.circular(10)
+            ),
+            padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
+            child: Text(appoimentHour, style: const TextStyle(fontSize: 16)),
+          ),
+      
+          const SizedBox(width: 20),
+          Expanded(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(10),
+              splashColor: Colors.black,
+              onTap: appoiment.citaEstado == "Ocupada" 
+                ? null
+                : () async {
+                  final result = await showDialog(context: context, builder: (context) => ShowDialogWidget(appoiment: appoiment));
+                  
+                  if(result == null) return;
+
+                  SnackBarWidget.showSnackBar('La cita fué reservada exitosamente', AppTheme.primaryColor);
+                },
+              child: Container(
                 decoration: BoxDecoration(
-                  color: Color(
-                    appoiment.citaEstado == "Ocupada"
-                      ? AppTheme.secondaryColor 
-                      : AppTheme.primaryColor
-                  ).withOpacity(0.05),
+                  color: Color(bgColor).withOpacity(0.8),
                   borderRadius: BorderRadius.circular(10)
                 ),
-                padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
-                child: Text(appoimentHour, style: const TextStyle(fontSize: 16)),
-              ),
-      
-              const SizedBox(width: 20),
-              Expanded(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  splashColor: Colors.black,
-                  onTap: appoiment.citaEstado == "Ocupada" 
-                    ? null
-                    : () async {
-                      final result = await showDialog(context: context, builder: (context) => ShowDialogWidget(appoiment: appoiment));
-                      
-                      if(result == null) return;
-
-                      
-                      SnackBarWidget.showSnackBar('La cita fué reservada exitosamente', AppTheme.primaryColor);
-                    },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(
-                      appoiment.citaEstado == "Ocupada"
-                        ? AppTheme.secondaryColor 
-                        : AppTheme.primaryColor
-                    ).withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical:15),
-                    child: Center(
-                      child: Text(
-                        appoiment.citaEstado ?? ' ', 
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
-                    ),
-                  ),
+                padding: const EdgeInsets.symmetric(vertical:15),
+                child: Center(
+                  child: Text(
+                    text, 
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
                 ),
-              )
-            ],
-          ),
-        );
-      }
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

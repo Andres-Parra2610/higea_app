@@ -23,6 +23,7 @@ class _ShowDialogWidgetState extends State<ShowDialogWidget> {
 
   bool isLoading = false;
 
+
   @override
   Widget build(BuildContext context){
 
@@ -32,24 +33,31 @@ class _ShowDialogWidgetState extends State<ShowDialogWidget> {
     final String appoimentHour = Helpers.transformHour(widget.appoiment.horaCita);
     final String appoimentDate = DateFormat('dd-MM-yyyy').format(widget.appoiment.fechaCita);
     final User user = User.fromRawJson(UserPreferences.user);
-
+    final Appoiment currentAppoiment = widget.appoiment;
+    final String appoimentToBd = currentAppoiment.fechaCita.toString().split(' ')[0];
+  
     return AlertDialog(
       scrollable: true,
       buttonPadding: const EdgeInsets.all(25),
       actions: [
         TextButton(
-          onPressed:  isLoading ? null : () => Navigator.pop(context),
+          onPressed:  isLoading ? null : ()async{
+            await NotificationService.showNotification();
+            Navigator.pop(context);
+          },
           child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16),),
         ),
         TextButton(
           onPressed: isLoading 
             ? null 
-            : (){
+            : () async{
                 setState(() => isLoading = true);
+                final navigator = Navigator.of(context);
                 widget.appoiment.cedulaPaciente = user.cedulaPaciente;
-                appoimetnProvider.newApoiment(widget.appoiment);
+                await appoimetnProvider.newApoiment(widget.appoiment);
                 setState(() => isLoading = false);
-                Navigator.pop(context, true);
+                await appoimetnProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimetnProvider.date);
+                navigator.pop(true);
               },
           child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
         ),
