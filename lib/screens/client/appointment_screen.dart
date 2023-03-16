@@ -387,21 +387,32 @@ class _AppoimentStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser;
+    final size = MediaQuery.of(context).size;
 
     final String appoimentHour = Helpers.transformHour(appoiment.horaCita);
-    String text;
-    int bgColor;
+    String text = "Disponible";
+    int bgColor = AppTheme.primaryColor;
+    String actionText = "Reservar";
+    
+    //Cita con gisela el lunes 27 de marzo
+   
 
-    if((currentUser.cedulaPaciente == appoiment.cedulaPaciente) && appoiment.citaEstado == "Ocupada"){
-      text = "Reservada";
-      bgColor = 0xFF45BB1B;
-    }else if(appoiment.citaEstado == "Ocupada"){
+    if((currentUser.cedulaPaciente == appoiment.cedulaPaciente) && appoiment.idCita != 0){
+      if(appoiment.citaEstado == "cancelada"){
+        text = "Cancelada";
+        actionText = " ";
+        bgColor = 0xFFFF8A00;
+      }else{
+        actionText = "Cancelar";
+        text = "Reservada";
+        bgColor = 0xFF45BB1B;
+      }
+    }else if(appoiment.citaEstado == "ocupada"){
       text = "Ocupada";
+      actionText = " ";
       bgColor = AppTheme.secondaryColor;
-    }else{
-      text = "Diponible";
-      bgColor = AppTheme.primaryColor;
     }
 
 
@@ -414,7 +425,7 @@ class _AppoimentStatus extends StatelessWidget {
               color: Color(bgColor).withOpacity(0.05),
               borderRadius: BorderRadius.circular(10)
             ),
-            padding: const EdgeInsets.symmetric(vertical:15, horizontal: 40),
+            padding: EdgeInsets.symmetric(vertical:15, horizontal: size.width * 0.020),
             child: Text(appoimentHour, style: const TextStyle(fontSize: 16)),
           ),
       
@@ -423,31 +434,50 @@ class _AppoimentStatus extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(10),
               splashColor: Colors.black,
-              onTap: appoiment.citaEstado == "Ocupada" 
-                ? null
-                : () async {
-                  final result = await showDialog(context: context, builder: (context) => ShowDialogWidget(appoiment: appoiment));
-                  
-                  if(result == null) return;
+              onTap: actionText == "Cancelar"
+                ? () => _cancelAppoiment(context)
+                : appoiment.idCita == 0 || actionText == "Reservar"
+                  ? () => _confirmAppoiment(context)
+                  : null,
 
-                  SnackBarWidget.showSnackBar('La cita fué reservada exitosamente', AppTheme.primaryColor);
-                },
               child: Container(
                 decoration: BoxDecoration(
                   color: Color(bgColor).withOpacity(0.8),
                   borderRadius: BorderRadius.circular(10)
                 ),
-                padding: const EdgeInsets.symmetric(vertical:15),
-                child: Center(
-                  child: Text(
-                    text, 
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(actionText, style: const TextStyle(fontSize: 13, color: Colors.white))
+                  ],
                 ),
               ),
             ),
           )
-        ],
+        ],  
       ),
     );
+  }
+
+  _confirmAppoiment(BuildContext context) async {
+
+    final result = await showDialog(context: context, builder: (context) => ConfirmAppoimentWidget(appoiment: appoiment));              
+    if(result == null) return;
+
+    result
+      ? SnackBarWidget.showSnackBar('La cita fué reservada exitosamente', AppTheme.primaryColor)
+      : SnackBarWidget.showSnackBar('Error al reservar la ctia médica');
+  }
+
+  _cancelAppoiment(BuildContext context) async {
+    final result = await showDialog(context: context, builder: (context) => CancelAppoimentWidget(appoiment: appoiment,));
+
+    if(result == null) return;
+
+    result
+      ? SnackBarWidget.showSnackBar('La cita fué cancelada', AppTheme.primaryColor)
+      : SnackBarWidget.showSnackBar('Error al cancelar la ctia médica');
   }
 }

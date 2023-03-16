@@ -1,4 +1,3 @@
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -20,7 +19,7 @@ class NotificationService {
     await notificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showNotification() async{
+  static Future<void> showNotification(int idCita, DateTime date) async{
 
     const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
         'cita_medica', 
@@ -32,14 +31,16 @@ class NotificationService {
     const NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails
     );
-    
-    
+
+    final location = tz.local;
+    final tz.TZDateTime dateNotification = tz.TZDateTime.from(date.subtract(const Duration(days: 1)), location);
+
 
     await notificationsPlugin.zonedSchedule(
-      1, 
+      idCita, 
       'Recordatorio de cita médica', 
       'Recuerda que el día de mañana tienes una cita médica,  no la olvides!',
-      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      dateNotification,
       notificationDetails,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,

@@ -22,17 +22,24 @@ class CardWidget extends StatelessWidget {
         elevation: 1,
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-              child: Image(
-                image: NetworkImage(speciality.imagenEspecialidad!),
-                height: 110,
-                width: double.infinity,
-                fit: BoxFit.cover,
+
+            Expanded(
+              flex: 2,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
+                child: Image(
+                  image: NetworkImage(speciality.imagenEspecialidad!),
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            const SizedBox(height: 10),
-            Text(speciality.nombreEspecialidad, style: Theme.of(context).textTheme.titleMedium,)
+
+            Expanded(
+              child: Center(
+                child: Text(speciality.nombreEspecialidad, style: Theme.of(context).textTheme.titleMedium)
+              )
+            )
           ],
         ),
       ),

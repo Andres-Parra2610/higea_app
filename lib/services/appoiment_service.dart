@@ -7,7 +7,6 @@ class AppoimentService {
 
   static final server = dotenv.env['SERVER_PATH'];
 
-
   static Future getAppoiments(doctorCi, date) async{
     final url = Uri.parse('$server/appoiment/$doctorCi/$date');
     final response = await http.get(url);
@@ -24,4 +23,17 @@ class AppoimentService {
     return data;
   }
   
+  static Future cancelAppoiment(appoimentId) async{
+    final url = Uri.parse('$server/appoiment/cancel/$appoimentId');
+    final response = await http.put(url);
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    return data;
+  }
+
+  static Future insertExistAppoiment(appoimentId, patientCi) async{
+    final url = Uri.parse('$server/appoiment/update/$appoimentId/$patientCi');
+    final response = await http.put(url);
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    return data;
+  }
 }

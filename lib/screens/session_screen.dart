@@ -12,7 +12,7 @@ const SessionScreen({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){
     
-
+    UserPreferences.deleteUser();
     if(UserPreferences.user == ''){
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(

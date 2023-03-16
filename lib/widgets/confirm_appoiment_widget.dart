@@ -7,8 +7,8 @@ import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/models/models.dart';
 
-class ShowDialogWidget extends StatefulWidget {
-  const ShowDialogWidget({ 
+class ConfirmAppoimentWidget extends StatefulWidget {
+  const ConfirmAppoimentWidget({ 
     Key? key,
     required this.appoiment
   }) : super(key: key);
@@ -16,10 +16,10 @@ class ShowDialogWidget extends StatefulWidget {
   final Appoiment appoiment;
 
   @override
-  State<ShowDialogWidget> createState() => _ShowDialogWidgetState();
+  State<ConfirmAppoimentWidget> createState() => _ConfirmAppoimentWidgetState();
 }
 
-class _ShowDialogWidgetState extends State<ShowDialogWidget> {
+class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
 
   bool isLoading = false;
 
@@ -41,10 +41,7 @@ class _ShowDialogWidgetState extends State<ShowDialogWidget> {
       buttonPadding: const EdgeInsets.all(25),
       actions: [
         TextButton(
-          onPressed:  isLoading ? null : ()async{
-            await NotificationService.showNotification();
-            Navigator.pop(context);
-          },
+          onPressed:  isLoading ? null : () => Navigator.pop(context),
           child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16),),
         ),
         TextButton(
@@ -54,10 +51,12 @@ class _ShowDialogWidgetState extends State<ShowDialogWidget> {
                 setState(() => isLoading = true);
                 final navigator = Navigator.of(context);
                 widget.appoiment.cedulaPaciente = user.cedulaPaciente;
-                await appoimetnProvider.newApoiment(widget.appoiment);
+                final res = currentAppoiment.idCita == 0 
+                  ? await appoimetnProvider.newApoiment(widget.appoiment)
+                  : await appoimetnProvider.updateAppoiment(currentAppoiment.idCita, user.cedulaPaciente);
                 setState(() => isLoading = false);
                 await appoimetnProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimetnProvider.date);
-                navigator.pop(true);
+                res == false ? navigator.pop(false) : navigator.pop(true);
               },
           child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
         ),

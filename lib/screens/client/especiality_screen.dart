@@ -72,7 +72,7 @@ class _EspecialistAppBar extends StatelessWidget {
                 name, 
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
               )
             ],
           ),
@@ -127,38 +127,43 @@ class _EspecialistList extends StatelessWidget {
                 ? 'assets/doctora-avatar.jpg'
                 : 'assets/doctor-avatar.jpg'; 
 
+
               return Column(
                 children: [
-                  ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
-                    onTap: () {
+                  InkWell(
+                    onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: snapshot.data![index])));
                     },
-                    leading: CircleAvatar(
-                      backgroundImage: AssetImage(img),
-                      radius: 30,
-                    ),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('$prefix $name $lastName',style: const TextStyle(
-                          color: Color(AppTheme.primaryColor),
-                          fontWeight: FontWeight.bold
-                        )),
-                        //const Text('Pediatra')
-                      ],
-                    ),
-                    trailing: Container(
-                      margin: const EdgeInsets.only(top: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
+                      child: Row(
                         children: [
-                          const Text('Horario'),
-                          Text('$startTime - $endTime')
+                          CircleAvatar(
+                            backgroundImage: AssetImage(img),
+                            radius: 30,
+                          ),
+
+                          const SizedBox(width: 40),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('$prefix $name $lastName',style: const TextStyle(
+                                color: Color(AppTheme.primaryColor),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16
+                              )),
+
+                              const SizedBox(height: 10),
+                              const Text('Horario de atención'),
+                              Text('$startTime - $endTime'),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                   ),
+
                   const Divider()
                 ],
               );

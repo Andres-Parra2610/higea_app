@@ -36,6 +36,7 @@ class _Especialities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
     final doctorProvider = Provider.of<DoctorProvider>(context);
 
     return Container(
@@ -67,15 +68,15 @@ class _Especialities extends StatelessWidget {
               }
           
               if(specialities.isEmpty) return const NotFoundWidget();
-          
+
               return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
-                  childAspectRatio: 3/2.5,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.0,
                   mainAxisSpacing: 10,
-                  crossAxisSpacing: 10
+                  crossAxisSpacing: 10,
                 ), 
                 itemCount: specialities.length, //snapshot.data!.length,
                 itemBuilder: (_, index){

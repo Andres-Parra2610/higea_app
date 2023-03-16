@@ -38,6 +38,7 @@ class AppoimentProvider extends ChangeNotifier{
     final result = res["results"] as List<dynamic>;
     
     appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+
     date = completeDate;
     loading = false;
     notifyListeners();
@@ -45,9 +46,38 @@ class AppoimentProvider extends ChangeNotifier{
 
 
   Future newApoiment(Appoiment newAppoiment) async{
-    final res = await AppoimentService.insetAppoiment(newAppoiment);
 
-    print(res);
+    final Map<String, dynamic> res = await AppoimentService.insetAppoiment(newAppoiment);
+
+    if(res["ok"] == false) return false;
+
+    final Appoiment succesAppoiment = Appoiment.fromJson(res["result"]);
+
+    await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
+
+    final List list = await NotificationService.notificationsPlugin.pendingNotificationRequests();
+
+    for(var notification in list){
+      print(notification.id);
+    }
+  }
+
+  Future cancelAppoiment(appoimentId) async{
+    final Map<String, dynamic> res = await AppoimentService.cancelAppoiment(appoimentId);
+
+    if(res["ok"] == false) return false;
+
+    await NotificationService.notificationsPlugin.cancel(appoimentId);
+  }
+
+  Future updateAppoiment(appoimentId, patientCi) async{
+    final Map<String, dynamic> res = await AppoimentService.insertExistAppoiment(appoimentId, patientCi);
+    if(res["ok"] == false) return false;
+
+    final Appoiment succesAppoiment = Appoiment.fromJson(res["result"]);
+
+    await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
+
   }
 
 
