@@ -7,7 +7,7 @@ class AppTheme{
 
   static const int primaryColor = 0xff005CB9;
   static const int secondaryColor = 0xffE1251B;
-  static const double horizontalPadding = 30;
+  static const double horizontalPadding = 20;
 
   static final ThemeData lightTheme = ThemeData(
 

@@ -75,7 +75,6 @@ class AuthProvider extends ChangeNotifier{
   Future confirmEmail(String codeVerication) async{
 
     formRegisterValues['codeVerification'] = codeVerication;
-
     Map<String, dynamic> data = await AuthService.confirmEmail(formRegisterValues);
 
     if(data['ok'] == false){
@@ -86,7 +85,6 @@ class AuthProvider extends ChangeNotifier{
     final createGlobalUser = User.fromRawJson(preferences);
     currentUser = createGlobalUser;
     return true;
-    
   }
 
 

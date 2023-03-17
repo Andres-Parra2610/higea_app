@@ -27,7 +27,7 @@ const RegisterScreen({ Key? key }) : super(key: key);
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Text('Regístrate', style: textTheme.headline5)),
+              Center(child: Text('Regístrate', style: textTheme.headlineSmall)),
         
               const SizedBox(height: 20),
         
@@ -35,8 +35,8 @@ const RegisterScreen({ Key? key }) : super(key: key);
                 'Datos personsales',
                 style: TextStyle(
                   color: const Color(AppTheme.primaryColor),
-                  fontSize: textTheme.subtitle2!.fontSize,
-                  fontWeight: textTheme.subtitle2!.fontWeight,
+                  fontSize: textTheme.titleSmall!.fontSize,
+                  fontWeight: textTheme.titleSmall!.fontWeight,
                 ),
               ),
 
@@ -144,7 +144,14 @@ class _RegisterForm extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          HigeaTextFieldPassword(formValues: registerProvider.formRegisterValues),
+          HigeaTextFieldPassword(
+            onchanged: (value) => registerProvider.formRegisterValues['password'] = value,
+            validate: (value){
+              if (value!.trim().isEmpty) return 'Debe colocar una contraseña';
+              if(value.trim().length < 7) return 'La contraseña debe tener mínimo 7 caracteres';
+              return null;
+            },
+          ),
 
           const SizedBox(height: 20),
 
@@ -168,7 +175,7 @@ class _RegisterForm extends StatelessWidget {
                
               }, 
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15), 
+                padding: const EdgeInsets.symmetric(vertical: 10), 
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

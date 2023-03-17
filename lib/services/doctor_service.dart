@@ -16,7 +16,7 @@ class DoctorServices {
 
   static Future getDoctorBySpeciality(id) async{
     
-    final url = Uri.http("192.168.1.106:3001", '/speciality/doctors', {
+    final url = Uri.http("192.168.1.107:3001", '/speciality/doctors', {
       'id': '$id'
     });
 

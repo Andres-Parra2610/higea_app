@@ -102,17 +102,30 @@ class _LoginForm extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            HigeaTextFieldPassword(formValues: formValues),
+            HigeaTextFieldPassword(
+              onchanged: (value) => formValues['password'] = value,
+              validate: (value){
+                if (value!.trim().isEmpty) return 'Debe colocar una contraseña';
+                if(value.trim().length < 7) return 'La contraseña debe tener mínimo 7 caracteres';
+                return null;
+              },
+            ),
 
             const SizedBox(height: 20),
 
-            Text(
-              '¿Olvidó su contraseña?',
-              style: TextStyle(
-                color: const Color(AppTheme.secondaryColor),
-                fontSize: textTheme.titleSmall!.fontSize,
-                fontWeight: textTheme.titleSmall!.fontWeight,
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black12
               ),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPassword())),
+              child: Text(
+                '¿Olvidó su contraseña?',
+                style: TextStyle(
+                  color: const Color(AppTheme.secondaryColor),
+                  fontSize: textTheme.titleSmall!.fontSize,
+                  fontWeight: textTheme.titleSmall!.fontWeight,
+                ),
+              )
             ),
 
             const SizedBox(height: 20),
@@ -135,12 +148,12 @@ class _LoginForm extends StatelessWidget {
                     if(!res){
                       SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
                     }else{
-                      navigator.push(MaterialPageRoute(builder: (context) => const HomeClientScreen()));
+                      navigator.push(MaterialPageRoute(builder: (context) => const PageTabScreen()));
                     }
 
                   }, 
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15), 
+                  padding: const EdgeInsets.symmetric(vertical: 10), 
                   child: loginProvider.loading
                     ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
                     : const Text('Ingresar')

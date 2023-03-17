@@ -396,7 +396,6 @@ class _AppoimentStatus extends StatelessWidget {
     int bgColor = AppTheme.primaryColor;
     String actionText = "Reservar";
     
-    //Cita con gisela el lunes 27 de marzo
    
 
     if((currentUser.cedulaPaciente == appoiment.cedulaPaciente) && appoiment.idCita != 0){

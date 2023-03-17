@@ -24,6 +24,7 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
   bool isLoading = false;
 
 
+
   @override
   Widget build(BuildContext context){
 
@@ -39,6 +40,7 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
     return AlertDialog(
       scrollable: true,
       buttonPadding: const EdgeInsets.all(25),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
       actions: [
         TextButton(
           onPressed:  isLoading ? null : () => Navigator.pop(context),
@@ -75,10 +77,6 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
               
               TextFormField(
                 initialValue: '${user.nombrePaciente} ${user.apellidoPaciente}',
-                /* decoration: const InputDecoration(
-                  helperText: 'Nota: Si el paciente es menor o de tercera edad debe dirigirse a la fundación con un representante',
-                  helperMaxLines: 3,
-                ), */
                 readOnly: true,
               ),
 

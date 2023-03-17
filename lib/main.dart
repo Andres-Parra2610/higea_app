@@ -38,6 +38,7 @@ class MyAppState extends StatelessWidget{
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => DoctorProvider()),
         ChangeNotifierProvider(create: (context) => AppoimentProvider()),
+        ChangeNotifierProvider(create: (context) => RecoveryPasswordProvider()),
       ],
       child: const MyApp(),
     );
@@ -62,7 +63,8 @@ class MyApp extends StatelessWidget{
         'register': (_) => const RegisterScreen(),
         'confirm': (_) => const ConfirmEmailScreen(),
         'home-client': (_) => const PageTabScreen(),
-        'session': (_) => const SessionScreen() 
+        'session': (_) => const SessionScreen(),
+        'recovery_password': (_) => const RecoveryPassword()
       },
     );
   }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:higea_app/providers/auth_provider.dart';
@@ -40,7 +39,7 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                   overflow: TextOverflow.ellipsis, 
                   maxLines: 2,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: textTheme.subtitle2!.fontSize),
+                  style: TextStyle(fontSize: textTheme.titleSmall!.fontSize),
                 )
               ),
 
@@ -83,7 +82,7 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                     );
                   }
                 }, 
-                child: const Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text('Confirmar'),),
+                child: const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Text('Confirmar'),),
               ),
             )
             ],

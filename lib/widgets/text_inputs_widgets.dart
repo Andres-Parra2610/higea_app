@@ -42,10 +42,14 @@ class HigeaTextField extends StatelessWidget {
 class HigeaTextFieldPassword extends StatefulWidget {
   const HigeaTextFieldPassword({
     Key? key, 
-    required this.formValues
+    required this.validate,
+    this.onchanged,
   }) : super(key: key);
 
-  final Map<String, dynamic> formValues;
+ 
+  
+  final Function validate;
+  final Function? onchanged;
 
   @override
   State<HigeaTextFieldPassword> createState() => _HigeaTextFieldPasswordState();
@@ -68,12 +72,8 @@ class _HigeaTextFieldPasswordState extends State<HigeaTextFieldPassword> {
             : const Icon(Icons.visibility)
         )
       ),
-      onChanged: (value) => widget.formValues['password'] = value,
-      validator: (value) {
-        if (value!.trim().isEmpty) return 'Debe colocar una contraseña';
-        if(value.trim().length < 7) return 'La contraseña debe tener mínimo 7 caracteres';
-        return null;
-      },
+      onChanged: widget.onchanged == null ? null : (value) => widget.onchanged!(value),
+      validator: (value) => widget.validate(value),
     );
   }
 }

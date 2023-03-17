@@ -32,7 +32,7 @@ class _CancelAppoimentWidgetState extends State<CancelAppoimentWidget> {
     return AlertDialog(
       scrollable: false,
       title: const Text('¿Deseas cancelar la cita?'),
-
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
       actions: [
         TextButton(
           onPressed: isLoading ? null : () => Navigator.pop(context),
