@@ -8,21 +8,28 @@ class RecoveryPasswordProvider extends ChangeNotifier {
   final GlobalKey<FormState> codeVerificationKey = GlobalKey<FormState>();
   final GlobalKey<FormState> updatePasswordKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _isError = false;
   String userCi = '';
   String codeVerification = '';
   String userPassword = '';
   late User user;
 
   bool get isLoading => _isLoading;
+  bool get isError => _isError;
+
 
   set isLoading(bool value){
     _isLoading = value;
     notifyListeners();
   }
 
+  set isError(bool value){
+    _isError = value;
+    notifyListeners();
+  }
+
   Future getPatientByCi() async {
     isLoading = true;
-
     Map<String, dynamic> data = await AuthService.getPatient(userCi);
 
     if(data["ok"] == false){
@@ -32,6 +39,33 @@ class RecoveryPasswordProvider extends ChangeNotifier {
 
     user = User.fromJson(data['user']);
     isLoading = false;
+    return true;
+  }
+
+  Future sendCode() async {
+    isLoading = true;
+
+    Map<String, dynamic> data = await AuthService.codeVerification(codeVerification);
+
+    if(data['ok'] == false){
+      isLoading = false;
+      isError = true;
+      return false;
+    }
+
+    isLoading = true;
+    return true;
+  }
+
+
+  Future newPassword() async{
+
+    Map<String, dynamic> reqBody = {'newPassword': userPassword, 'userCi': user.cedulaPaciente};
+
+    Map<String, dynamic> data = await AuthService.updatePassword(reqBody);
+
+    if(data['ok'] == false) return false;
+
     return true;
   }
 }

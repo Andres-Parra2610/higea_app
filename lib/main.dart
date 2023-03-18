@@ -62,9 +62,9 @@ class MyApp extends StatelessWidget{
         'login': (_) => const LoginScreen(),
         'register': (_) => const RegisterScreen(),
         'confirm': (_) => const ConfirmEmailScreen(),
-        'home-client': (_) => const PageTabScreen(),
+        'home-client': (_) => const IndexScreen(),
         'session': (_) => const SessionScreen(),
-        'recovery_password': (_) => const RecoveryPassword()
+        //'recovery_password': (_) => const RecoveryPassword()
       },
     );
   }

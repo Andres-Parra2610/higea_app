@@ -117,7 +117,7 @@ class _LoginForm extends StatelessWidget {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black12
               ),
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPassword())),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPasswordScreen())),
               child: Text(
                 '¿Olvidó su contraseña?',
                 style: TextStyle(
@@ -148,7 +148,10 @@ class _LoginForm extends StatelessWidget {
                     if(!res){
                       SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
                     }else{
-                      navigator.push(MaterialPageRoute(builder: (context) => const PageTabScreen()));
+                      navigator.pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => const IndexScreen()), 
+                        (route) => false
+                      );
                     }
 
                   }, 

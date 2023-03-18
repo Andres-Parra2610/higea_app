@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
 
-class RecoveryPassword extends StatelessWidget {
-const RecoveryPassword({ Key? key }) : super(key: key);
+class RecoveryPasswordScreen extends StatelessWidget {
+const RecoveryPasswordScreen({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context){

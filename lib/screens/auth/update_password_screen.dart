@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
-import 'package:higea_app/widgets/text_inputs_widgets.dart';
+import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class UpdatePasswordScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ const UpdatePasswordScreen({ Key? key }) : super(key: key);
     return WillPopScope(
       onWillPop: (){
         Navigator.popUntil(context, (route) => route.isFirst);
-        return Future.value(true);
+        return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -25,6 +25,7 @@ const UpdatePasswordScreen({ Key? key }) : super(key: key);
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: (){
+              //TODO VALIDAR ESTO
               Navigator.popUntil(context, (route) => route.isFirst);
             },
           ),
@@ -56,17 +57,21 @@ const UpdatePasswordScreen({ Key? key }) : super(key: key);
   }
 }
 
-class _UpdatePasswordForm extends StatelessWidget {
-  const _UpdatePasswordForm({
-    super.key,
-   
-  });
+class _UpdatePasswordForm extends StatefulWidget {
+  const _UpdatePasswordForm();
 
+  @override
+  State<_UpdatePasswordForm> createState() => _UpdatePasswordFormState();
+}
+
+class _UpdatePasswordFormState extends State<_UpdatePasswordForm> {
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
 
-    final recoveryProvider = Provider.of<RecoveryPasswordProvider>(context);
+    final recoveryProvider = Provider.of<RecoveryPasswordProvider>(context, listen: false);
 
     return Form(
       key: recoveryProvider.updatePasswordKey,
@@ -98,15 +103,34 @@ class _UpdatePasswordForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: (){
+              onPressed: isLoading ? null : () async{
                 if(!recoveryProvider.updatePasswordKey.currentState!.validate()) return;
-                
+                final navigator = Navigator.of(context);
+                setState(()=> isLoading = true);
+
+                final res = await recoveryProvider.newPassword();
+
+                if(res){
+                  SnackBarWidget.showSnackBar('La contraseña fué cambiada con éxito', AppTheme.primaryColor);
+                  await Future.delayed(const Duration(seconds: 3));
+                  navigator.popUntil((route) => route.isFirst);
+                }else{
+                  SnackBarWidget.showSnackBar('Un error ha ocurrido al cambiar la contraseña');
+                }
+
+                setState(()=> isLoading = false);
               }, 
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10), 
-                child: Text('Recuperar contraseña'),
+                child: Text('Cambiar contraseña'),
               )
             ),
+          ),
+
+          const SizedBox(height: 50),
+
+          !isLoading ? Container() : const Center(
+            child: CircularProgressIndicator.adaptive(),
           )
         ],
       )

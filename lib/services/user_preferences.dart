@@ -18,7 +18,8 @@ class UserPreferences{
     _prefers.setString('user', user);
   }
 
-  static deleteUser(){
-    _prefers.remove('user');
+  static Future deleteUser() async{
+    _user = '';
+    await _prefers.remove('user');
   }
 }

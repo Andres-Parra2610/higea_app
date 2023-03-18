@@ -23,10 +23,14 @@ const RecoveryPasswordWidget({ Key? key }) : super(key: key);
         ),
 
         TextButton(
-          onPressed: (){
+          onPressed: () async{
             if(!recoveryPorovider.codeVerificationKey.currentState!.validate()) return;
+            final navigator = Navigator.of(context);
+            final response = await recoveryPorovider.sendCode();
 
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const UpdatePasswordScreen()));
+            response 
+              ? navigator.push(MaterialPageRoute(builder: (context)=> const UpdatePasswordScreen()))
+              : null;
           }, 
           child: const Text('Continuar', style: TextStyle(fontSize: 16),)
         )
@@ -41,9 +45,7 @@ const RecoveryPasswordWidget({ Key? key }) : super(key: key);
 }
 
 class _FormInputCodeVerification extends StatelessWidget {
-  const _FormInputCodeVerification({
-    super.key,
-  });
+  const _FormInputCodeVerification();
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +74,39 @@ class _FormInputCodeVerification extends StatelessWidget {
             ),
           ),
 
-          Container(
-            margin: const EdgeInsets.only(top: 30),
-            child: const CircularProgressIndicator.adaptive()
-          ),
+
+          const _ShowLoadingOrError(),
         ],
       ),
     );
+  }
+}
+
+class _ShowLoadingOrError extends StatelessWidget {
+  const _ShowLoadingOrError();
+
+  @override
+  Widget build(BuildContext context) {
+    final recoveryPorovider = Provider.of<RecoveryPasswordProvider>(context);
+
+    if(recoveryPorovider.isLoading){
+      return Container(
+        margin: const EdgeInsets.only(top: 30),
+        child: const CircularProgressIndicator.adaptive()
+      );
+    }
+
+
+    if(recoveryPorovider.isError){
+      return Container(
+        margin: const EdgeInsets.only(top: 30),
+        child: const Text(
+          'Códivo de verificación inválido',
+          style: TextStyle(fontSize: 14, color: Color(AppTheme.secondaryColor))
+        )
+      );
+    }
+
+    return Container();
   }
 }

@@ -167,7 +167,7 @@ class _RegisterForm extends StatelessWidget {
                 final navigator = Navigator.of(context);
                 final res = await registerProvider.registerUser();
                 
-                registerProvider.loading = true;
+                registerProvider.loading = false;
                 
                 !res 
                   ? SnackBarWidget.showSnackBar('Usuario ya registrado')

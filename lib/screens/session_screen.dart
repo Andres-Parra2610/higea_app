@@ -7,12 +7,14 @@ import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
 
 class SessionScreen extends StatelessWidget {
-const SessionScreen({ Key? key }) : super(key: key);
+const SessionScreen({ Key? key}) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context){
     
-    UserPreferences.deleteUser();
+
     if(UserPreferences.user == ''){
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(
@@ -27,7 +29,7 @@ const SessionScreen({ Key? key }) : super(key: key);
 
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const PageTabScreen(),
+          pageBuilder: (_, __, ___) => const IndexScreen(),
           transitionDuration: const Duration(seconds: 0)
         ));
       });

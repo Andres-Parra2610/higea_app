@@ -68,16 +68,19 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async{
+                  registerProvider.loading = true;
                   if(!_textKey.currentState!.validate()) return;
                   final navigator = Navigator.of(context);
                   
                   final res = await registerProvider.confirmEmail(codeValidation);
                   
+                  registerProvider.loading = false;
+
                   if(!res){
                     SnackBarWidget.showSnackBar('Código de verificación inválido');
                   }else{
                     navigator.pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const PageTabScreen()), 
+                      MaterialPageRoute(builder: (_) => const IndexScreen()), 
                       (route) => false
                     );
                   }
