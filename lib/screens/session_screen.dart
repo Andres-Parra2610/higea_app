@@ -14,7 +14,7 @@ const SessionScreen({ Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context){
     
-
+    
     if(UserPreferences.user == ''){
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(
@@ -24,12 +24,21 @@ const SessionScreen({ Key? key}) : super(key: key);
       });
     }else{
 
-      final user = User.fromRawJson(UserPreferences.user);
-      Provider.of<AuthProvider>(context, listen: false).currentUser = user;
+      final idRol = UserPreferences.idRol;
+      Widget screen = const IndexScreen();
+
+      if(idRol == 3){
+        final user = User.fromRawJson(UserPreferences.user);
+        Provider.of<AuthProvider>(context, listen: false).currentUser = user;
+      }else{
+        final doctor = Doctor.fromRawJson(UserPreferences.user);
+        Provider.of<AuthProvider>(context, listen: false).currentDoctor = doctor;
+        screen = const HomeDoctorScreen();
+      }
 
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(
-          pageBuilder: (_, __, ___) => const IndexScreen(),
+          pageBuilder: (_, __, ___) => screen,
           transitionDuration: const Duration(seconds: 0)
         ));
       });

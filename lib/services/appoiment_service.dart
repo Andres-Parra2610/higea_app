@@ -7,8 +7,11 @@ class AppoimentService {
 
   static final server = dotenv.env['SERVER_PATH'];
 
-  static Future getAppoiments(doctorCi, date) async{
-    final url = Uri.parse('$server/appoiment/$doctorCi/$date');
+  static Future getAppoiments(doctorCi, [date = '']) async{
+
+    final url = Uri.http('192.168.1.107:3001', '/appoiment/$doctorCi', {
+      'date': '$date'
+    });
     final response = await http.get(url);
     final data =  jsonDecode(response.body) as Map<String, dynamic>;
     return data;

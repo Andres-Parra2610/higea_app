@@ -16,55 +16,61 @@ const LoginScreen({ Key? key }) : super(key: key);
     final textTheme = Theme.of(context).textTheme;
     final loginProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    return Scaffold(
-      body:  Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              SvgPicture.asset(
-                'assets/logo-higea.svg',
-                width: 110,
-              ),
-              
-          
-              const SizedBox(height: 30),
-          
-              Text('Iniciar sesión', style: textTheme.headlineSmall),
-          
-              const SizedBox(height: 30),
-          
-              const _LoginForm(),
-          
-              const SizedBox(height: 20),
-          
-              GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => const RegisterScreen(), maintainState: false)
-                  );
-                  FocusScope.of(context).unfocus();
-                  loginProvider.formLoginKey.currentState!.reset();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('¿No posees cuenta? ', style: textTheme.titleSmall,),
-                    Text('Regístrate', style: TextStyle(
-                      fontSize: textTheme.titleSmall!.fontSize,
-                      fontWeight: textTheme.titleSmall!.fontWeight,
-                      color: const Color(AppTheme.secondaryColor)
-                    ))
-                  ],
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return Future.value(true);
+      },
+      child: Scaffold(
+        body:  Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+    
+                SvgPicture.asset(
+                  'assets/logo-higea.svg',
+                  width: 110,
                 ),
-              )
-          
-            ],
-          ),
+                
+            
+                const SizedBox(height: 30),
+            
+                Text('Iniciar sesión', style: textTheme.headlineSmall),
+            
+                const SizedBox(height: 30),
+            
+                const _LoginForm(),
+            
+                const SizedBox(height: 20),
+            
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => const RegisterScreen(), maintainState: false)
+                    );
+                    FocusScope.of(context).unfocus();
+                    loginProvider.formLoginKey.currentState!.reset();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('¿No posees cuenta? ', style: textTheme.titleSmall,),
+                      Text('Regístrate', style: TextStyle(
+                        fontSize: textTheme.titleSmall!.fontSize,
+                        fontWeight: textTheme.titleSmall!.fontWeight,
+                        color: const Color(AppTheme.secondaryColor)
+                      ))
+                    ],
+                  ),
+                )
+            
+              ],
+            ),
+          )
         )
-      )
+      ),
     );
   }
 }
@@ -148,8 +154,13 @@ class _LoginForm extends StatelessWidget {
                     if(!res){
                       SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
                     }else{
+
+                      Widget screen = const IndexScreen();
+
+                      if(loginProvider.idRol != 3) screen = const HomeDoctorScreen();
+                      
                       navigator.pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => const IndexScreen()), 
+                        MaterialPageRoute(builder: (context) => screen), 
                         (route) => false
                       );
                     }

@@ -9,7 +9,6 @@ class User {
         required this.telefonoPaciente,
         required this.fechaNacimientoPaciente,
         this.activo,
-        this.idRol,
     });
 
     final int cedulaPaciente;
@@ -19,7 +18,6 @@ class User {
     final String telefonoPaciente;
     final DateTime fechaNacimientoPaciente;
     final int? activo;
-    final int? idRol;
 
     factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
@@ -32,7 +30,6 @@ class User {
         telefonoPaciente: json["telefono_paciente"],
         fechaNacimientoPaciente: DateTime.parse(json["fecha_nacimiento_paciente"]),
         activo: json["activo"],
-        idRol: json["id_rol"],
     );
 
 

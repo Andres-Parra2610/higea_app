@@ -22,8 +22,8 @@ void main() async{
   await NotificationService.initNotification();
   await UserPreferences.initPreferences();
   await dotenv.load(fileName: '.env');
-
-
+  await initializeDateFormatting();
+  
   runApp(const MyAppState());
 }
 
@@ -39,6 +39,7 @@ class MyAppState extends StatelessWidget{
         ChangeNotifierProvider(create: (context) => DoctorProvider()),
         ChangeNotifierProvider(create: (context) => AppoimentProvider()),
         ChangeNotifierProvider(create: (context) => RecoveryPasswordProvider()),
+        ChangeNotifierProvider(create: (context) => CalendarProvider()),
       ],
       child: const MyApp(),
     );

@@ -28,6 +28,8 @@ class AuthProvider extends ChangeNotifier{
   };
 
   late User currentUser;
+  late Doctor currentDoctor;
+  int idRol = 0;
 
   bool _loading = false;
 
@@ -49,11 +51,23 @@ class AuthProvider extends ChangeNotifier{
     Map<String, dynamic> data = await AuthService.loginUser(ci, password);
 
 
-    if(data.containsKey('user')){
+    if(data.containsKey('idRol')){
+
       final user = jsonEncode(data['user']);
       final preferences = UserPreferences.setUser = user;
-      final createGlobalUser = User.fromRawJson(preferences);
-      currentUser = createGlobalUser;
+
+      if(data["idRol"] == 3){
+        idRol = 3;
+        UserPreferences.setIdRol = idRol;
+        final createGlobalUser = User.fromRawJson(preferences);
+        currentUser = createGlobalUser;
+      }else{
+        idRol = 2;
+        UserPreferences.setIdRol = idRol;
+        final createGlobalUser = Doctor.fromRawJson(preferences);
+        currentDoctor = createGlobalUser;
+      }
+
       return true;
     }
 

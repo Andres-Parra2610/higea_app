@@ -80,5 +80,14 @@ class AppoimentProvider extends ChangeNotifier{
 
   }
 
+  Future showAppoimentToDoctors(doctorCi) async{
+    final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi);
+
+    
+    final Map<String, List<Appoiment>> events = Map.from(res['results']).map((k, v) => MapEntry<String, List<Appoiment>>(k, List<Appoiment>.from(v.map((x) => Appoiment.fromJson(x)))));
+
+    print(events['2023-03-13']);
+  }
+
 
 }
