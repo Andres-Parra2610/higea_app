@@ -11,8 +11,6 @@ class AppoimentProvider extends ChangeNotifier{
   bool loading = false;
   String date = '';
 
-  
-
   Future<Doctor> showDoctorDatesWork(ci) async{
 
     final Map<String, dynamic> response = await DoctorServices.getDoctorDatesWork(ci);

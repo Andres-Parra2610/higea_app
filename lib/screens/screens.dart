@@ -1,3 +1,4 @@
+export 'package:higea_app/screens/doctor/appoiments_details.dart';
 export 'package:higea_app/screens/doctor/home_doctor_screen.dart';
 export 'package:higea_app/screens/general/profile_screen.dart';
 export 'package:higea_app/screens/auth/update_password_screen.dart';

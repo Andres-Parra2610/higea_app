@@ -40,6 +40,7 @@ class MyAppState extends StatelessWidget{
         ChangeNotifierProvider(create: (context) => AppoimentProvider()),
         ChangeNotifierProvider(create: (context) => RecoveryPasswordProvider()),
         ChangeNotifierProvider(create: (context) => CalendarProvider()),
+        ChangeNotifierProvider(create: (context) => HistoryProvider()),
       ],
       child: const MyApp(),
     );
@@ -53,20 +54,23 @@ class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('es_ES');
-    return MaterialApp(
-      title: 'Higea Fundation Aplication',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      scaffoldMessengerKey: SnackBarWidget.scaffoldKey,
-      initialRoute: 'session',
-      routes: {
-        'login': (_) => const LoginScreen(),
-        'register': (_) => const RegisterScreen(),
-        'confirm': (_) => const ConfirmEmailScreen(),
-        'home-client': (_) => const IndexScreen(),
-        'session': (_) => const SessionScreen(),
-        //'recovery_password': (_) => const RecoveryPassword()
-      },
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: MaterialApp(
+        title: 'Higea Fundation Aplication',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        scaffoldMessengerKey: SnackBarWidget.scaffoldKey,
+        initialRoute: 'session',
+        routes: {
+          'login': (_) => const LoginScreen(),
+          'register': (_) => const RegisterScreen(),
+          'confirm': (_) => const ConfirmEmailScreen(),
+          'home-client': (_) => const IndexScreen(),
+          'session': (_) => const SessionScreen(),
+          //'recovery_password': (_) => const RecoveryPassword()
+        },
+      ),
     );
   }
 

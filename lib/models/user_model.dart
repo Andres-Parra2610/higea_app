@@ -19,6 +19,17 @@ class User {
     final DateTime fechaNacimientoPaciente;
     final int? activo;
 
+
+    User.empty() : 
+      cedulaPaciente = 0,
+      nombrePaciente = '',
+      apellidoPaciente = '',
+      correoPaciente = '',
+      telefonoPaciente = '',
+      fechaNacimientoPaciente = DateTime(0),
+      activo = 0;
+
+
     factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 
 
@@ -29,7 +40,7 @@ class User {
         correoPaciente: json["correo_paciente"],
         telefonoPaciente: json["telefono_paciente"],
         fechaNacimientoPaciente: DateTime.parse(json["fecha_nacimiento_paciente"]),
-        activo: json["activo"],
+        activo: json["activo"] ?? 0,
     );
 
 

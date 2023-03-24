@@ -40,4 +40,13 @@ class Helpers{
     return '$nameDay $day de $monthName';
   }
 
+  static String completeDateFromDateTime(DateTime date){
+    final String nameDay = DateFormat('EEEE', 'es_Es').format(date);
+    final String monthName = DateFormat('MMMM', 'es_Es').format(date);
+    final String day = DateFormat('d').format(date);
+    final String year = DateFormat('y').format(date);
+
+    return '$nameDay, $day de $monthName $year';
+  }
+
 }

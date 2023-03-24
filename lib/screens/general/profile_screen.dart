@@ -129,8 +129,9 @@ class _ConfirmLogout extends StatelessWidget{
           onPressed: () async{
             final navigator = Navigator.of(context);
             await UserPreferences.deleteUser();
-            navigator.pushReplacement(
+            navigator.pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => const SessionScreen()), 
+              (route) => false
             );
           }, 
           child: const Text('Aceptar', style: TextStyle(fontSize: 16))
