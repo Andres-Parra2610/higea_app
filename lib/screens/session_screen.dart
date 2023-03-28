@@ -30,10 +30,12 @@ const SessionScreen({ Key? key}) : super(key: key);
       if(idRol == 3){
         final user = User.fromRawJson(UserPreferences.user);
         Provider.of<AuthProvider>(context, listen: false).currentUser = user;
-      }else{
+      }else if(idRol == 2){
         final doctor = Doctor.fromRawJson(UserPreferences.user);
         Provider.of<AuthProvider>(context, listen: false).currentDoctor = doctor;
         screen = const HomeDoctorScreen();
+      }else{
+        screen = const HomeScreenAdmin();
       }
 
       Future.microtask((){

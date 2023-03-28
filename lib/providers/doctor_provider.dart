@@ -17,13 +17,17 @@ class DoctorProvider extends ChangeNotifier{
   }
 
   Future<List<Speciality>> showSpecialities() async{
+
+    //if(specialities.isNotEmpty) return specialities;
+    
     final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
 
     
     if(response['ok'] == false) return specialities = [];
 
     final results = response['results'] as List<dynamic>;
-    return specialities =  List<Speciality>.from(results.map((x) => Speciality.fromJson(x)));
+    specialities =  List<Speciality>.from(results.map((x) => Speciality.fromJson(x)));
+    return specialities;
   }
 
   Future<List<Doctor>> showDoctorBySpeciality(id) async{

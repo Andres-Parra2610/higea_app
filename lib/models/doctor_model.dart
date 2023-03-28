@@ -19,6 +19,15 @@ class Doctor {
     final String horaFin;
     final List<String>? fechas;
 
+    Doctor.empty() :
+      cedulaMedico = 0,
+      nombreMedico = '',
+      apellidoMedico = '',
+      sexoMedico = '',
+      horaInicio = '',
+      fechas = [],
+      horaFin = '';
+
     factory Doctor.fromRawJson(String str) => Doctor.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());

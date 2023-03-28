@@ -61,11 +61,13 @@ class AuthProvider extends ChangeNotifier{
         UserPreferences.setIdRol = idRol;
         final createGlobalUser = User.fromRawJson(preferences);
         currentUser = createGlobalUser;
-      }else{
+      }else if(data["idRol"] == 2){
         idRol = 2;
         UserPreferences.setIdRol = idRol;
         final createGlobalUser = Doctor.fromRawJson(preferences);
         currentDoctor = createGlobalUser;
+      }else if(data["idRol"] == 1){
+        idRol = 1;
       }
 
       return true;

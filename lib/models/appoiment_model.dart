@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:higea_app/models/models.dart';
 
-
-
 class Appoiment {
     Appoiment({
         required this.cedulaMedico,
         required this.fechaCita,
         required this.horaCita,
         this.user,
+        this.doctor,
         this.citaEstado,
         this.idCita,
         this.cedulaPaciente
@@ -20,6 +19,7 @@ class Appoiment {
     final String horaCita;
     final int? idCita;
     final User? user;
+    final Doctor? doctor;
     String? citaEstado;
     int? cedulaPaciente;
 
@@ -34,7 +34,8 @@ class Appoiment {
         fechaCita: DateTime.parse(json["fecha_cita"]),
         horaCita: json["hora_cita"],
         citaEstado: json["cita_estado"] ?? ' ',
-        user:  json["paciente"] == null ? User.empty() : User.fromJson(json["paciente"]) 
+        user:  json["paciente"] == null ? User.empty() : User.fromJson(json["paciente"]), 
+        doctor: json["doctor"] == null ? Doctor.empty() : Doctor.fromJson(json["doctor"]) 
     );
 
     Map<String, dynamic> toJson() => {

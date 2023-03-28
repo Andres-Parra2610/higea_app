@@ -9,8 +9,8 @@ class Speciality {
     });
 
     final int idespecialidad;
-    final String nombreEspecialidad;
-    final String? imagenEspecialidad;
+    String nombreEspecialidad;
+    String? imagenEspecialidad;
 
     factory Speciality.fromRawJson(String str) => Speciality.fromJson(json.decode(str));
 
@@ -23,7 +23,6 @@ class Speciality {
     );
 
     Map<String, dynamic> toJson() => {
-        "idespecialidad": idespecialidad,
         "nombre_especialidad": nombreEspecialidad,
         "imagen_especialidad": imagenEspecialidad,
     };

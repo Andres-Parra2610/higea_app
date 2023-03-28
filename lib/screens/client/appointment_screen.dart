@@ -352,7 +352,6 @@ class _AviableAppoiments extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final appoimentProvider = Provider.of<AppoimentProvider>(context);
-    final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser;
 
     if(appoimentProvider.loading){
       return const Center(child: CircularProgressIndicator.adaptive());
@@ -377,7 +376,6 @@ class _AviableAppoiments extends StatelessWidget {
 
 class _AppoimentStatus extends StatelessWidget {
   const _AppoimentStatus({
-    super.key,
     required this.appoiment,
   });
 

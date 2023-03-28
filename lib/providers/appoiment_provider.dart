@@ -4,12 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
+import 'package:intl/intl.dart';
 
 class AppoimentProvider extends ChangeNotifier{
 
   List<Appoiment> appoiments = [];
+  List<Appoiment> filterAppoiments = [];
   bool loading = false;
   String date = '';
+
+
+
+  Future getAllAppoiments() async{
+    final Map<String, dynamic> res = await AppoimentService.getAllAppoiments();
+    final result = res["results"] as List<dynamic>;
+    
+    appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+    filterAppoiments = appoiments;
+
+    notifyListeners();
+  }
 
   Future<Doctor> showDoctorDatesWork(ci) async{
 
@@ -85,6 +99,18 @@ class AppoimentProvider extends ChangeNotifier{
     final Map<String, List<Appoiment>> events = Map.from(res['results']).map((k, v) => MapEntry<String, List<Appoiment>>(k, List<Appoiment>.from(v.map((x) => Appoiment.fromJson(x)))));
 
     print(events['2023-03-13']);
+  }
+
+  void searchAppoimentByDate(date){
+    filterAppoiments = appoiments.where((appoiment){
+      final dateAppoimentFormat = DateFormat('dd/MM/yyyy').format(appoiment.fechaCita);
+      if(dateAppoimentFormat == date){
+        return true;
+      }
+      return false;
+    }).toList();
+
+    notifyListeners();
   }
 
 

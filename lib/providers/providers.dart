@@ -1,3 +1,4 @@
+export 'package:higea_app/providers/speciality_provider.dart';
 export 'package:higea_app/providers/history_provider.dart';
 export 'package:higea_app/providers/calendar_provider.dart';
 export 'package:higea_app/providers/recovery_password_provider.dart';

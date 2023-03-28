@@ -155,10 +155,16 @@ class _LoginForm extends StatelessWidget {
                       SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
                     }else{
 
-                      Widget screen = const IndexScreen();
+                      Widget screen;
 
-                      if(loginProvider.idRol != 3) screen = const HomeDoctorScreen();
-                      
+                      final  Map<int, dynamic> rol =  {
+                        1: const HomeScreenAdmin(),
+                        2: const HomeDoctorScreen(),
+                        3: const IndexScreen()
+                      };
+
+                      screen = rol[loginProvider.idRol];
+
                       navigator.pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => screen), 
                         (route) => false
