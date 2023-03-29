@@ -11,6 +11,14 @@ class SpecialityProvider extends ChangeNotifier{
   late Speciality currentSpeciality;
   PlatformFile? pickedImage;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value){
+    _isLoading = value;
+    notifyListeners();
+  } 
 
   SpecialityProvider(Speciality speciality){
     currentSpeciality = speciality;
@@ -29,10 +37,26 @@ class SpecialityProvider extends ChangeNotifier{
     }
   }
 
-
   Future insertSpeciality()async {
+    isLoading = true;
     final Map<String, dynamic> res = await SpecialityService.addSpeciality(currentSpeciality);
+    isLoading = false;
+    return res["ok"];
+  }
 
+
+  Future updateSpeciality() async{
+    isLoading = true;
+    final Map<String, dynamic> res = await SpecialityService.updateSpeciality(currentSpeciality);
+    isLoading = false;
+    return res["ok"];
+  }
+
+  Future deleteSpeciality(int id) async{
+    isLoading = true;
+    final Map<String, dynamic> res = await SpecialityService.removeSpeciality(id);
+    isLoading = false;
+    return res["ok"];
   }
 
   

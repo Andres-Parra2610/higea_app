@@ -32,9 +32,11 @@ class HomeScreenAdmin extends StatelessWidget {
             if(!PlatformDevice.isMobile) const Expanded(flex: 2, child: DrawerSlideWidget()),
             Expanded(
               flex: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                child: screen ?? const AppoimentListAdmin(),
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  child: screen ?? const AppoimentListAdmin(),
+                ),
               ),
             )
           ],

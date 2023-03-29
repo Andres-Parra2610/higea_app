@@ -44,7 +44,7 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
       actions: [
         TextButton(
           onPressed:  isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16),),
+          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16)),
         ),
         TextButton(
           onPressed: isLoading 

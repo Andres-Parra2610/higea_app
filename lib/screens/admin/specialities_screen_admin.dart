@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
+import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +23,6 @@ class SpecialitiesScreenAdmin extends StatelessWidget {
     return FutureBuilder(
       future: doctorProvider.showSpecialities(),
       builder: (context, AsyncSnapshot<List<Speciality>> snapshot) {
-
-        print('Me render');
 
         if(!snapshot.hasData){
           return const Center(child: CircularProgressIndicator());
@@ -72,18 +73,7 @@ class _SpecialitiesDataTableState extends State<_SpecialitiesDataTable> {
 
     return PaginatedDataTable(
       header: const Text('Especialidades'),
-      actions: [
-        selectedRows.isEmpty ? TextButton(
-          onPressed: () async{
-            final  res = await showDialog(context: context, builder: (_) => AddSpecialityWidget(
-              speciality:Speciality(idespecialidad: 0, nombreEspecialidad: '', imagenEspecialidad: ''))
-            );
-           
-            res ? await doctorProvider.showSpecialities() : null; 
-          }, 
-          child: const Text('Agregar especialidad')
-        ) : Container()
-      ],
+      actions: _specialityActions(context, doctorProvider),
       source: _SpecialityDataTableSource(widget.specialities!, selectedRows, onSelectRow),
       columns: const <DataColumn>[
         DataColumn(
@@ -103,6 +93,84 @@ class _SpecialitiesDataTableState extends State<_SpecialitiesDataTable> {
         ),
       ], 
     );
+  }
+
+
+
+  List<Widget> _specialityActions(BuildContext context, DoctorProvider doctorProvider) {
+
+    final List<Speciality> specialities = doctorProvider.specialities;
+    
+
+    return [
+
+      if(selectedRows.isEmpty)
+        TextButton(
+          onPressed: () async{
+            final  res = await showDialog(context: context, builder: (_) => AlertSpecialityWidget(
+              speciality:Speciality(idespecialidad: 0, nombreEspecialidad: '', imagenEspecialidad: ''))
+            );
+
+            if(res == null) return;
+            
+            if(res){
+              doctorProvider.render = true;
+              SnackBarWidget.showSnackBar('La especialidad se ha agregado correctamente', AppTheme.primaryColor);
+            }else{
+              SnackBarWidget.showSnackBar('La especialidad ya existe');
+            }
+
+
+          }, 
+          child: const Text('Agregar especialidad')
+        ) 
+      
+      else if(selectedRows.length == 1)
+        Row(
+          children: [
+            IconButton(
+              onPressed: () async{
+                final Speciality speciality = specialities.firstWhere((spe) => selectedRows[0] == spe.idespecialidad);
+
+                final res = await showDialog(context: context, builder: (_) => AlertSpecialityWidget(
+                  speciality: speciality)
+                );
+
+                if(res == null) return;
+                
+                if(res){
+                  doctorProvider.render = true;
+                  SnackBarWidget.showSnackBar('La especialidad se ha editado correctamente', AppTheme.primaryColor);
+                }else{
+                  SnackBarWidget.showSnackBar('Ocurrió un error al editar la especialidad');
+                }
+
+              }, 
+              icon: const Icon(Icons.edit),
+              tooltip: 'Editar especialidad',
+            ),
+            IconButton(
+              onPressed: () async{
+                final int id = selectedRows[0];
+                final res = await showDialog(context: context, builder: (_) => AlertDeleteSpecialityWidget(id: id));
+
+                if(res == null) return;
+
+                if(res){
+                  selectedRows.remove(selectedRows[0]);
+                  doctorProvider.render = true;
+                  SnackBarWidget.showSnackBar('La especialidad se ha eliminado correctamente', AppTheme.primaryColor);
+                }else{
+                  SnackBarWidget.showSnackBar('Ocurrió un error al eliminar la especialidad');
+                }
+              }, 
+              icon: const Icon(Icons.delete),
+              tooltip: 'Eliminar especialidad',
+            )
+          ],
+        )
+
+    ];
   }
 }
 

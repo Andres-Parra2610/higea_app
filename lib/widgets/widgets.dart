@@ -1,4 +1,5 @@
-export 'package:higea_app/widgets/add_speciality_widget.dart';
+export 'package:higea_app/widgets/alert_delete_speciality_widget.dart';
+export 'package:higea_app/widgets/alert_speciality_widget.dart';
 export 'package:higea_app/widgets/drawer_slide_widget.dart';
 export 'package:higea_app/widgets/recovery_password_widget.dart';
 export 'package:higea_app/widgets/cancel_appoiment_widget.dart';
