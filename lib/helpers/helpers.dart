@@ -1,8 +1,17 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Helpers{
+
+
+  static  String formattedHourFromTime(TimeOfDay time){
+    final DateTime dateTime = DateTime(0, 0, 0, time.hour, time.minute);
+    final String formattedTime = DateFormat('h:mm a').format(dateTime);
+
+    return formattedTime;
+  }
 
   static String transformHour(String hour){
 

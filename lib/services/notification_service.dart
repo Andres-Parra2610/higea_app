@@ -34,6 +34,7 @@ class NotificationService {
 
     final location = tz.local;
     //TODO VALIDAR ESTO
+    //tz.TZDateTime.now(location).add(const Duration(seconds: 5)),
     final tz.TZDateTime dateNotification = tz.TZDateTime.from(date.subtract(const Duration(days: 1)), location);
 
 

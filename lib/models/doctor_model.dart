@@ -8,16 +8,24 @@ class Doctor {
         required this.sexoMedico,
         required this.horaInicio,
         required this.horaFin,
+        this.telefonoMedico,
+        this.correoMedico, 
+        this.fechaNacimiento, 
+        this.nombreEspecialidad, 
         this.fechas
     });
 
-    final int cedulaMedico;
-    final String nombreMedico;
-    final String apellidoMedico;
-    final String sexoMedico;
-    final String horaInicio;
-    final String horaFin;
-    final List<String>? fechas;
+    int cedulaMedico;
+    String nombreMedico;
+    String apellidoMedico;
+    String sexoMedico;
+    String horaInicio;
+    String horaFin;
+    String? telefonoMedico;
+    String? correoMedico;
+    DateTime? fechaNacimiento;
+    String? nombreEspecialidad;
+    List<String>? fechas;
 
     Doctor.empty() :
       cedulaMedico = 0,
@@ -25,7 +33,11 @@ class Doctor {
       apellidoMedico = '',
       sexoMedico = '',
       horaInicio = '',
+      correoMedico = '',
+      fechaNacimiento = DateTime(0),
+      nombreEspecialidad = '',
       fechas = [],
+      telefonoMedico = '',
       horaFin = '';
 
     factory Doctor.fromRawJson(String str) => Doctor.fromJson(json.decode(str));
@@ -39,6 +51,10 @@ class Doctor {
         sexoMedico: json["sexo_medico"],
         horaInicio: json["hora_inicio"],
         horaFin: json["hora_fin"],
+        telefonoMedico: json["telefono_medico"] ?? '',
+        correoMedico: json["correo_medico"] ?? '',
+        nombreEspecialidad: json["nombre_especialidad"] ?? '',
+        fechaNacimiento: json["fecha_nacimiento"] == null ? DateTime(2000) :  DateTime.parse(json["fecha_nacimiento"]),
         fechas: json["fechas"] == null ? [] : List<String>.from(json["fechas"].map((x) => x)),
     );
 
@@ -49,6 +65,10 @@ class Doctor {
         "sexo_medico": sexoMedico,
         "hora_inicio": horaInicio,
         "hora_fin": horaFin,
+        "telefono_medico": telefonoMedico,
+        "correo_medico": correoMedico,
+        "fecha_nacimiento": fechaNacimiento,
+        "nombre_especialidad": nombreEspecialidad,
         "fechas": List<dynamic>.from(fechas!.map((x) => x)),
     };
 }

@@ -38,8 +38,14 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
 
             ListTile(
               title: const Text('Médicos'),
-              leading: const Icon(Icons.supervised_user_circle_rounded),
-              //onTap: (){},
+              leading: const Icon(Icons.medical_information),
+              onTap: () => Navigator.pushReplacement(
+                context, 
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: DoctorScreenAdmin()),
+                  transitionDuration: const Duration(seconds: 0)
+                )
+              ),
             ),
 
             ListTile(

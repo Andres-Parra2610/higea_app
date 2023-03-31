@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
 
 class DoctorProvider extends ChangeNotifier{
 
+
+  GlobalKey<FormState> formDoctorKey = GlobalKey<FormState>();
   List<Speciality> specialities = [];
+  List<String> selectedDays = [];
   List<Doctor> doctors = [];
-  late Doctor doctor;
+  Doctor doctor = Doctor.empty();
   String _searchSpeciality = '';
   bool _render = false;
 
@@ -45,6 +50,24 @@ class DoctorProvider extends ChangeNotifier{
 
     final results = response['results'] as List<dynamic>;
     return doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
+  }
+
+  Future showAllDoctors() async{
+    final Map<String, dynamic> response = await DoctorServices.getAllDoctors();
+    if(response["ok"] == false) return doctors = [];
+
+    final results = response['results'] as List<dynamic>;
+    doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
+    notifyListeners();
+  }
+
+  Future getSpecialitiesToDropDown() async{
+    specialities = await showSpecialities();
+    notifyListeners();
+  }
+
+  registerDoctor(){
+    
   }
 
 

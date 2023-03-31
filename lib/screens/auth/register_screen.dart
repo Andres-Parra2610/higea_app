@@ -100,7 +100,7 @@ class _RegisterForm extends StatelessWidget {
             formValues: registerProvider.formRegisterValues, 
             labelText: 'Cédula', 
             mapKey: 'ci', 
-            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$')) ],
+            formatter: [ FilteringTextInputFormatter.digitsOnly ],
             validate: (value){
               if(value!.length < 7 || value.length > 8) return 'Debe ser una cédula válida';
               return null;
@@ -130,7 +130,7 @@ class _RegisterForm extends StatelessWidget {
             labelText: 'Teléfono', 
             prefixText: '0-',
             mapKey: 'phone', 
-            formatter: [ LengthLimitingTextInputFormatter(10) ],
+            formatter: [ LengthLimitingTextInputFormatter(10), FilteringTextInputFormatter.digitsOnly ],
             validate: (value){
               if(value!.trim().isEmpty) return 'Ingrese un teléfono';
               if(value.trim().startsWith('0')) return 'El número no debe empezar con 0';
