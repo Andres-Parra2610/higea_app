@@ -1,3 +1,4 @@
+export 'package:higea_app/widgets/alert_delete_doctor_widget.dart';
 export 'package:higea_app/widgets/alert_doctor_widget.dart';
 export 'package:higea_app/widgets/alert_delete_speciality_widget.dart';
 export 'package:higea_app/widgets/alert_speciality_widget.dart';
@@ -10,6 +11,7 @@ export 'package:higea_app/widgets/confirm_appoiment_widget.dart';
 export 'package:higea_app/widgets/card_widget.dart';
 export 'package:higea_app/widgets/navigation_bar_widget.dart';
 export 'package:higea_app/widgets/not_found_widget.dart';
+
 
 
 

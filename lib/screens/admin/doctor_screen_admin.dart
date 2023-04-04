@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/doctor_model.dart';
 import 'package:higea_app/providers/doctor_provider.dart';
+import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +37,7 @@ class _DoctorScreenAdminState extends State<DoctorScreenAdmin> {
   Widget build(BuildContext context){
 
     final doctorProvider = Provider.of<DoctorProvider>(context);
+    final List<Doctor> doctors = doctorProvider.doctors;
 
     if(doctorProvider.doctors.isEmpty){
       return const Center(child: CircularProgressIndicator());
@@ -44,8 +48,8 @@ class _DoctorScreenAdminState extends State<DoctorScreenAdmin> {
 
         PaginatedDataTable(
           header: const Text('Lista de médicos de la fundación'),
-          actions: _actionDoctorDataTable(),
-          source: _DoctorsDataTableSource(doctorProvider.doctors, selectedRows, onSelectRow),
+          actions: _actionDoctorDataTable(doctorProvider),
+          source: _DoctorsDataTableSource(doctors, selectedRows, onSelectRow),
           columns: const <DataColumn>[
             DataColumn(
               label: Expanded(
@@ -73,15 +77,66 @@ class _DoctorScreenAdminState extends State<DoctorScreenAdmin> {
     );
   }
 
-  List<Widget> _actionDoctorDataTable() {
+  List<Widget> _actionDoctorDataTable(DoctorProvider doctorProvider) {
     return [
 
           if(selectedRows.isEmpty)
             TextButton(
-              onPressed: (){
-                showDialog(context: context, builder: (_) => const AlertDoctorWidget());
+              onPressed: () async{
+                final res = await showDialog(context: context, builder: (_) => AlertDoctorWidget(doctor: Doctor.empty(), title: 'Agregar médico',));
+
+                if(res == null) return;
+
+                if(res){
+                  doctorProvider.showAllDoctors();
+                  SnackBarWidget.showSnackBar('El doctor se ha agregado correctamente', AppTheme.primaryColor);
+                }else{
+                  SnackBarWidget.showSnackBar('Error al agregar el doctor');
+                }
               },
               child: const Text('Agregar médico')
+            )
+
+          else if(selectedRows.length == 1)
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () async{
+                    final Doctor doctor = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedulaMedico);
+                    final res = await showDialog(context: context, builder: (_) => AlertDoctorWidget(doctor: doctor, title: 'Editar médico', isEdit: true,));
+
+                    if(res == null) return;
+
+                    if(res){
+                      doctorProvider.showAllDoctors();
+                      SnackBarWidget.showSnackBar('El doctor se ha editado correctamente', AppTheme.primaryColor);
+                    }else{
+                      SnackBarWidget.showSnackBar('Error al editar el doctor');
+                    }
+
+                  }, 
+                  icon: const Icon(Icons.edit),
+                  tooltip: 'Editar doctor',
+                ),
+                IconButton(
+                  onPressed: () async{
+                    final int doctorCi = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedulaMedico).cedulaMedico;
+                    final res = await showDialog(context: context, builder: (_) => AlertDeleteDoctorWidget(doctorCi: doctorCi,));
+
+                    if(res == null) return;
+
+                    if(res){
+                      selectedRows.remove(selectedRows[0]);
+                      doctorProvider.showAllDoctors();
+                      SnackBarWidget.showSnackBar('El doctor se ha eliminado correctamente', AppTheme.primaryColor);
+                    }else{
+                      SnackBarWidget.showSnackBar('Error al eliminar el doctor');
+                    }
+                  }, 
+                  icon: const Icon(Icons.delete),
+                  tooltip: 'Eliminar doctor',
+                )
+              ],
             )
         ];
   }

@@ -14,12 +14,19 @@ class DoctorProvider extends ChangeNotifier{
   Doctor doctor = Doctor.empty();
   String _searchSpeciality = '';
   bool _render = false;
+  bool _isLoading = false;
 
   String get searchSpeciality => _searchSpeciality;
   bool get render => _render;
+  bool get isLoading => _isLoading;
 
   set searchSpeciality(String q){
     _searchSpeciality = q;
+    notifyListeners();
+  }
+
+  set isLoading(bool value){
+    _isLoading = value;
     notifyListeners();
   }
 
@@ -66,9 +73,28 @@ class DoctorProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  registerDoctor(){
-    
+  Future registerDoctor() async{
+    isLoading = true;
+    final Map<String, dynamic> response = await DoctorServices.registerDoctor(doctor);
+    if(response["ok"] == false) return false;
+    isLoading = false;
+    return true;
   }
 
+  Future editDoctor() async {
+    isLoading = true;
+    final Map<String, dynamic> response = await DoctorServices.editDoctor(doctor);
+    if(response["ok"] == false) return false;
+    isLoading = false; 
+    return true;
+  }
+
+  Future deleteDoctor(int doctorCi) async {
+    isLoading = true;
+    final Map<String, dynamic> response = await DoctorServices.removeDoctor(doctorCi);
+    if(response["ok"] == false) return false;
+    isLoading = false; 
+    return true;
+  }
 
 }

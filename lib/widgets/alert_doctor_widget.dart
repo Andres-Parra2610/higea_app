@@ -1,47 +1,69 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/doctor_provider.dart';
 import 'package:higea_app/styles/app_theme.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class AlertDoctorWidget extends StatelessWidget {
-const AlertDoctorWidget({ Key? key }) : super(key: key);
+  const AlertDoctorWidget({ Key? key, required this.doctor, required this.title, this.isEdit}) : super(key: key);
+
+  final Doctor doctor;
+  final String title;
+  final bool? isEdit;
 
   @override
   Widget build(BuildContext context){
 
-    final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
+    final doctorProvider = Provider.of<DoctorProvider>(context);
     final formKey = doctorProvider.formDoctorKey;
     
     return AlertDialog(
       actions: [
         TextButton(
-          onPressed: (){
-            if(!formKey.currentState!.validate() || doctorProvider.selectedDays.isEmpty) return;
-
-            doctorProvider.registerDoctor();
+          onPressed: doctorProvider.isLoading ? null : () async{
+            if(!formKey.currentState!.validate() || doctorProvider.doctor.fechas!.isEmpty) return;
+    
+            final navigator = Navigator.of(context);
+            dynamic res;
+    
+            if(isEdit == null){
+              res = await doctorProvider.registerDoctor();
+            }else{
+              res = await doctorProvider.editDoctor();
+            }
+    
+            res ? navigator.pop(true) : navigator.pop(false);
           }, 
-          child: const Text('Agregar médico')
+          child: Text(title)
         )
       ],
-      title: const Text('Agregar médico'),
-      content: const SingleChildScrollView(child: SizedBox(width: 700, child: _DoctorForm())),
+      title: Text(title),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: 700, 
+          child: AbsorbPointer(absorbing: doctorProvider.isLoading, child: _DoctorForm(doctor, isEdit ?? false))
+        )
+      ),
     );
   }
 }
 
 class _DoctorForm extends StatelessWidget {
-  const _DoctorForm();
+  const _DoctorForm(this.doctor, this.isEdit);
+
+  final Doctor doctor;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context) {
 
     final doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
-    final Doctor doctorForm = doctorProvider.doctor;
+    final Doctor doctorForm = doctorProvider.doctor = doctor;
 
     const double widthSeparator = 20; 
     const double heigthSeparator = 30;
@@ -52,36 +74,43 @@ class _DoctorForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Datos personales'),
-
+    
           const SizedBox(height: heigthSeparator - 10),
-
-          _FirstRow(widthSeparator, doctorForm),
-
+    
+          _FirstRow(widthSeparator, doctorForm, isEdit),
+    
           const SizedBox(height: heigthSeparator),
-
+    
           _SecondRow(widthSeparator, doctorForm),
-
+    
           const SizedBox(height: heigthSeparator),
-
+    
           _ThirdRow(widthSeparator, doctorForm),
-
+    
           const SizedBox(height: heigthSeparator),
+    
+          _FourthRow(widthSeparator, doctorForm, isEdit),
+          
+          Visibility(
+            visible: !isEdit,
+            child: Column(
+              children: [
+                const SizedBox(height: heigthSeparator),
 
-          _FourthRow(widthSeparator, doctorForm),
-
-          const SizedBox(height: heigthSeparator),
-
-          const Text('Horario de trabajo'),
-
-          const SizedBox(height: heigthSeparator - 10),
-
-          _ListDoctorDayWorks(doctorForm),
-
-          const SizedBox(height: heigthSeparator - 10),
-
-          _HourWorks(widthSeparator, doctorForm)
-
-
+                const Text('Horario de trabajo'),
+          
+                const SizedBox(height: heigthSeparator - 10),
+          
+                _ListDoctorDayWorks(doctorForm),
+          
+                const SizedBox(height: heigthSeparator - 10),
+          
+                _HourWorks(widthSeparator, doctorForm)
+              ],
+            )
+          )
+    
+    
         ],
       ),
     );
@@ -99,6 +128,16 @@ class _HourWorks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    if(doctorForm.horaFin.isNotEmpty){
+      final String formatedStartHour = Helpers.transHour(doctorForm.horaInicio);
+      final String formatedEndHour = Helpers.transHour(doctorForm.horaFin);
+      
+      _startHourController.text = formatedStartHour;
+      _endHourController.text = formatedEndHour;
+    }
+
+
     return Row(
       children: [
         Expanded(
@@ -121,7 +160,7 @@ class _HourWorks extends StatelessWidget {
               doctorForm.horaInicio = hourToBd;
             },
             validator: (value){
-              if(value!.trim().isEmpty) return 'Por favor seleccione una hora';
+              if(value!.trim().isEmpty && doctorForm.horaInicio.isEmpty) return 'Por favor seleccione una hora';
               return null; 
             },
           ),
@@ -144,13 +183,12 @@ class _HourWorks extends StatelessWidget {
               if(time == null) return;
 
               final String timeFormat = Helpers.formattedHourFromTime(time);
-
-              _endHourController.text = timeFormat;
               final String hourToBd = DateFormat('HH:mm:ss').format(DateFormat('h:mm a').parse(timeFormat));
+              _endHourController.text = timeFormat;
               doctorForm.horaFin = hourToBd;
             },
             validator: (value){
-              if(value!.trim().isEmpty) return 'Por favor seleccione una hora';
+              if(value!.trim().isEmpty && doctorForm.horaFin.isEmpty) return 'Por favor seleccione una hora';
               final startHour = DateFormat.jm().parse(_startHourController.text);
               final endHour = DateFormat.jm().parse(value);
               if(endHour.isBefore(startHour)) return 'El horario de fin no puede estar antes que el horario de inicio';
@@ -174,12 +212,13 @@ class _ListDoctorDayWorks extends StatefulWidget {
 
 class _ListDoctorDayWorksState extends State<_ListDoctorDayWorks> {
 
-  final List<String> days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'];
+  final List<String> days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
 
   @override
   Widget build(BuildContext context) {
 
-    final List<String> selectedDays = Provider.of<DoctorProvider>(context, listen: false).selectedDays;
+    final List<String> selectedDays = Provider.of<DoctorProvider>(context, listen: false).selectedDays = widget.doctorForm.fechas!;
 
     return Wrap(
       children: [
@@ -192,14 +231,10 @@ class _ListDoctorDayWorksState extends State<_ListDoctorDayWorks> {
               selected: selectedDays.contains(day),
               onSelected: (value){
 
-                final int position = days.indexOf(day) + 1;
-
                 if(selectedDays.contains(day)){
-                  selectedDays.remove(day);
-                  widget.doctorForm.fechas!.remove(position.toString());
+                  widget.doctorForm.fechas!.remove(day);
                 }else{
-                  selectedDays.add(day);
-                  widget.doctorForm.fechas!.add(position.toString());
+                  widget.doctorForm.fechas!.add(day);
                 }
 
                 setState(() {});
@@ -215,10 +250,11 @@ class _ListDoctorDayWorksState extends State<_ListDoctorDayWorks> {
 
 
 class _FirstRow extends StatelessWidget {
-  const _FirstRow(this.widthSeparator, this.doctorForm);
+  const _FirstRow(this.widthSeparator, this.doctorForm, this.isEdit);
 
   final double widthSeparator; 
   final Doctor doctorForm;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -227,6 +263,8 @@ class _FirstRow extends StatelessWidget {
       children: [
         Expanded(
           child: TextFormField(
+            readOnly: isEdit,
+            initialValue: doctorForm.cedulaMedico == 0 ? '' : doctorForm.cedulaMedico.toString(),
             decoration: const InputDecoration(labelText: 'Cédula'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly ],
             onChanged: (value) => doctorForm.cedulaMedico = int.parse(value),
@@ -239,6 +277,7 @@ class _FirstRow extends StatelessWidget {
         SizedBox(width: widthSeparator),
         Expanded(
           child: TextFormField( 
+            initialValue: doctorForm.nombreMedico,
             decoration: const InputDecoration(labelText: 'Nombre(s)'),
             inputFormatters: [ FilteringTextInputFormatter.deny(RegExp(r'[0-9]')) ],
             onChanged: (value) => doctorForm.nombreMedico = value,
@@ -266,6 +305,7 @@ class _SecondRow extends StatelessWidget {
       children: [
         Expanded(
           child: TextFormField(
+            initialValue: doctorForm.apellidoMedico,
             decoration: const InputDecoration(labelText: 'Apellido(s)'),
             inputFormatters: [ FilteringTextInputFormatter.deny(RegExp(r'[0-9]')) ],
             onChanged: (value) => doctorForm.apellidoMedico = value,
@@ -278,6 +318,7 @@ class _SecondRow extends StatelessWidget {
         SizedBox(width: widthSeparator),
         Expanded(
           child: TextFormField(
+            initialValue: doctorForm.telefonoMedico,
             decoration: const InputDecoration(labelText: 'Teléfono', prefixText: '0-'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(10)],
             onChanged: (value) => doctorForm.telefonoMedico = value,
@@ -301,10 +342,17 @@ class _ThirdRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    if(doctorForm.sexoMedico.isEmpty){
+      doctorForm.sexoMedico = 'M';
+    }
+
     return Row(
       children: [
         Expanded(
           child: TextFormField(
+            initialValue: doctorForm.correoMedico,
             decoration: const InputDecoration(labelText: 'Correo electrónico'),
             onChanged: (value) => doctorForm.correoMedico = value,
             validator: (value){
@@ -317,7 +365,7 @@ class _ThirdRow extends StatelessWidget {
         SizedBox(width: widthSeparator),
         Expanded(
           child: DropdownButtonFormField(
-            value: 'M',
+            value: doctorForm.sexoMedico,
             onChanged: (value) => doctorForm.sexoMedico = value!,
             items: const [
               DropdownMenuItem(value: 'M',child: Text('Masculino')),
@@ -332,10 +380,11 @@ class _ThirdRow extends StatelessWidget {
 
 
 class _FourthRow extends StatefulWidget {
-  const _FourthRow(this.widthSeparator, this.doctorForm,);
+  const _FourthRow(this.widthSeparator, this.doctorForm, this.isEdit,);
 
   final double widthSeparator;
   final Doctor doctorForm;
+  final bool isEdit;
 
   @override
   State<_FourthRow> createState() => _FourthRowState();
@@ -356,6 +405,16 @@ class _FourthRowState extends State<_FourthRow> {
     final doctorProvider = Provider.of<DoctorProvider>(context);
     final List<Speciality> specialities = doctorProvider.specialities;
 
+
+    if(doctorProvider.doctor.nombreEspecialidad!.isEmpty && specialities.isNotEmpty){
+      doctorProvider.doctor.nombreEspecialidad = specialities[0].idespecialidad.toString();
+    }
+
+    if(doctorProvider.doctor.fechaNacimiento!.year != 0){
+      _controller.text = DateFormat('dd/MM/yyyy').format(doctorProvider.doctor.fechaNacimiento!);
+      widget.doctorForm.fechaNacimiento = DateTime.parse(DateFormat('yyyy-MM-dd').format(widget.doctorForm.fechaNacimiento!));
+    }
+
     return Row(
       children: [
         Expanded(
@@ -374,9 +433,9 @@ class _FourthRowState extends State<_FourthRow> {
               if(birthDate == null) return;
               
               String dateFormat = DateFormat('dd/MM/yyyy').format(birthDate);
-
+              final dateToBd = DateFormat('yyyy-MM-dd').format(birthDate);
               _controller.text = dateFormat;
-              widget.doctorForm.fechaNacimiento = birthDate;
+              widget.doctorForm.fechaNacimiento = DateTime.parse(dateToBd);
             },
             validator: (value){
               if(value!.trim().isEmpty) return 'Por favor seleccione una fecha';
@@ -388,14 +447,19 @@ class _FourthRowState extends State<_FourthRow> {
         SizedBox(width: widget.widthSeparator),
 
         Expanded(
-          child: DropdownButtonFormField(
-            value: specialities.isEmpty ? null : specialities[0].idespecialidad,
+          child: specialities.isEmpty 
+            ? const Center(child: CircularProgressIndicator(),)
+            : DropdownButtonFormField(
+            value: doctorProvider.doctor.nombreEspecialidad!.contains('1')
+               ? specialities[0].idespecialidad
+               : specialities.firstWhere((spe) => spe.nombreEspecialidad == doctorProvider.doctor.nombreEspecialidad).idespecialidad,
+
             decoration: const InputDecoration(labelText: 'Eliga la especialidad'),
-            onChanged: (value) => doctorProvider.doctor.nombreEspecialidad,
+            onChanged: widget.isEdit ? null : (value) => doctorProvider.doctor.nombreEspecialidad = value.toString(),
             items: [
               ...specialities.map((Speciality speciality){ 
                 return DropdownMenuItem(
-                  value: speciality.idespecialidad , 
+                  value: speciality.idespecialidad, 
                   child: Text(speciality.nombreEspecialidad, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 15),)
                 );
               }).toList()

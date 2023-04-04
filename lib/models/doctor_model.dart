@@ -67,7 +67,7 @@ class Doctor {
         "hora_fin": horaFin,
         "telefono_medico": telefonoMedico,
         "correo_medico": correoMedico,
-        "fecha_nacimiento": fechaNacimiento,
+        "fecha_nacimiento": fechaNacimiento!.toIso8601String(),
         "nombre_especialidad": nombreEspecialidad,
         "fechas": List<dynamic>.from(fechas!.map((x) => x)),
     };

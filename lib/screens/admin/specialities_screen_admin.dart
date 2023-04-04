@@ -16,8 +16,6 @@ class SpecialitiesScreenAdmin extends StatelessWidget {
 
     final doctorProvider = Provider.of<DoctorProvider>(context);
 
-
-
     return FutureBuilder(
       future: doctorProvider.showSpecialities(),
       builder: (context, AsyncSnapshot<List<Speciality>> snapshot) {

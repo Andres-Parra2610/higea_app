@@ -6,10 +6,11 @@ import 'package:higea_app/models/models.dart';
 class AppoimentService {
 
   static final server = dotenv.env['SERVER_PATH'];
+  static final port = dotenv.env['SERVER_PORT']!;
 
   static Future getAppoiments(doctorCi, [date = '']) async{
 
-    final url = Uri.http('192.168.1.100:3001', '/appoiment/$doctorCi', {
+    final url = Uri.http(port, '/appoiment/$doctorCi', {
       'date': '$date'
     });
     final response = await http.get(url);
@@ -41,7 +42,7 @@ class AppoimentService {
   }
 
   static Future getHistoryById([id = 0]) async{
-    final url = Uri.http('192.168.1.100:3001', '/appoiment/history', {
+    final url = Uri.http(port, '/appoiment/history', {
       'id': '$id'
     });
     final response = await http.get(url);

@@ -13,6 +13,12 @@ class Helpers{
     return formattedTime;
   }
 
+  static String transHour(String hour){
+    DateTime hora = DateTime.parse("1970-01-01 $hour");
+    String horaFormat = DateFormat('h:mm a').format(hora);
+    return horaFormat;
+  }
+
   static String transformHour(String hour){
 
     String modifiedDate = hour;
