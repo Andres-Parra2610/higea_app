@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:higea_app/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/screens/screens.dart';
@@ -24,52 +25,75 @@ const LoginScreen({ Key? key }) : super(key: key);
       child: Scaffold(
         body:  Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-    
-                SvgPicture.asset(
-                  'assets/logo-higea.svg',
-                  width: 110,
-                ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: PlatformDevice.isMobile ? 900 : 500
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                 
-            
-                const SizedBox(height: 30),
-            
-                Text('Iniciar sesión', style: textTheme.headlineSmall),
-            
-                const SizedBox(height: 30),
-            
-                const _LoginForm(),
-            
-                const SizedBox(height: 20),
-            
-                GestureDetector(
-                  onTap: (){
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (context) => const RegisterScreen(), maintainState: false)
-                    );
-                    FocusScope.of(context).unfocus();
-                    loginProvider.formLoginKey.currentState!.reset();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('¿No posees cuenta? ', style: textTheme.titleSmall,),
-                      Text('Regístrate', style: TextStyle(
-                        fontSize: textTheme.titleSmall!.fontSize,
-                        fontWeight: textTheme.titleSmall!.fontWeight,
-                        color: const Color(AppTheme.secondaryColor)
-                      ))
-                    ],
+                  SvgPicture.asset(
+                    'assets/logo-higea.svg',
+                    width: 110,
                   ),
-                )
-            
-              ],
+                  
+                  const SizedBox(height: 30),
+              
+                  Text('Iniciar sesión', style: textTheme.headlineSmall),
+              
+                  const SizedBox(height: 30),
+              
+                  const _LoginForm(),
+              
+                  const SizedBox(height: 20),
+              
+                  _RegisterUserText(loginProvider: loginProvider)
+              
+                ],
+              ),
             ),
           )
         )
+      ),
+    );
+  }
+}
+
+class _RegisterUserText extends StatelessWidget {
+  const _RegisterUserText({
+    required this.loginProvider,
+  });
+
+  final AuthProvider loginProvider;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final textTheme = Theme.of(context).textTheme;
+
+    return Visibility(
+      visible: PlatformDevice.isMobile,
+      child: GestureDetector(
+        onTap: (){
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (context) => const RegisterScreen(), maintainState: false)
+          );
+          FocusScope.of(context).unfocus();
+          loginProvider.formLoginKey.currentState!.reset();
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('¿No posees cuenta? ', style: textTheme.titleSmall,),
+            Text('Regístrate', style: TextStyle(
+              fontSize: textTheme.titleSmall!.fontSize,
+              fontWeight: textTheme.titleSmall!.fontWeight,
+              color: const Color(AppTheme.secondaryColor)
+            ))
+          ],
+        ),
       ),
     );
   }
@@ -85,7 +109,6 @@ class _LoginForm extends StatelessWidget {
 
     final loginProvider = Provider.of<AuthProvider>(context);
     final formValues = loginProvider.formLoginValues;
-    final textTheme = Theme.of(context).textTheme;
   
     return Form(
       key: loginProvider.formLoginKey,
@@ -119,20 +142,7 @@ class _LoginForm extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black12
-              ),
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPasswordScreen())),
-              child: Text(
-                '¿Olvidó su contraseña?',
-                style: TextStyle(
-                  color: const Color(AppTheme.secondaryColor),
-                  fontSize: textTheme.titleSmall!.fontSize,
-                  fontWeight: textTheme.titleSmall!.fontWeight,
-                ),
-              )
-            ),
+            const _RecoveryPasswordText(),
 
             const SizedBox(height: 20),
 
@@ -183,6 +193,36 @@ class _LoginForm extends StatelessWidget {
           ],
         ),
       )
+    );
+  }
+}
+
+class _RecoveryPasswordText extends StatelessWidget {
+  const _RecoveryPasswordText();
+
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final textTheme = Theme.of(context).textTheme;
+
+    return Visibility(
+      visible: PlatformDevice.isMobile,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.black12
+        ),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPasswordScreen())),
+        child: Text(
+          '¿Olvidó su contraseña?',
+          style: TextStyle(
+            color: const Color(AppTheme.secondaryColor),
+            fontSize: textTheme.titleSmall!.fontSize,
+            fontWeight: textTheme.titleSmall!.fontWeight,
+          ),
+        )
+      ),
     );
   }
 }

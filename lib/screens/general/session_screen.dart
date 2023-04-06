@@ -35,9 +35,12 @@ const SessionScreen({ Key? key}) : super(key: key);
         Provider.of<AuthProvider>(context, listen: false).currentDoctor = doctor;
         screen = const HomeDoctorScreen();
       }else{
+        final admin = Admin.fromRawJson(UserPreferences.user);
+        Provider.of<AuthProvider>(context, listen: false).currentAdmin = admin;
         screen = const HomeScreenAdmin();
       }
 
+    
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(
           pageBuilder: (_, __, ___) => screen,

@@ -71,6 +71,18 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
                 )
               ),
             ),
+
+            ListTile(
+              title: const Text('Reportes'),
+              leading: const Icon(Icons.receipt_long_rounded),
+              onTap: () => Navigator.pushReplacement(
+                context, 
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: ReportsAdminScreen()),
+                  transitionDuration: const Duration(seconds: 0)
+                )
+              ),
+            ),
           ],
         ),
       ),

@@ -64,4 +64,9 @@ class Helpers{
     return '$nameDay, $day de $monthName $year';
   }
 
+
+  static List<String> months(){
+    return ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  }
+
 }

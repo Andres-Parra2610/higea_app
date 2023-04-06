@@ -29,6 +29,7 @@ class AuthProvider extends ChangeNotifier{
 
   late User currentUser;
   late Doctor currentDoctor;
+  late Admin currentAdmin;
   int idRol = 0;
 
   bool _loading = false;
@@ -59,15 +60,15 @@ class AuthProvider extends ChangeNotifier{
       if(data["idRol"] == 3){
         idRol = 3;
         UserPreferences.setIdRol = idRol;
-        final createGlobalUser = User.fromRawJson(preferences);
-        currentUser = createGlobalUser;
+        currentUser = User.fromRawJson(preferences);
       }else if(data["idRol"] == 2){
         idRol = 2;
         UserPreferences.setIdRol = idRol;
-        final createGlobalUser = Doctor.fromRawJson(preferences);
-        currentDoctor = createGlobalUser;
+        currentDoctor = Doctor.fromRawJson(preferences);
       }else if(data["idRol"] == 1){
         idRol = 1;
+        UserPreferences.setIdRol = idRol;
+        currentAdmin = Admin.fromRawJson(user);
       }
 
       return true;

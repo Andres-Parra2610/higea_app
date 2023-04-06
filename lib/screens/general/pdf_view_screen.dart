@@ -7,13 +7,21 @@ import 'package:http/http.dart' as http;
 import 'dart:html' as html;
 
 class PdfViewScreen extends StatefulWidget {
-  PdfViewScreen({super.key, required this.url});
+  PdfViewScreen({
+    super.key, 
+    required this.url,
+    this.params
+  });
 
   final server = dotenv.env['SERVER_PATH'];
+  final port = dotenv.env['SERVER_PORT']!;
+
   final String url; 
+  final Map<String, dynamic>? params;
+  
   
   @override
-  _PdfViewScreenState createState() => _PdfViewScreenState();
+  State<PdfViewScreen> createState() => _PdfViewScreenState();
 }
 
 class _PdfViewScreenState extends State<PdfViewScreen> {
@@ -21,7 +29,9 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
   Uint8List pdfBytes = Uint8List(0);
 
   Future _getPdfBytes() async {
-    final response = await http.readBytes(Uri.parse('${widget.server}/reportes/${widget.url}'));
+
+    final url = Uri.http(widget.port, '/reports/${widget.url}', widget.params);
+    final response = await http.readBytes(url);
     pdfBytes = response;
     setState(() {});
   }

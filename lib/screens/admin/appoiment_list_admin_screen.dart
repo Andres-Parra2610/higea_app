@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
-import 'package:higea_app/screens/general/pdf_view_screen.dart';
-import 'package:higea_app/screens/screens.dart';
-import 'package:higea_app/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -33,53 +30,36 @@ class _AppoimentListAdminScreenState extends State<AppoimentListAdminScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Stack(
-      children: [
-        PaginatedDataTable(
-          header: const _HeaderDataTable(),
-          source: _AppoimentDataTableSource(appoimentProvider.filterAppoiments),
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text('Cédula del paciente'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Nombre del paciente'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Nombre del doctor'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Fecha de la cita'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Hora de la cita'),
-              )
-            ),
-          ], 
-        ),
-
-        const Positioned(
-          bottom: 0,
-          left: 0,
-          child: FloatinMenuButtonWidget(
-            items: [
-              PopupMenuItem(
-                value: 0,
-                child: Text('Reporte de cliente con más citas médicas'),
-              )
-            ],
+    return PaginatedDataTable(
+      header: const _HeaderDataTable(),
+      source: _AppoimentDataTableSource(appoimentProvider.filterAppoiments),
+      columns: const <DataColumn>[
+        DataColumn(
+          label: Expanded(
+            child: Text('Cédula del paciente'),
           )
         ),
-      ],
+        DataColumn(
+          label: Expanded(
+            child: Text('Nombre del paciente'),
+          )
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text('Nombre del doctor'),
+          )
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text('Fecha de la cita'),
+          )
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text('Hora de la cita'),
+          )
+        ),
+      ], 
     );
   }
 }
