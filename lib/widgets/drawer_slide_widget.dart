@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:higea_app/screens/general/pdf_view_screen.dart';
 import 'package:higea_app/screens/screens.dart';
 
 class DrawerSlideWidget extends StatelessWidget {
@@ -6,11 +8,21 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
+    
     return Drawer(
 
       child: SingleChildScrollView(
         child: Column(
           children:   [
+            
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              child: SvgPicture.asset(
+                'assets/logo-higea.svg',
+                semanticsLabel: 'Logo de la fundación Higea',
+                width: 90,
+              ),
+            ),
 
             ListTile(
               title: const Text('Inicio'),
@@ -18,7 +30,7 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
               onTap: () => Navigator.pushReplacement(
                 context, 
                 PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: AppoimentListAdmin()),
+                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: AppoimentListAdminScreen()),
                   transitionDuration: const Duration(seconds: 0)
                 )
               ),
@@ -30,7 +42,7 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
               onTap: () => Navigator.pushReplacement(
                 context, 
                 PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: SpecialitiesScreenAdmin()),
+                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: SpecialitiesListAdminScreen()),
                   transitionDuration: const Duration(seconds: 0)
                 )
               ),
@@ -42,7 +54,7 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
               onTap: () => Navigator.pushReplacement(
                 context, 
                 PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: DoctorScreenAdmin()),
+                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: DoctorListAdminScreen()),
                   transitionDuration: const Duration(seconds: 0)
                 )
               ),
@@ -51,15 +63,14 @@ const DrawerSlideWidget({ Key? key }) : super(key: key);
             ListTile(
               title: const Text('Pacientes'),
               leading: const Icon(Icons.supervised_user_circle_rounded),
-              //onTap: (){},
+              onTap: () => Navigator.pushReplacement(
+                context, 
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const HomeScreenAdmin(screen: PatientListAdminScreen()),
+                  transitionDuration: const Duration(seconds: 0)
+                )
+              ),
             ),
-
-             ListTile(
-              title: const Text('Reportes'),
-              leading: const Icon(Icons.supervised_user_circle_rounded),
-              //onTap: (){},
-            )
-
           ],
         ),
       ),

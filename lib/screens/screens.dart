@@ -1,6 +1,7 @@
-export 'package:higea_app/screens/admin/doctor_screen_admin.dart';
-export 'package:higea_app/screens/admin/specialities_screen_admin.dart';
-export 'package:higea_app/screens/admin/appoiment_list_admin.dart';
+export 'package:higea_app/screens/admin/patient_list_admin_screen.dart';
+export 'package:higea_app/screens/admin/doctor_list_admin_screen.dart';
+export 'package:higea_app/screens/admin/specialities_list_admin_screen.dart';
+export 'package:higea_app/screens/admin/appoiment_list_admin_screen.dart';
 export 'package:higea_app/screens/admin/home_screen_admin.dart';
 export 'package:higea_app/screens/doctor/appoiments_details.dart';
 export 'package:higea_app/screens/doctor/home_doctor_screen.dart';
@@ -16,6 +17,8 @@ export 'package:higea_app/screens/client/home_client_screen.dart';
 export 'package:higea_app/screens/auth/confirm_email_screen.dart';
 export 'package:higea_app/screens/auth/register_screen.dart';
 export 'package:higea_app/screens/auth/login_screen.dart';
+export 'package:higea_app/screens/general/pdf_view_screen.dart';
+
 
 
 

@@ -35,7 +35,7 @@ class HomeScreenAdmin extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                  child: screen ?? const AppoimentListAdmin(),
+                  child: screen ?? const AppoimentListAdminScreen(),
                 ),
               ),
             )

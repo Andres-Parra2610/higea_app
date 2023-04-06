@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/doctor_model.dart';
@@ -10,14 +8,14 @@ import 'package:provider/provider.dart';
 
 
 
-class DoctorScreenAdmin extends StatefulWidget {
-const DoctorScreenAdmin({ Key? key }) : super(key: key);
+class DoctorListAdminScreen extends StatefulWidget {
+const DoctorListAdminScreen({ Key? key }) : super(key: key);
 
   @override
-  State<DoctorScreenAdmin> createState() => _DoctorScreenAdminState();
+  State<DoctorListAdminScreen> createState() => _DoctorListAdminScreenState();
 }
 
-class _DoctorScreenAdminState extends State<DoctorScreenAdmin> {
+class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
 
   List<int> selectedRows = [];
 

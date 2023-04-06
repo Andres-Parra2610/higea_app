@@ -6,8 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalendarProvider extends ChangeNotifier{
 
-  late final ValueNotifier<List<Appoiment>> selectedAppoiments;
-  List<Appoiment> selectDayEvent = [];
+  ValueNotifier<List<Appoiment>> selectedAppoiments = ValueNotifier([]);
   final DateFormat format = DateFormat('yyyy-MM-dd');
   Map<String, List<Appoiment>> events = {};
   CalendarFormat calendarFormat = CalendarFormat.month;

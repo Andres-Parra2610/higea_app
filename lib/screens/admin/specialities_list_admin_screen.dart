@@ -5,11 +5,11 @@ import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class SpecialitiesScreenAdmin extends StatelessWidget {
+class SpecialitiesListAdminScreen extends StatelessWidget {
 
 
 
-  const SpecialitiesScreenAdmin({ Key? key }) : super(key: key);
+  const SpecialitiesListAdminScreen({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
@@ -69,6 +69,7 @@ class _SpecialitiesDataTableState extends State<_SpecialitiesDataTable> {
 
     return PaginatedDataTable(
       header: const Text('Especialidades'),
+      dataRowHeight: 98.0,
       actions: _specialityActions(context, doctorProvider),
       source: _SpecialityDataTableSource(widget.specialities!, selectedRows, onSelectRow),
       columns: const <DataColumn>[
@@ -196,12 +197,7 @@ class _SpecialityDataTableSource extends DataTableSource{
         DataCell(Text(speciality.idespecialidad.toString())),
         DataCell(Text(speciality.nombreEspecialidad)),
         DataCell(
-          Image(
-            image: NetworkImage(speciality.imagenEspecialidad!),
-            width: 300,
-            height: 300,
-            fit: BoxFit.cover,
-          )
+          _SpecialityImage(image: speciality.imagenEspecialidad!)
         ),
       ]
     );
@@ -216,4 +212,31 @@ class _SpecialityDataTableSource extends DataTableSource{
   @override
   int get selectedRowCount => 0;
 
+}
+
+class _SpecialityImage extends StatelessWidget {
+  const _SpecialityImage({
+    required this.image,
+  });
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8)
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image(
+          image: NetworkImage(image),
+          width: 150,
+          height: 200,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
 }

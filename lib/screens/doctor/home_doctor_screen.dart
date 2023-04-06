@@ -30,6 +30,7 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
 
             onPressed: (){
               UserPreferences.deleteUser();
+              calendarProvider.events = {};
               Navigator.pushAndRemoveUntil(
                 context, 
                 MaterialPageRoute(builder: (_) => const SessionScreen()), 

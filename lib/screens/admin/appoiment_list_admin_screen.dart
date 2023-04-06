@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
+import 'package:higea_app/screens/general/pdf_view_screen.dart';
+import 'package:higea_app/screens/screens.dart';
+import 'package:higea_app/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AppoimentListAdmin extends StatefulWidget {
-const AppoimentListAdmin({ Key? key }) : super(key: key);
+class AppoimentListAdminScreen extends StatefulWidget {
+const AppoimentListAdminScreen({ Key? key }) : super(key: key);
 
   @override
-  State<AppoimentListAdmin> createState() => _AppoimentListAdminState();
+  State<AppoimentListAdminScreen> createState() => _AppoimentListAdminScreenState();
 }
 
-class _AppoimentListAdminState extends State<AppoimentListAdmin> {
+class _AppoimentListAdminScreenState extends State<AppoimentListAdminScreen> {
 
   @override
   void initState() {
@@ -30,10 +33,8 @@ class _AppoimentListAdminState extends State<AppoimentListAdmin> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-      
         PaginatedDataTable(
           header: const _HeaderDataTable(),
           source: _AppoimentDataTableSource(appoimentProvider.filterAppoiments),
@@ -64,7 +65,20 @@ class _AppoimentListAdminState extends State<AppoimentListAdmin> {
               )
             ),
           ], 
-        )
+        ),
+
+        const Positioned(
+          bottom: 0,
+          left: 0,
+          child: FloatinMenuButtonWidget(
+            items: [
+              PopupMenuItem(
+                value: 0,
+                child: Text('Reporte de cliente con más citas médicas'),
+              )
+            ],
+          )
+        ),
       ],
     );
   }
@@ -76,22 +90,16 @@ class _HeaderDataTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: const [
-        Expanded(child: Text('Lista de citas médicas')),
+      children: [
+        const Expanded(child: Text('Lista de citas médicas')),
         Expanded(child: _SearchAppoimentByDate())
       ],
     );
   }
 }
 
-class _SearchAppoimentByDate extends StatefulWidget {
-  const _SearchAppoimentByDate();
-
-  @override
-  State<_SearchAppoimentByDate> createState() => _SearchAppoimentByDateState();
-}
-
-class _SearchAppoimentByDateState extends State<_SearchAppoimentByDate> {
+class _SearchAppoimentByDate extends StatelessWidget {
+  _SearchAppoimentByDate();
 
   final TextEditingController _controller = TextEditingController();
 
@@ -126,8 +134,6 @@ class _SearchAppoimentByDateState extends State<_SearchAppoimentByDate> {
     );
   }
 }
-
-
 
 class _AppoimentDataTableSource extends DataTableSource{  
 

@@ -44,6 +44,8 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   table_calendar: ^3.0.9
   file_picker: ^5.2.6
+  pdf: ^3.10.1
+  syncfusion_flutter_pdfviewer: ^21.1.38
 
 dev_dependencies:
 

@@ -447,7 +447,7 @@ class _FourthRowState extends State<_FourthRow> {
         SizedBox(width: widget.widthSeparator),
 
         Expanded(
-          child: specialities.isEmpty 
+          child: specialities.isEmpty || doctorProvider.isLoading
             ? const Center(child: CircularProgressIndicator(),)
             : DropdownButtonFormField(
             value: doctorProvider.doctor.nombreEspecialidad!.contains('1')
