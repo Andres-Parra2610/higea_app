@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 
 class Appoiment {
@@ -22,6 +23,10 @@ class Appoiment {
     final Doctor? doctor;
     String? citaEstado;
     int? cedulaPaciente;
+
+
+    get fechaCitaStr => Helpers.completeDateFromDateTime(fechaCita);
+    get horaCitaStr =>  Helpers.transHour(horaCita);
 
     factory Appoiment.fromRawJson(String str) => Appoiment.fromJson(json.decode(str));
 

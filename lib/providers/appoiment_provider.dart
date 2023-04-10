@@ -25,6 +25,17 @@ class AppoimentProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<List<Appoiment>> showAppoimentByPatient(int ci) async{
+    final Map<String, dynamic> res = await AppoimentService.getPendingAppoimentByPatient(ci);
+
+
+    if(res['ok'] == false) return [];
+
+    final result = res["results"] as List<dynamic>;
+
+    return List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+  } 
+
   Future<Doctor> showDoctorDatesWork(ci) async{
 
     final Map<String, dynamic> response = await DoctorServices.getDoctorDatesWork(ci);
@@ -92,14 +103,6 @@ class AppoimentProvider extends ChangeNotifier{
 
   }
 
-  Future showAppoimentToDoctors(doctorCi) async{
-    final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi);
-
-    
-    final Map<String, List<Appoiment>> events = Map.from(res['results']).map((k, v) => MapEntry<String, List<Appoiment>>(k, List<Appoiment>.from(v.map((x) => Appoiment.fromJson(x)))));
-
-    print(events['2023-03-13']);
-  }
 
   void searchAppoimentByDate(date){
     filterAppoiments = appoiments.where((appoiment){

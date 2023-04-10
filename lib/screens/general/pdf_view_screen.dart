@@ -4,7 +4,7 @@ import 'package:higea_app/styles/app_theme.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
 
 class PdfViewScreen extends StatefulWidget {
   PdfViewScreen({

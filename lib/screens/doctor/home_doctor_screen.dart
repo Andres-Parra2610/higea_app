@@ -16,7 +16,7 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){
 
-    final calendarProvider = Provider.of<CalendarProvider>(context);
+    final calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     final currentDoctor = Provider.of<AuthProvider>(context, listen: false).currentDoctor;
 
     return Scaffold(
@@ -50,78 +50,91 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
               return const Center(child: CircularProgressIndicator(),);
             }
 
-            return Column(
-              children: [
-                TableCalendar( 
-                  eventLoader: (day){
-                    return calendarProvider.getAllEvents(day);
-                  },
-                  locale: 'ES_es',
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: calendarProvider.dayFocused,  
-                  calendarFormat: calendarProvider.calendarFormat,
-                  selectedDayPredicate: (day){
-                    return isSameDay(calendarProvider.currentDay, day);
-                  },
-                  onDaySelected: calendarProvider.onSelectDay,
-                  calendarStyle: CalendarStyle(
-                    todayDecoration: BoxDecoration(
-                      color: const Color(AppTheme.primaryColor).withOpacity(0.7),
-                      shape: BoxShape.circle
-                    ),
-                    selectedDecoration: const BoxDecoration(
-                      color:Color(AppTheme.primaryColor),
-                      shape: BoxShape.circle
-                    )
-                  ),
-
-                  headerStyle: const HeaderStyle(titleCentered: true, formatButtonVisible: false),
-                  calendarBuilders: CalendarBuilders(
-                    markerBuilder:(context, day, events) {
-                      if(events.isNotEmpty){
-                        return Container(
-                          width: 20,
-                          height: 20,
-                          alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                            color: Color(AppTheme.secondaryColor),
-                            shape: BoxShape.circle
-                          ),
-                          child: Text(
-                            '${events.length}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        );
-                      }
-        
-                      return null;
-                    },
-                  ),
-                ),
-
-                const SizedBox(height: 30),
-
-                Text(
-                  'Lista de citas', 
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.bold, 
-                    color: const Color(AppTheme.primaryColor)
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-                ValueListenableBuilder<List<Appoiment>>(
-                  valueListenable: calendarProvider.selectedAppoiments, 
-                  builder:(context, value, _) {
-                    return _AppoimentList(value: value);
-                  },
-                )
-              ],
-            );
+            return const _CalendarEventes();
           }
         ),
       ),
+    );
+  }
+}
+
+class _CalendarEventes extends StatelessWidget {
+  const _CalendarEventes();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final calendarProvider = Provider.of<CalendarProvider>(context);
+
+    return Column(
+      children: [
+        TableCalendar( 
+          rowHeight: 40,
+          eventLoader: (day){
+            return calendarProvider.getAllEvents(day);
+          },
+          locale: 'ES_es',
+          firstDay: DateTime.utc(2010, 10, 16),
+          lastDay: DateTime.utc(2030, 3, 14),
+          focusedDay: calendarProvider.dayFocused,  
+          calendarFormat: calendarProvider.calendarFormat,
+          selectedDayPredicate: (day){
+            return isSameDay(calendarProvider.currentDay, day);
+          },
+          onDaySelected: calendarProvider.onSelectDay,
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: const Color(AppTheme.primaryColor).withOpacity(0.7),
+              shape: BoxShape.circle
+            ),
+            selectedDecoration: const BoxDecoration(
+              color:Color(AppTheme.primaryColor),
+              shape: BoxShape.circle
+            )
+          ),
+
+          headerStyle: const HeaderStyle(titleCentered: true, formatButtonVisible: false),
+          calendarBuilders: CalendarBuilders(
+            markerBuilder:(context, day, events) {
+              if(events.isNotEmpty){
+                return Container(
+                  width: 15,
+                  height: 15,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: Color(AppTheme.secondaryColor),
+                    shape: BoxShape.circle
+                  ),
+                  child: Text(
+                    '${events.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                );
+              }
+        
+              return null;
+            },
+          ),
+        ),
+
+        const SizedBox(height: 30),
+
+        Text(
+          'Lista de citas', 
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            fontWeight: FontWeight.bold, 
+            color: const Color(AppTheme.primaryColor)
+          ),
+        ),
+
+        const SizedBox(height: 10),
+        ValueListenableBuilder<List<Appoiment>>(
+          valueListenable: calendarProvider.selectedAppoiments, 
+          builder:(context, value, _) {
+            return _AppoimentList(value: value);
+          },
+        )
+      ],
     );
   }
 }

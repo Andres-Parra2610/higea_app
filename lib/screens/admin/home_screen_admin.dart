@@ -22,8 +22,25 @@ class HomeScreenAdmin extends StatelessWidget {
     final Admin admin = Provider.of<AuthProvider>(context, listen: false).currentAdmin;
 
     if(PlatformDevice.isMobile){
-      return const Scaffold(
-        body: Center(child: Text('Para acceder al administrador debe hacerlo desde la web'),),
+      return Scaffold(
+        body: Center(
+          child: Column(
+            children: [
+              const Text('Para acceder al administrador debe hacerlo desde la web'),
+              ElevatedButton(
+                onPressed: (){
+                  UserPreferences.deleteUser();
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (_) => const SessionScreen()), 
+                    (route) => false
+                  );
+                },  
+                child: const Text('Cerrar')
+              )
+            ],
+          )
+        ),
       );
     }
 

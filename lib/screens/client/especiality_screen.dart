@@ -68,11 +68,14 @@ class _EspecialistAppBar extends StatelessWidget {
                 onPressed: () => Navigator.pop(context), 
                 icon: const Icon(Icons.arrow_back, color: Colors.white,)
               ),
-              Text(
-                name, 
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
+              Expanded(
+                child: Text(
+                  name, 
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold,color: Colors.white)
+                ),
               )
             ],
           ),
@@ -135,12 +138,12 @@ class _EspecialistList extends StatelessWidget {
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: snapshot.data![index])));
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 8),
                       child: Row(
                         children: [
                           CircleAvatar(
                             backgroundImage: AssetImage(img),
-                            radius: 30,
+                            radius: 25,
                           ),
 
                           const SizedBox(width: 40),
@@ -148,15 +151,15 @@ class _EspecialistList extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('$prefix $name $lastName',style: const TextStyle(
-                                color: Color(AppTheme.primaryColor),
+                              Text('$prefix $name $lastName',
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                color: const Color(AppTheme.primaryColor),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16
                               )),
 
-                              const SizedBox(height: 10),
-                              const Text('Horario de atención'),
-                              Text('$startTime - $endTime'),
+                              const SizedBox(height: 5),
+                              Text('Horario de atención: ', style: Theme.of(context).textTheme.labelMedium),
+                              Text('$startTime - $endTime', style: Theme.of(context).textTheme.labelMedium),
                             ],
                           ),
                         ],

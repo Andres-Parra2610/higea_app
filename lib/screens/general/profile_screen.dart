@@ -67,7 +67,20 @@ const ProfileScreen({ Key? key }) : super(key: key);
                 icon: Icons.date_range_rounded, 
               ),
 
-              const SizedBox(height: 30),
+
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PendingAppoimentsScreen()));
+                },
+                title: const Text(
+                  'Mis citas médicas pentiendes', 
+                  style: TextStyle(fontSize: 14, color: Color(AppTheme.primaryColor)),
+                ),
+                trailing: const Icon(Icons.keyboard_arrow_right_outlined),
+              ),
+
+              const SizedBox(height: 15),
 
               TextButton(
                 onPressed: (){
@@ -75,7 +88,7 @@ const ProfileScreen({ Key? key }) : super(key: key);
                 }, 
                 child: const Text(
                   'Cerrar sesión', 
-                  style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 15)
+                  style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14)
                 )
               )
             ],
@@ -102,9 +115,19 @@ class _InformationItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-          subtitle: Text(subtTitle),
+          leading: Icon(icon, size: 20),
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          subtitle: Text(
+            subtTitle,
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(
+              color: Colors.black45
+            ),
+          ),
         ),
         const Divider()
       ],

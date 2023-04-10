@@ -63,4 +63,11 @@ class AppoimentService {
     final data =  jsonDecode(response.body) as Map<String, dynamic>;
     return data;
   }
+
+  static Future getPendingAppoimentByPatient(int ci) async{
+    final url = Uri.parse('$server/appoiment/patient/$ci');
+    final response = await http.get(url);
+    final data =  jsonDecode(response.body) as Map<String, dynamic>;
+    return data;
+  }
 }

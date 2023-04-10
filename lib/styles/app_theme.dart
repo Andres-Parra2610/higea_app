@@ -45,17 +45,16 @@ class AppTheme{
     textTheme: const TextTheme(
       headlineSmall: TextStyle(
         fontWeight: FontWeight.w900,
-        color: Colors.black,
         fontSize: 20
       ),
       titleLarge: TextStyle(
         fontWeight: FontWeight.bold,
-        fontSize: 18
+        fontSize: 16
       ),
       titleSmall: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold
-      )
+      ),
 
     )
 

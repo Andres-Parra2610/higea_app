@@ -1,6 +1,3 @@
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
@@ -23,15 +20,13 @@ class AppoimentsDetails extends StatelessWidget {
   Widget build(BuildContext context){
 
     final Doctor currentDoctor = Provider.of<AuthProvider>(context, listen: false).currentDoctor;
-    final formatDate = Helpers.completeDateFromDateTime(appoiment.fechaCita);
-    final hour = Helpers.transformHour(appoiment.horaCita);
-  
     const TextStyle textStyle = TextStyle(color: Colors.black45);
 
     return WillPopScope(
       onWillPop: ()async {
         final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
         historyProvider.switchValue = false;
+        historyProvider.writing = false;
         historyProvider.switchError = '';
         return Future.value(true);
       },
@@ -70,14 +65,21 @@ class AppoimentsDetails extends StatelessWidget {
                 Row(
                   children: [
                     const Expanded(child: Text('Fecha y hora de la cita')),
-                    Text('$formatDate $hour',  style: textStyle)
+                    Text('${appoiment.fechaCitaStr} ${appoiment.horaCitaStr}',  style: textStyle)
                   ],
                 ),
     
                 const SizedBox(height: 30),
     
-                const Text('Nombre'),
-                Text('${patient.nombrePaciente} ${patient.apellidoPaciente}', style: textStyle,),
+                ListTile(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=> HistoryListWidget(patient: patient)));
+                  },
+                  contentPadding: const EdgeInsets.all(0),
+                  title: const Text('Nombre', style: TextStyle(fontSize: 14)),
+                  subtitle: Text('${patient.nombrePaciente} ${patient.apellidoPaciente}', style: textStyle,),
+                  trailing: const Text('Ver historial >', style: TextStyle(fontSize: 12)),
+                ),
     
                 const SizedBox(height: 30),
     
@@ -119,7 +121,6 @@ class _LoadingWidget extends StatelessWidget {
 class _FormAppoimentsDetalis extends StatelessWidget {
   const _FormAppoimentsDetalis(this.id);
 
-
   final int id;
 
   @override
@@ -127,22 +128,16 @@ class _FormAppoimentsDetalis extends StatelessWidget {
 
     final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
 
-
     return  FutureBuilder(
       future: historyProvider.showHistory(id),
       builder: (context, AsyncSnapshot<History> snapshot) {
-
 
         if(!snapshot.hasData){
           return Column(children: const[CircularProgressIndicator.adaptive()]);
         }
 
-
         final History history = snapshot.data!;
 
-        
-
-  
         return Form(
           key: historyProvider.formKey,
           child: Column(
@@ -161,7 +156,10 @@ class _FormAppoimentsDetalis extends StatelessWidget {
                 decoration: const InputDecoration(
                   hintText: 'Ejemplo: paciente gripe'
                 ),
-                onChanged: (value) => historyProvider.currentHistory.notaMedica = value,
+                onChanged: (value) {
+                  historyProvider.currentHistory.notaMedica = value;
+                  historyProvider.writing = true;
+                },
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 validator: (value) {
@@ -181,7 +179,10 @@ class _FormAppoimentsDetalis extends StatelessWidget {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 minLines: 8,
-                onChanged: (value) => historyProvider.currentHistory.observaciones = value,
+                onChanged: (value) {
+                  historyProvider.currentHistory.observaciones = value;
+                  historyProvider.writing = true;
+                },
                 validator: (value) {
                   if(value!.trim().isNotEmpty) return null;
                   return 'El campo no puede estar vacio';
@@ -193,28 +194,9 @@ class _FormAppoimentsDetalis extends StatelessWidget {
         
               const SizedBox(height: 15),
         
-              ElevatedButton(
-                onPressed: ()async{
-                  if(!historyProvider.formKey.currentState!.validate() || (!historyProvider.switchValue && history.idhistorial == 0)){
-                    historyProvider.switchError = 'Debe marcar la cita como finalizada';
-                    return;
-                  }
-                  
-                  if(historyProvider.switchError.trim().isNotEmpty){
-                    historyProvider.switchError = '';
-                  }
-
-                  final String msg = await historyProvider.finishAppoiment(id);
-
-                  SnackBarWidget.showSnackBar(msg, AppTheme.primaryColor);
-                  
-                }, 
-                child: const Text('Guardar')
-              ),
+              _SavedButton(history: history, id: id),
 
               const SizedBox(height: 30),
-
-              
             ],
           ),
         );
@@ -223,10 +205,47 @@ class _FormAppoimentsDetalis extends StatelessWidget {
   }
 }
 
+class _SavedButton extends StatelessWidget {
+  const _SavedButton({
+    required this.history,
+    required this.id,
+  });
+
+  final History history;
+  final int id;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final historyProvider = Provider.of<HistoryProvider>(context);
+    
+    return ElevatedButton(
+      onPressed: historyProvider.writing == false ? null : () async{
+        if(!historyProvider.formKey.currentState!.validate() || (!historyProvider.switchValue && history.idhistorial == 0)){
+          historyProvider.switchError = 'Debe marcar la cita como finalizada';
+          return;
+        }
+        
+        if(historyProvider.switchError.trim().isNotEmpty){
+          historyProvider.switchError = '';
+        }
+
+        final String msg = await historyProvider.finishAppoiment(id);
+
+        SnackBarWidget.showSnackBar(msg, AppTheme.primaryColor);
+        
+      }, 
+      child: const Text('Guardar')
+    );
+  }
+}
+
+
+
+
 class _SwitchFinish extends StatelessWidget {
   const _SwitchFinish({
     required this.history,
- 
   });
 
   final History history;
@@ -240,9 +259,9 @@ class _SwitchFinish extends StatelessWidget {
       children: [
         SwitchListTile.adaptive(
           contentPadding: EdgeInsets.zero,
-          value: history.idhistorial != 0 ? true : historyProvider.switchValue, 
-          onChanged: history.idhistorial != 0 ? null : (value) => historyProvider.switchValue = value,
-          title: const Text('¿Finalizar cita?', style: TextStyle(fontSize: 15),),
+          value: history.idhistorial != null ? true : historyProvider.switchValue, 
+          onChanged:  (value) => historyProvider.switchValue = value,
+          title: const Text('¿Finalizar cita?', style: TextStyle(fontSize: 15)),
           activeColor: const Color(AppTheme.primaryColor),
           subtitle: const Text('Nota: Una vez finalizada la cita ya no podrá editarla'),
         ),

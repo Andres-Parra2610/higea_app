@@ -39,7 +39,12 @@ class CardWidget extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                 child: Center(
-                  child: Text(speciality.nombreEspecialidad, style: Theme.of(context).textTheme.titleSmall)
+                  child: Text(
+                    speciality.nombreEspecialidad, 
+                    style: Theme.of(context).textTheme.titleSmall,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  )
                 ),
               )
             )

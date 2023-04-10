@@ -139,20 +139,13 @@ class _ClientName extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Bienvenido',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24
-            ),
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.normal)
           ),
           Text(
             '$name $lastName',
-            style: const TextStyle(
-              color:  Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold
-            ),
+            style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white)
           ),
         ],
       ),

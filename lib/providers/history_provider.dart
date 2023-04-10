@@ -6,9 +6,11 @@ import 'package:higea_app/services/services.dart';
 
 class HistoryProvider extends ChangeNotifier{
 
+  late History currentHistory;
+  List<History> histories = [];
   bool _switchValue = false;
   bool _loading = false;
-  late History currentHistory;
+  bool _writing = false;
   String _switchError = '';
 
 
@@ -16,16 +18,26 @@ class HistoryProvider extends ChangeNotifier{
 
   bool get switchValue => _switchValue;
   bool get loading => _loading;
+  bool get writing => _writing;
   String get switchError => _switchError;
 
   set switchValue(bool value){
-    _switchValue = value;
-    notifyListeners();
+    if(value != _switchValue){
+      _switchValue = value;
+      notifyListeners();
+    }
   }
 
   set loading(bool value){
     _loading = value;
     notifyListeners();
+  }
+
+  set writing(bool value){
+    if(value != _writing){
+      _writing = value;
+      notifyListeners();
+    }
   }
 
   set switchError(String value){
@@ -40,6 +52,20 @@ class HistoryProvider extends ChangeNotifier{
     final History history = History.fromJson(res['results']);
     currentHistory = history;
     return history;
+  }
+
+
+  Future<List<History>> showHistoryByPatient(int ci) async{
+
+    //if(histories.isNotEmpty) return histories;
+
+    final Map<String, dynamic> res = await HistoryService.getHistoryByPatient(ci);
+
+    if(res['ok'] == false) return [];
+
+    final historyList = res['results'] as List<dynamic>;
+    histories = historyList.map((e) => History.fromJson(e)).toList();
+    return histories;
   }
 
 

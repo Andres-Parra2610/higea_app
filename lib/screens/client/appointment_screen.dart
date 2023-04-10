@@ -96,7 +96,7 @@ class _AppointMentAppBar extends StatelessWidget {
               child: _TextHeader(name: name, lastName: lastName, prefix: prefix),
             ),
             CircleAvatar(
-              radius: 40,
+              radius: 30,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image(
@@ -133,10 +133,11 @@ class _TextHeader extends StatelessWidget {
       children:[
         Text(
           '$prefix $name $lastName',
-          style: const TextStyle(
-              color: Color(AppTheme.primaryColor),
-              fontSize: 22,
-              fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+              color: const Color(AppTheme.primaryColor),
+              fontWeight: FontWeight.bold,
+              fontSize: 18
+            ),
         ),
       ],
     );
@@ -164,7 +165,6 @@ class _AppoinmentDates extends StatelessWidget {
 
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 15),
-          child: Text(''),
         ),
         SizedBox(
           width: double.infinity,
@@ -288,11 +288,10 @@ class _Dates extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('$monthName: ', style: TextStyle(fontSize: 16,color: Color(textColor), fontWeight: FontWeight.bold)),
-            Text('$nameDay ', style: TextStyle(fontSize: 16,color: Color(textColor))),
-            Text(day, style: TextStyle(fontSize: 16, color: Color(textColor)))
+            Text('$monthName: ', style: TextStyle(fontSize: 14,color: Color(textColor), fontWeight: FontWeight.bold)),
+            Text('$nameDay ', style: TextStyle(fontSize: 14,color: Color(textColor))),
+            Text(day, style: TextStyle(fontSize: 14, color: Color(textColor)))
           ],
         ),
       ),
@@ -423,7 +422,7 @@ class _AppoimentStatus extends StatelessWidget {
               borderRadius: BorderRadius.circular(10)
             ),
             padding: EdgeInsets.symmetric(vertical:15, horizontal: size.width * 0.020),
-            child: Text(appoimentHour, style: const TextStyle(fontSize: 16)),
+            child: Text(appoimentHour, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)),
           ),
       
           const SizedBox(width: 20),
@@ -446,7 +445,7 @@ class _AppoimentStatus extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(text, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(text, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white)),
                     Text(actionText, style: const TextStyle(fontSize: 13, color: Colors.white))
                   ],
                 ),
