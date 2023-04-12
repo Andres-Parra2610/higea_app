@@ -27,6 +27,7 @@ class HigeaTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return TextFormField(
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
       keyboardType: keyboardType ?? TextInputType.text,
       decoration: InputDecoration(
         labelText: labelText,
@@ -62,6 +63,7 @@ class _HigeaTextFieldPasswordState extends State<HigeaTextFieldPassword> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
       obscureText: !showPassword,
       decoration: InputDecoration(
         labelText: 'Contraseña',

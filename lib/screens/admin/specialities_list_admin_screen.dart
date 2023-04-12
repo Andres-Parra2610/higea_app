@@ -197,7 +197,7 @@ class _SpecialityDataTableSource extends DataTableSource{
         DataCell(Text(speciality.idespecialidad.toString())),
         DataCell(Text(speciality.nombreEspecialidad)),
         DataCell(
-          _SpecialityImage(image: speciality.imagenEspecialidad!)
+          _SpecialityImage(image: speciality.imagenEspecialidad)
         ),
       ]
     );
@@ -219,7 +219,7 @@ class _SpecialityImage extends StatelessWidget {
     required this.image,
   });
 
-  final String image;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -230,12 +230,12 @@ class _SpecialityImage extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Image(
-          image: NetworkImage(image),
+        child:  Image(
+          image: image!.isNotEmpty ? NetworkImage(image!) : const AssetImage('assets/no-image.jpg') as ImageProvider,
           width: 150,
           height: 200,
           fit: BoxFit.cover,
-        ),
+        ), 
       ),
     );
   }

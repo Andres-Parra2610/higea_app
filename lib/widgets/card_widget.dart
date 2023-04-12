@@ -28,7 +28,9 @@ class CardWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
                 child: Image(
-                  image: NetworkImage(speciality.imagenEspecialidad!),
+                  image: speciality.imagenEspecialidad!.isEmpty 
+                    ? const AssetImage('assets/no-image.jpg')
+                    : NetworkImage(speciality.imagenEspecialidad!) as ImageProvider,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),

@@ -62,7 +62,7 @@ class AppTheme{
   );
 
   //GradientDecoration
-  static BoxDecoration BoxGradient({double fOpacity = 1, double sOpacity = 0.6}) {
+  static BoxDecoration boxGradient({double fOpacity = 1, double sOpacity = 0.6}) {
     return BoxDecoration(
       gradient: LinearGradient(
         colors: [

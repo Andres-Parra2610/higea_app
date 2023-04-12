@@ -152,6 +152,7 @@ class _FormAppoimentsDetalis extends StatelessWidget {
         
               const SizedBox(height: 15),
               TextFormField(
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
                 initialValue: historyProvider.currentHistory.notaMedica,
                 decoration: const InputDecoration(
                   hintText: 'Ejemplo: paciente gripe'
@@ -175,6 +176,7 @@ class _FormAppoimentsDetalis extends StatelessWidget {
               const SizedBox(height: 15),
         
               TextFormField(
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
                 initialValue: historyProvider.currentHistory.observaciones,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,

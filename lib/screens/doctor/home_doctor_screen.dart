@@ -184,11 +184,22 @@ class _AppoimentItem extends StatelessWidget {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (_) => AppoimentsDetails(patient: patient, appoiment: appoiment)));
       },
-      title: Text('${patient.nombrePaciente} ${patient.apellidoPaciente}'),
+      title: Text(
+        '${patient.nombrePaciente} ${patient.apellidoPaciente}',
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)
+      ),
       subtitle: Row(
         children: [
-          Expanded(child: Text(format.format(appoiment.fechaCita))),
-          Text(Helpers.transformHour(appoiment.horaCita))
+          Expanded(
+            child: Text(
+              format.format(appoiment.fechaCita),
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
+            )
+          ),
+          Text(
+            Helpers.transformHour(appoiment.horaCita),
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
+          )
         ],
       ),
       trailing: const Icon(Icons.keyboard_arrow_right_outlined),

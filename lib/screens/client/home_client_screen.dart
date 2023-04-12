@@ -107,7 +107,7 @@ class _CustomHeader extends StatelessWidget {
       padding: const EdgeInsets.all(AppTheme.horizontalPadding),
       height: size.height * 0.28,
       width: double.infinity,
-      decoration: AppTheme.BoxGradient(),
+      decoration: AppTheme.boxGradient(),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
