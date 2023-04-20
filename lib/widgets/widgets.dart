@@ -1,7 +1,6 @@
 export 'package:higea_app/widgets/history_details_widget.dart';
 export 'package:higea_app/widgets/history_list_widget.dart';
 export 'package:higea_app/widgets/report_button.dart';
-export 'package:higea_app/widgets/floatin_menu_button_widget.dart';
 export 'package:higea_app/widgets/alert_delete_doctor_widget.dart';
 export 'package:higea_app/widgets/alert_doctor_widget.dart';
 export 'package:higea_app/widgets/alert_delete_speciality_widget.dart';

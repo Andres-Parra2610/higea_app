@@ -43,7 +43,7 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: calendarProvider.getEventsFromBd(currentDoctor.cedulaMedico),
+          future: calendarProvider.getEventsFromBd(currentDoctor.cedula),
           builder: (context, AsyncSnapshot<Map<String, List<Appoiment>>> snapshot) {
             
             if(!snapshot.hasData){

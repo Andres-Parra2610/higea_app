@@ -64,9 +64,9 @@ class _PatientDataTable extends DataTableSource{
     return DataRow.byIndex(
       index: index,
       cells: <DataCell> [
-        DataCell(Text(data.cedulaPaciente.toString())),
+        DataCell(Text(data.cedula.toString())),
         DataCell(Text('${data.nombrePaciente.split(' ')[0]} ${data.apellidoPaciente.split(' ')[0]}')),
-        DataCell(Text(data.correoPaciente)),
+        DataCell(Text(data.correo)),
         DataCell(Text(data.telefonoPaciente))
       ]
     );

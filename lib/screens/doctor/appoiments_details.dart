@@ -56,7 +56,7 @@ class AppoimentsDetails extends StatelessWidget {
                 Row(
                   children: [
                     const Expanded(child: Text('Cédula del paciente')),
-                    Text('${patient.cedulaPaciente}', style: textStyle,)
+                    Text('${patient.cedula}', style: textStyle,)
                   ],
                 ),
     
@@ -84,7 +84,7 @@ class AppoimentsDetails extends StatelessWidget {
                 const SizedBox(height: 30),
     
                 const Text('Correo'),
-                Text(patient.correoPaciente,  style: textStyle),
+                Text(patient.correo,  style: textStyle),
     
                 const SizedBox(height: 30),
     

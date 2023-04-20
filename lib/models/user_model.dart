@@ -2,29 +2,29 @@ import 'dart:convert';
 
 class User {
     User({
-        required this.cedulaPaciente,
+        required this.cedula,
         required this.nombrePaciente,
         required this.apellidoPaciente,
-        required this.correoPaciente,
+        required this.correo,
         required this.telefonoPaciente,
         required this.fechaNacimientoPaciente,
         this.activo,
     });
 
-    final int cedulaPaciente;
+    final int cedula;
     final String nombrePaciente;
     final String apellidoPaciente;
-    final String correoPaciente;
+    final String correo;
     final String telefonoPaciente;
     final DateTime fechaNacimientoPaciente;
     final int? activo;
 
 
     User.empty() : 
-      cedulaPaciente = 0,
+      cedula = 0,
       nombrePaciente = '',
       apellidoPaciente = '',
-      correoPaciente = '',
+      correo = '',
       telefonoPaciente = '',
       fechaNacimientoPaciente = DateTime(0),
       activo = 0;
@@ -34,10 +34,10 @@ class User {
 
 
     factory User.fromJson(Map<String, dynamic> json) => User(
-        cedulaPaciente: json["cedula_paciente"],
+        cedula: json["cedula_paciente"],
         nombrePaciente: json["nombre_paciente"],
         apellidoPaciente: json["apellido_paciente"],
-        correoPaciente: json["correo_paciente"],
+        correo: json["correo_paciente"],
         telefonoPaciente: json["telefono_paciente"],
         fechaNacimientoPaciente: DateTime.parse(json["fecha_nacimiento_paciente"]),
         activo: json["activo"] ?? 0,

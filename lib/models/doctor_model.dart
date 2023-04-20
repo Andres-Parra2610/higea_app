@@ -2,38 +2,38 @@ import 'dart:convert';
 
 class Doctor {
     Doctor({
-        required this.cedulaMedico,
+        required this.cedula,
         required this.nombreMedico,
         required this.apellidoMedico,
-        required this.sexoMedico,
-        required this.horaInicio,
-        required this.horaFin,
+        this.sexoMedico,
+        this.horaInicio,
+        this.horaFin,
         this.telefonoMedico,
-        this.correoMedico, 
+        this.correo, 
         this.fechaNacimiento, 
         this.nombreEspecialidad, 
         this.fechas
     });
 
-    int cedulaMedico;
+    int cedula;
     String nombreMedico;
     String apellidoMedico;
-    String sexoMedico;
-    String horaInicio;
-    String horaFin;
+    String? sexoMedico;
+    String? horaInicio;
+    String? horaFin;
     String? telefonoMedico;
-    String? correoMedico;
+    String? correo;
     DateTime? fechaNacimiento;
     String? nombreEspecialidad;
     List<String>? fechas;
 
     Doctor.empty() :
-      cedulaMedico = 0,
+      cedula = 0,
       nombreMedico = '',
       apellidoMedico = '',
       sexoMedico = '',
       horaInicio = '',
-      correoMedico = '',
+      correo = '',
       fechaNacimiento = DateTime(0),
       nombreEspecialidad = '',
       fechas = [],
@@ -45,28 +45,28 @@ class Doctor {
     String toRawJson() => json.encode(toJson());
 
     factory Doctor.fromJson(Map<String, dynamic> json) => Doctor(
-        cedulaMedico: json["cedula_medico"],
+        cedula: json["cedula_medico"],
         nombreMedico: json["nombre_medico"],
         apellidoMedico: json["apellido_medico"],
         sexoMedico: json["sexo_medico"],
         horaInicio: json["hora_inicio"],
         horaFin: json["hora_fin"],
         telefonoMedico: json["telefono_medico"] ?? '',
-        correoMedico: json["correo_medico"] ?? '',
+        correo: json["correo_medico"] ?? '',
         nombreEspecialidad: json["nombre_especialidad"] ?? '',
         fechaNacimiento: json["fecha_nacimiento"] == null ? DateTime(2000) :  DateTime.parse(json["fecha_nacimiento"]),
         fechas: json["fechas"] == null ? [] : List<String>.from(json["fechas"].map((x) => x)),
     );
 
     Map<String, dynamic> toJson() => {
-        "cedula_medico": cedulaMedico,
+        "cedula_medico": cedula,
         "nombre_medico": nombreMedico,
         "apellido_medico": apellidoMedico,
         "sexo_medico": sexoMedico,
         "hora_inicio": horaInicio,
         "hora_fin": horaFin,
         "telefono_medico": telefonoMedico,
-        "correo_medico": correoMedico,
+        "correo_medico": correo,
         "fecha_nacimiento": fechaNacimiento!.toIso8601String(),
         "nombre_especialidad": nombreEspecialidad,
         "fechas": List<dynamic>.from(fechas!.map((x) => x)),

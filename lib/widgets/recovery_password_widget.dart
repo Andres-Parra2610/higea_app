@@ -54,7 +54,7 @@ class _FormInputCodeVerification extends StatelessWidget {
     return IntrinsicHeight(
       child: Column(
         children: [
-          Text('Por favor, ingrese el código enviado a ${recoveryPorovider.user.correoPaciente}'),
+          Text('Por favor, ingrese el código enviado a ${recoveryPorovider.user.correo}'),
 
           const SizedBox(height: 20),
 

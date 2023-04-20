@@ -83,7 +83,7 @@ class _FormInputCi extends StatelessWidget {
           onPressed: recoveryPorovider.isLoading ? null : () async{
             if(!recoveryPorovider.userCiKey.currentState!.validate()) return;
 
-            final res = await recoveryPorovider.getPatientByCi();
+            final res = await recoveryPorovider.getUserByCi();
 
             if(!res){
               SnackBarWidget.showSnackBar('El usuario es inexistente');

@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
@@ -75,14 +77,10 @@ class AppoimentProvider extends ChangeNotifier{
     if(res["ok"] == false) return false;
 
     final Appoiment succesAppoiment = Appoiment.fromJson(res["result"]);
-
+    
     await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
 
-    final List list = await NotificationService.notificationsPlugin.pendingNotificationRequests();
-
-    for(var notification in list){
-      print(notification.id);
-    }
+    //final List list = await NotificationService.notificationsPlugin.pendingNotificationRequests();
   }
 
   Future cancelAppoiment(appoimentId) async{

@@ -52,10 +52,10 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
             : () async{
                 setState(() => isLoading = true);
                 final navigator = Navigator.of(context);
-                widget.appoiment.cedulaPaciente = user.cedulaPaciente;
+                widget.appoiment.cedulaPaciente = user.cedula;
                 final res = currentAppoiment.idCita == 0 
                   ? await appoimetnProvider.newApoiment(widget.appoiment)
-                  : await appoimetnProvider.updateAppoiment(currentAppoiment.idCita, user.cedulaPaciente);
+                  : await appoimetnProvider.updateAppoiment(currentAppoiment.idCita, user.cedula);
                 setState(() => isLoading = false);
                 await appoimetnProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimetnProvider.date);
                 res == false ? navigator.pop(false) : navigator.pop(true);
@@ -84,7 +84,7 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
 
               Text('Email', style: textStyle,),
               TextFormField(
-                initialValue: user.correoPaciente,
+                initialValue: user.correo,
                 readOnly: true,
               ),
 

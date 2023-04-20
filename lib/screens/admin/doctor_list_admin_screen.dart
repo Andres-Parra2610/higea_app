@@ -100,7 +100,7 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
               children: [
                 IconButton(
                   onPressed: () async{
-                    final Doctor doctor = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedulaMedico);
+                    final Doctor doctor = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedula);
                     final res = await showDialog(context: context, builder: (_) => AlertDoctorWidget(doctor: doctor, title: 'Editar médico', isEdit: true,));
 
                     if(res == null) return;
@@ -118,7 +118,7 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
                 ),
                 IconButton(
                   onPressed: () async{
-                    final int doctorCi = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedulaMedico).cedulaMedico;
+                    final int doctorCi = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedula).cedula;
                     final res = await showDialog(context: context, builder: (_) => AlertDeleteDoctorWidget(doctorCi: doctorCi,));
 
                     if(res == null) return;
@@ -153,20 +153,20 @@ class _DoctorsDataTableSource extends DataTableSource{
   DataRow? getRow(int index) {
 
     final Doctor doctor = data[index];
-    final bool isSelected = selected.contains(doctor.cedulaMedico);
-    final startHour = Helpers.transformHour(doctor.horaInicio);
-    final endHour = Helpers.transformHour(doctor.horaFin);
+    final bool isSelected = selected.contains(doctor.cedula);
+    final startHour = Helpers.transformHour(doctor.horaInicio!);
+    final endHour = Helpers.transformHour(doctor.horaFin!);
 
     return DataRow.byIndex(
       selected: isSelected,
       onSelectChanged: (value) {
         if(value == null) return;
-        onSelectedRow(value, doctor.cedulaMedico);
+        onSelectedRow(value, doctor.cedula);
         notifyListeners();
       },
       index: index,
       cells: <DataCell>[
-        DataCell(Text(doctor.cedulaMedico.toString())),
+        DataCell(Text(doctor.cedula.toString())),
         DataCell(Text('${doctor.nombreMedico.split(' ')[0]} ${doctor.apellidoMedico.split(' ')[0]}')),
         DataCell(Row(
           children: [

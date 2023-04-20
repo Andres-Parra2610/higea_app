@@ -8,7 +8,7 @@ class NotificationService {
 
   static Future<void> initNotification() async{
     
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('flutter_icon');
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('logo_higea');
 
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid
@@ -19,21 +19,32 @@ class NotificationService {
     await notificationsPlugin.initialize(initializationSettings);
   }
 
+
+
+
+
   static Future<void> showNotification(int idCita, DateTime date) async{
+
+
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    final minDate = tomorrow.add(const Duration(days: 1));
+
+    if(date.isBefore(minDate)) return;
+
 
     const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
         'cita_medica', 
         'recordatorio_cita',
         importance: Importance.high,
-        priority: Priority.high
-      );
+        priority: Priority.high,
+    );
 
     const NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails
     );
 
     final location = tz.local;
-    //TODO VALIDAR ESTO
     //tz.TZDateTime.now(location).add(const Duration(seconds: 5)),
     final tz.TZDateTime dateNotification = tz.TZDateTime.from(date.subtract(const Duration(days: 1)), location);
 
@@ -42,7 +53,7 @@ class NotificationService {
       idCita, 
       'Recordatorio de cita médica', 
       'Recuerda que el día de mañana tienes una cita médica,  no la olvides!',
-      dateNotification,
+      tz.TZDateTime.now(location).add(const Duration(seconds: 5)),
       notificationDetails,
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,

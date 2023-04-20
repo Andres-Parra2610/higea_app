@@ -48,8 +48,8 @@ class AuthService{
     return data;
   }
 
-  static Future getPatient(String ci) async{
-    final url = Uri.parse('$server/recovery-password/patient/$ci');
+  static Future getUser(String ci) async{
+    final url = Uri.parse('$server/recovery-password/user/$ci');
     final response = await http.get(url);
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     return data;

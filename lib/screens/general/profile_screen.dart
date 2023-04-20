@@ -32,7 +32,7 @@ const ProfileScreen({ Key? key }) : super(key: key);
             children: [
 
               _InformationItem(
-                title: '${user.cedulaPaciente}', 
+                title: '${user.cedula}', 
                 subtTitle: 'Cédula de identidad', 
                 icon: Icons.contact_emergency_rounded, 
               ),
@@ -50,7 +50,7 @@ const ProfileScreen({ Key? key }) : super(key: key);
               ),
 
                _InformationItem(
-                title: user.correoPaciente, 
+                title: user.correo, 
                 subtTitle: 'Correo', 
                 icon: Icons.email_rounded, 
               ),

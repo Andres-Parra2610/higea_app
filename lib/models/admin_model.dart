@@ -4,24 +4,24 @@ import 'dart:convert';
 class Admin{
 
   Admin({
-    required this.cedulaAdmin,
+    required this.cedula,
     required this.nombreAdmin,
     required this.apellidoAdmin,
-    required this.correoAdmin
+    required this.correo
   });
 
-  final int cedulaAdmin;
+  final int cedula;
   final String nombreAdmin;
   final String apellidoAdmin;
-  final String correoAdmin;
+  final String correo;
 
 
   factory Admin.fromRawJson(String str) => Admin.fromJson(json.decode(str));
 
   factory Admin.fromJson(Map<String, dynamic> json) => Admin(
-    cedulaAdmin: json['cedula_admin'],
+    cedula: json['cedula_admin'],
     nombreAdmin: json['nombre_admin'],
     apellidoAdmin: json['apellido_admin'],
-    correoAdmin: json['correo_admin'],
+    correo: json['correo_admin'],
   );
 }

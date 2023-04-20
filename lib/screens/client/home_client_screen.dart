@@ -35,6 +35,7 @@ class _Especialities extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
     final doctorProvider = Provider.of<DoctorProvider>(context);
 
@@ -66,7 +67,12 @@ class _Especialities extends StatelessWidget {
                 ).toList();
               }
           
-              if(specialities.isEmpty) return const NotFoundWidget();
+              if(specialities.isEmpty){
+                return SizedBox(
+                  height:size.height - size.height * 0.28 - (kBottomNavigationBarHeight + AppTheme.horizontalPadding * 2.5),
+                  child: const NotFoundWidget(text: 'Sin resultados', icon: Icons.search_off,),
+                );
+              }
 
               return GridView.builder(
                 shrinkWrap: true,
@@ -175,7 +181,7 @@ class _SearchField extends StatelessWidget {
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0)
         ),
-        onFieldSubmitted: (value) => doctorProvider.searchSpeciality = value ,
+        onChanged: (value) => doctorProvider.searchSpeciality = value ,
       ),
     );
   }

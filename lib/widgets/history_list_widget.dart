@@ -18,21 +18,25 @@ const HistoryListWidget({ Key? key, required this.patient }) : super(key: key);
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Color(AppTheme.primaryColor)),
-        backgroundColor: Colors.white,
-        title: const Text('Historial de citas médicas', style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal),),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: const Color(AppTheme.primaryColor),
+        title: const Text('Historial de citas médicas', style: TextStyle(color: Colors.white),),
         elevation: 0.5,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: FutureBuilder(
-          future: historyProvider.showHistoryByPatient(patient.cedulaPaciente),
+          future: historyProvider.showHistoryByPatient(patient.cedula),
           builder: (context, AsyncSnapshot<List<History>> snapshot) {
       
             if(!snapshot.hasData){
               return const Center(child: CircularProgressIndicator());
             }
             
+            if(snapshot.data!.isEmpty){
+              return const Center(child: NotFoundWidget(text: 'Sin historias médicas', icon: Icons.history_edu));
+            }
+
             return  _PatientHistoryList(snapshot.data!);
           }
         ),

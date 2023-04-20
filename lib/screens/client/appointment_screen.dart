@@ -39,7 +39,7 @@ class AppointmentScreen extends StatelessWidget {
             
             Expanded(
               flex: 1, 
-              child:  _AppoinmentDates(ci: doctor.cedulaMedico)
+              child:  _AppoinmentDates(ci: doctor.cedula)
             ),
     
             const Expanded(
@@ -395,7 +395,7 @@ class _AppoimentStatus extends StatelessWidget {
     
    
 
-    if((currentUser.cedulaPaciente == appoiment.cedulaPaciente) && appoiment.idCita != 0){
+    if((currentUser.cedula == appoiment.cedulaPaciente) && appoiment.idCita != 0){
       if(appoiment.citaEstado == "cancelada"){
         text = "Cancelada";
         actionText = " ";

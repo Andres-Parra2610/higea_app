@@ -129,9 +129,9 @@ class _HourWorks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    if(doctorForm.horaFin.isNotEmpty){
-      final String formatedStartHour = Helpers.transHour(doctorForm.horaInicio);
-      final String formatedEndHour = Helpers.transHour(doctorForm.horaFin);
+    if(doctorForm.horaFin!.isNotEmpty){
+      final String formatedStartHour = Helpers.transHour(doctorForm.horaInicio!);
+      final String formatedEndHour = Helpers.transHour(doctorForm.horaFin!);
       
       _startHourController.text = formatedStartHour;
       _endHourController.text = formatedEndHour;
@@ -160,7 +160,7 @@ class _HourWorks extends StatelessWidget {
               doctorForm.horaInicio = hourToBd;
             },
             validator: (value){
-              if(value!.trim().isEmpty && doctorForm.horaInicio.isEmpty) return 'Por favor seleccione una hora';
+              if(value!.trim().isEmpty && doctorForm.horaInicio!.isEmpty) return 'Por favor seleccione una hora';
               return null; 
             },
           ),
@@ -188,7 +188,7 @@ class _HourWorks extends StatelessWidget {
               doctorForm.horaFin = hourToBd;
             },
             validator: (value){
-              if(value!.trim().isEmpty && doctorForm.horaFin.isEmpty) return 'Por favor seleccione una hora';
+              if(value!.trim().isEmpty && doctorForm.horaFin!.isEmpty) return 'Por favor seleccione una hora';
               final startHour = DateFormat.jm().parse(_startHourController.text);
               final endHour = DateFormat.jm().parse(value);
               if(endHour.isBefore(startHour)) return 'El horario de fin no puede estar antes que el horario de inicio';
@@ -264,10 +264,10 @@ class _FirstRow extends StatelessWidget {
         Expanded(
           child: TextFormField(
             readOnly: isEdit,
-            initialValue: doctorForm.cedulaMedico == 0 ? '' : doctorForm.cedulaMedico.toString(),
+            initialValue: doctorForm.cedula == 0 ? '' : doctorForm.cedula.toString(),
             decoration: const InputDecoration(labelText: 'Cédula'),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly ],
-            onChanged: (value) => doctorForm.cedulaMedico = int.parse(value),
+            onChanged: (value) => doctorForm.cedula = int.parse(value),
             validator: (value) {
               if(value!.length < 7 || value.length > 8) return 'Debe ser una cédula válida';
               return null;
@@ -344,7 +344,7 @@ class _ThirdRow extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
-    if(doctorForm.sexoMedico.isEmpty){
+    if(doctorForm.sexoMedico!.isEmpty){
       doctorForm.sexoMedico = 'M';
     }
 
@@ -352,9 +352,9 @@ class _ThirdRow extends StatelessWidget {
       children: [
         Expanded(
           child: TextFormField(
-            initialValue: doctorForm.correoMedico,
+            initialValue: doctorForm.correo,
             decoration: const InputDecoration(labelText: 'Correo electrónico'),
-            onChanged: (value) => doctorForm.correoMedico = value,
+            onChanged: (value) => doctorForm.correo = value,
             validator: (value){
               if(value!.trim().isEmpty) return 'Debe colocar un email';
               if(!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) return 'Debe ser un email válido';

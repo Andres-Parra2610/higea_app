@@ -12,7 +12,7 @@ class RecoveryPasswordProvider extends ChangeNotifier {
   String userCi = '';
   String codeVerification = '';
   String userPassword = '';
-  late User user;
+  late dynamic user;
 
   bool get isLoading => _isLoading;
   bool get isError => _isError;
@@ -28,16 +28,27 @@ class RecoveryPasswordProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future getPatientByCi() async {
+  Future getUserByCi() async {
     isLoading = true;
-    Map<String, dynamic> data = await AuthService.getPatient(userCi);
+    Map<String, dynamic> data = await AuthService.getUser(userCi);
 
     if(data["ok"] == false){
       isLoading = false;
       return false;
     }
 
-    user = User.fromJson(data['user']);
+    final int idRol = data["user"]["id_rol"] as int;
+
+    if(idRol == 3){
+      user = User.fromJson(data['user']);
+
+    }else if(idRol == 2){
+      user = Doctor.fromJson(data['user']);
+
+    }else if(idRol == 1){
+      user = Admin.fromJson(data['user']);
+    }
+
     isLoading = false;
     return true;
   }
@@ -60,7 +71,7 @@ class RecoveryPasswordProvider extends ChangeNotifier {
 
   Future newPassword() async{
 
-    Map<String, dynamic> reqBody = {'newPassword': userPassword, 'userCi': user.cedulaPaciente};
+    Map<String, dynamic> reqBody = {'newPassword': userPassword, 'userCi': user.cedula};
 
     Map<String, dynamic> data = await AuthService.updatePassword(reqBody);
 
