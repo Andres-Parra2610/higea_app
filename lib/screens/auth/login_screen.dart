@@ -35,7 +35,7 @@ const LoginScreen({ Key? key }) : super(key: key);
                 
                   SvgPicture.asset(
                     'assets/logo-higea.svg',
-                    width: 110,
+                    width: PlatformDevice.isMobile ? 90:  110,
                   ),
                   
                   const SizedBox(height: 30),
@@ -207,22 +207,19 @@ class _RecoveryPasswordText extends StatelessWidget {
 
     final textTheme = Theme.of(context).textTheme;
 
-    return Visibility(
-      visible: PlatformDevice.isMobile,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.black12
-        ),
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPasswordScreen())),
-        child: Text(
-          '¿Olvidó su contraseña?',
-          style: TextStyle(
-            color: const Color(AppTheme.secondaryColor),
-            fontSize: textTheme.titleSmall!.fontSize,
-            fontWeight: textTheme.titleSmall!.fontWeight,
-          ),
-        )
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.black12
       ),
+      onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RecoveryPasswordScreen())),
+      child: Text(
+        '¿Olvidó su contraseña?',
+        style: TextStyle(
+          color: const Color(AppTheme.secondaryColor),
+          fontSize: textTheme.titleSmall!.fontSize,
+          fontWeight: textTheme.titleSmall!.fontWeight,
+        ),
+      )
     );
   }
 }

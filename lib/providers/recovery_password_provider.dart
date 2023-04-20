@@ -64,7 +64,7 @@ class RecoveryPasswordProvider extends ChangeNotifier {
       return false;
     }
 
-    isLoading = true;
+    isLoading = false;
     return true;
   }
 

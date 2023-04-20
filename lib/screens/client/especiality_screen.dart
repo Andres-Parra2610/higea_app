@@ -20,7 +20,7 @@ class EspecialityScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
 
-          _EspecialistAppBar(name: speciality.nombreEspecialidad, image: speciality.imagenEspecialidad!),
+          _EspecialistAppBar(speciality: speciality),
 
 
           SliverToBoxAdapter(
@@ -42,12 +42,11 @@ class EspecialityScreen extends StatelessWidget {
 class _EspecialistAppBar extends StatelessWidget {
   const _EspecialistAppBar({
     Key? key, 
-    required this.name, 
-    required this.image,
+    required this.speciality, 
   }) : super(key: key);
 
-  final String name;
-  final String image;
+  final Speciality speciality;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +69,7 @@ class _EspecialistAppBar extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  name, 
+                  speciality.nombreEspecialidad, 
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -80,11 +79,14 @@ class _EspecialistAppBar extends StatelessWidget {
             ],
           ),
         ),
-        background: Image(
-          image: image.isEmpty 
-          ? const AssetImage('assets/no-image.jpg')
-          : NetworkImage(image) as ImageProvider,
-          fit: BoxFit.cover,
+        background: Hero(
+          tag: speciality.idespecialidad,
+          child: Image(
+            image: speciality.imagenEspecialidad!.isEmpty
+            ? const AssetImage('assets/no-image.jpg')
+            : NetworkImage(speciality.imagenEspecialidad!) as ImageProvider,
+            fit: BoxFit.cover,
+          ),
         )
       ),
     );

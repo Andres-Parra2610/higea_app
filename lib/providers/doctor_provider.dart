@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
@@ -13,7 +11,7 @@ class DoctorProvider extends ChangeNotifier{
   List<Doctor> doctors = [];
   Doctor doctor = Doctor.empty();
   String _searchSpeciality = '';
-  bool _render = false;
+  bool _render = true;
   bool _isLoading = false;
 
   String get searchSpeciality => _searchSpeciality;
@@ -32,23 +30,24 @@ class DoctorProvider extends ChangeNotifier{
 
   set render(value){
     _render = value;
-    _render = false;
     notifyListeners();
   }
 
   Future<List<Speciality>> showSpecialities() async{
 
-    //if(specialities.isNotEmpty && !render) return specialities;
-    
-    final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
+    if(_render){
+      final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
 
-    
-    if(response['ok'] == false) return specialities = [];
+      if(response['ok'] == false) return specialities = [];
 
+      final results = response['results'] as List<dynamic>;
+      specialities =  List<Speciality>.from(results.map((x) => Speciality.fromJson(x)));
+      _render = false;
+      return specialities;
+    }
 
-    final results = response['results'] as List<dynamic>;
-    specialities =  List<Speciality>.from(results.map((x) => Speciality.fromJson(x)));
     return specialities;
+    
   }
 
   Future<List<Doctor>> showDoctorBySpeciality(id) async{

@@ -27,12 +27,15 @@ class CardWidget extends StatelessWidget {
               flex: 2,
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-                child: Image(
-                  image: speciality.imagenEspecialidad!.isEmpty 
-                    ? const AssetImage('assets/no-image.jpg')
-                    : NetworkImage(speciality.imagenEspecialidad!) as ImageProvider,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: speciality.idespecialidad,
+                  child: Image(
+                    image: speciality.imagenEspecialidad!.isEmpty 
+                      ? const AssetImage('assets/no-image.jpg')
+                      : NetworkImage(speciality.imagenEspecialidad!) as ImageProvider,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

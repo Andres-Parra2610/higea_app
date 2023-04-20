@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:higea_app/providers/providers.dart';
+import 'package:higea_app/services/platform_device.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -25,30 +26,36 @@ const UpdatePasswordScreen({ Key? key }) : super(key: key);
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: (){
-              //TODO VALIDAR ESTO
               Navigator.popUntil(context, (route) => route.isFirst);
             },
           ),
         ),
     
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-    
-                const SizedBox(height: 20),
-                Text('Coloca la nueva contraseña', style: TextStyle(
-                  fontSize: textTheme.headlineSmall!.fontSize, 
-                  color: const Color(AppTheme.primaryColor
-                  )
-                )),
-          
-                const SizedBox(height: 20),
-
-                const _UpdatePasswordForm()
-              ],
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: PlatformDevice.isMobile ? 900 : 500
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                
+                    const SizedBox(height: 20),
+                    Text('Coloca la nueva contraseña', style: TextStyle(
+                      fontSize: textTheme.headlineSmall!.fontSize, 
+                      color: const Color(AppTheme.primaryColor
+                      )
+                    )),
+              
+                    const SizedBox(height: 20),
+            
+                    const _UpdatePasswordForm()
+                  ],
+                ),
+              ),
             ),
           ),
         ),

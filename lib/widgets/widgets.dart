@@ -1,3 +1,4 @@
+export 'package:higea_app/widgets/platform_widget.dart';
 export 'package:higea_app/widgets/history_details_widget.dart';
 export 'package:higea_app/widgets/history_list_widget.dart';
 export 'package:higea_app/widgets/report_button.dart';
@@ -14,6 +15,7 @@ export 'package:higea_app/widgets/confirm_appoiment_widget.dart';
 export 'package:higea_app/widgets/card_widget.dart';
 export 'package:higea_app/widgets/navigation_bar_widget.dart';
 export 'package:higea_app/widgets/not_found_widget.dart';
+
 
 
 

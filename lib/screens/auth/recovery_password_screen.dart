@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:higea_app/services/platform_device.dart';
 import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:higea_app/providers/providers.dart';
@@ -21,26 +22,33 @@ const RecoveryPasswordScreen({ Key? key }) : super(key: key);
         elevation: 0,
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              const SizedBox(height: 20),
-              Text('Recuperar contraseña', style: TextStyle(
-                fontSize: textTheme.headlineSmall!.fontSize, 
-                color: const Color(AppTheme.primaryColor
-                )
-              )),
-        
-              const SizedBox(height: 20),
-        
-              const _FormInputCi(),
-
-             
-            ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: PlatformDevice.isMobile ? 900 : 500
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+          
+                  const SizedBox(height: 20),
+                  Text('Recuperar contraseña', style: TextStyle(
+                    fontSize: textTheme.headlineSmall!.fontSize, 
+                    color: const Color(AppTheme.primaryColor
+                    )
+                  )),
+            
+                  const SizedBox(height: 20),
+            
+                  const _FormInputCi(),
+          
+                 
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -51,8 +59,6 @@ const RecoveryPasswordScreen({ Key? key }) : super(key: key);
 class _FormInputCi extends StatelessWidget {
   const _FormInputCi();
 
-
-
   @override
   Widget build(BuildContext context) {
     final recoveryPorovider = Provider.of<RecoveryPasswordProvider>(context);
@@ -62,8 +68,9 @@ class _FormInputCi extends StatelessWidget {
         Form(
           key: recoveryPorovider.userCiKey,
           child: TextFormField(
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
             keyboardType: TextInputType.number,
-            inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'^[0-9]+$')) ],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly ],
             decoration: const InputDecoration(
               labelText: 'Ingesa la cédula',
               helperText: 'Al ingresar su cédula se le estará enviando un código por correo electrónico asociado a esa cédula',

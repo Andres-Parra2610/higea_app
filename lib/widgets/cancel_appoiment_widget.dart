@@ -43,10 +43,10 @@ class _CancelAppoimentWidgetState extends State<CancelAppoimentWidget> {
           onPressed: isLoading ? null : () async{
             final navigator = Navigator.of(context);
             setState(() => isLoading = true);
-            final res = await appoimentProvider.cancelAppoiment(widget.appoiment.idCita);
+            final Response res = await appoimentProvider.cancelAppoiment(widget.appoiment.idCita);
             setState(() => isLoading = false);
             await appoimentProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimentProvider.date);
-            res == false ? navigator.pop(false) : navigator.pop(true);
+            navigator.pop(res);
           }, 
           child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
         )

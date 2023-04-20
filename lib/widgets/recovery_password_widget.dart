@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/screens/screens.dart';
+import 'package:higea_app/services/platform_device.dart';
 import 'package:higea_app/styles/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,7 @@ const RecoveryPasswordWidget({ Key? key }) : super(key: key);
       ],
 
       content: SizedBox(
-        width: MediaQuery.of(context).size.width,
+        width: PlatformDevice.isMobile ? MediaQuery.of(context).size.width : 500,
         child: const _FormInputCodeVerification(),
       ),
     );

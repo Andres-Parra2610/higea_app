@@ -462,18 +462,21 @@ class _AppoimentStatus extends StatelessWidget {
     final result = await showDialog(context: context, builder: (context) => ConfirmAppoimentWidget(appoiment: appoiment));              
     if(result == null) return;
 
-    result
-      ? SnackBarWidget.showSnackBar('La cita fué reservada exitosamente', AppTheme.primaryColor)
-      : SnackBarWidget.showSnackBar('Error al reservar la ctia médica');
+    final Response response = result;
+
+    response.ok
+      ? SnackBarWidget.showSnackBar(response.msg, AppTheme.primaryColor)
+      : SnackBarWidget.showSnackBar(response.msg);
   }
 
   _cancelAppoiment(BuildContext context) async {
     final result = await showDialog(context: context, builder: (context) => CancelAppoimentWidget(appoiment: appoiment,));
-
     if(result == null) return;
 
-    result
-      ? SnackBarWidget.showSnackBar('La cita fué cancelada', AppTheme.primaryColor)
-      : SnackBarWidget.showSnackBar('Error al cancelar la ctia médica');
+    final Response response = result;
+
+    response.ok
+      ? SnackBarWidget.showSnackBar(response.msg, AppTheme.primaryColor)
+      : SnackBarWidget.showSnackBar(response.msg);
   }
 }

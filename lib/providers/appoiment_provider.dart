@@ -70,34 +70,49 @@ class AppoimentProvider extends ChangeNotifier{
   }
 
 
-  Future newApoiment(Appoiment newAppoiment) async{
+  Future<Response> newApoiment(Appoiment newAppoiment) async{
 
-    final Map<String, dynamic> res = await AppoimentService.insetAppoiment(newAppoiment);
+    final Map<String, dynamic> data = await AppoimentService.insetAppoiment(newAppoiment);
 
-    if(res["ok"] == false) return false;
+    final response = Response.fromJson(data);
 
-    final Appoiment succesAppoiment = Appoiment.fromJson(res["result"]);
-    
-    await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
+    if(response.ok){
+      final Appoiment succesAppoiment = Appoiment.fromJson(data["result"]);
+      
+      await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
+    }
+
+    return response;
 
     //final List list = await NotificationService.notificationsPlugin.pendingNotificationRequests();
   }
 
-  Future cancelAppoiment(appoimentId) async{
-    final Map<String, dynamic> res = await AppoimentService.cancelAppoiment(appoimentId);
+  Future<Response> cancelAppoiment(appoimentId) async{
+    final Map<String, dynamic> data = await AppoimentService.cancelAppoiment(appoimentId);
 
-    if(res["ok"] == false) return false;
+    final response = Response.fromJson(data);
 
-    await NotificationService.notificationsPlugin.cancel(appoimentId);
+    if(response.ok){
+      await NotificationService.notificationsPlugin.cancel(appoimentId);
+    }
+
+    return response;
   }
 
-  Future updateAppoiment(appoimentId, patientCi) async{
-    final Map<String, dynamic> res = await AppoimentService.insertExistAppoiment(appoimentId, patientCi);
-    if(res["ok"] == false) return false;
+  Future<Response> updateAppoiment(appoimentId, patientCi) async{
 
-    final Appoiment succesAppoiment = Appoiment.fromJson(res["result"]);
+    final Map<String, dynamic> data = await AppoimentService.insertExistAppoiment(appoimentId, patientCi);
 
-    await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
+    final response = Response.fromJson(data);
+
+    if(response.ok){
+      final Appoiment succesAppoiment = Appoiment.fromJson(data["result"]);
+
+      await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
+    }
+
+
+    return response;
 
   }
 

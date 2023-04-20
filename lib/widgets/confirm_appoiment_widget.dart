@@ -53,12 +53,12 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
                 setState(() => isLoading = true);
                 final navigator = Navigator.of(context);
                 widget.appoiment.cedulaPaciente = user.cedula;
-                final res = currentAppoiment.idCita == 0 
+                final Response res = currentAppoiment.idCita == 0 
                   ? await appoimetnProvider.newApoiment(widget.appoiment)
                   : await appoimetnProvider.updateAppoiment(currentAppoiment.idCita, user.cedula);
                 setState(() => isLoading = false);
                 await appoimetnProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimetnProvider.date);
-                res == false ? navigator.pop(false) : navigator.pop(true);
+                navigator.pop(res);
               },
           child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
         ),
