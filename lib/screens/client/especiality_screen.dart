@@ -125,50 +125,15 @@ class _EspecialistList extends StatelessWidget {
             childCount: snapshot.data!.length,
             (context, index) {
               
-              final startTime = Helpers.transformHour(snapshot.data![index].horaInicio!);
-              final endTime = Helpers.transformHour(snapshot.data![index].horaFin!);
-              final name = snapshot.data![index].nombreMedico.split(' ')[0];
-              final lastName = snapshot.data![index].apellidoMedico.split(' ')[0];
-              final prefix = snapshot.data![index].sexoMedico == 'F' ? 'Dra.' : 'Dr';
-              final img = snapshot.data![index].sexoMedico == 'F' 
-                ? 'assets/doctora-avatar.jpg'
-                : 'assets/doctor-avatar.jpg'; 
-
-
+              final Doctor doctor = snapshot.data![index];
+              
               return Column(
                 children: [
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: snapshot.data![index])));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: doctor)));
                     },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 8),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(img),
-                            radius: 25,
-                          ),
-
-                          const SizedBox(width: 40),
-
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('$prefix $name $lastName',
-                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                                color: const Color(AppTheme.primaryColor),
-                                fontWeight: FontWeight.bold,
-                              )),
-
-                              const SizedBox(height: 5),
-                              Text('Horario de atención: ', style: Theme.of(context).textTheme.labelMedium),
-                              Text('$startTime - $endTime', style: Theme.of(context).textTheme.labelMedium),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    child: _DoctorItem(doctor: doctor),
                   ),
 
                   const Divider()
@@ -177,6 +142,60 @@ class _EspecialistList extends StatelessWidget {
           })
         );
       }
+    );
+  }
+}
+
+class _DoctorItem extends StatelessWidget {
+  const _DoctorItem({
+    required this.doctor,
+  });
+
+  final Doctor doctor;
+  
+
+  @override
+  Widget build(BuildContext context) {
+
+    final startTime = Helpers.transformHour(doctor.horaInicio!);
+    final endTime = Helpers.transformHour(doctor.horaFin!);
+    final name = doctor.nombreMedico.split(' ')[0];
+    final lastName = doctor.apellidoMedico.split(' ')[0];
+    final prefix = doctor.sexoMedico == 'F' ? 'Dra.' : 'Dr';
+    final img = doctor.sexoMedico == 'F' 
+      ? 'assets/doctora-avatar.jpg'
+      : 'assets/doctor-avatar.jpg'; 
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 8),
+      child: Row(
+        children: [
+          Hero(
+            tag: doctor.cedula,
+            child: CircleAvatar(
+              backgroundImage: AssetImage(img),
+              radius: 25,
+            ),
+          ),
+
+          const SizedBox(width: 40),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('$prefix $name $lastName',
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: const Color(AppTheme.primaryColor),
+                fontWeight: FontWeight.bold,
+              )),
+
+              const SizedBox(height: 5),
+              Text('Horario de atención: ', style: Theme.of(context).textTheme.labelMedium),
+              Text('$startTime - $endTime', style: Theme.of(context).textTheme.labelMedium),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

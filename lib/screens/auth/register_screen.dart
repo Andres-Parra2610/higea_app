@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:higea_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+import 'package:higea_app/models/models.dart';
+import 'package:higea_app/widgets/widgets.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
-import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
 const RegisterScreen({ Key? key }) : super(key: key);
@@ -60,7 +61,7 @@ class _RegisterForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final registerProvider = Provider.of<AuthProvider>(context);
+    final registerProvider = Provider.of<AuthProvider>(context, listen: false);
 
 
     return Form(
@@ -72,7 +73,7 @@ class _RegisterForm extends StatelessWidget {
             formValues: registerProvider.formRegisterValues, 
             labelText: 'Nombres', 
             mapKey: 'name', 
-            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$')) ],
+            formatter: [ FilteringTextInputFormatter.deny(RegExp(r'[0-9]')) ],
             validate: (value){
               if(value!.trim().isEmpty) return 'Debe colocar un nombre';
               return null;
@@ -85,7 +86,7 @@ class _RegisterForm extends StatelessWidget {
             formValues: registerProvider.formRegisterValues, 
             labelText: 'Apellidos', 
             mapKey: 'lastName', 
-            formatter: [ FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$')) ],
+            formatter: [ FilteringTextInputFormatter.deny(RegExp(r'[0-9]')) ],
             validate: (value){
               if(value!.trim().isEmpty) return 'Debe colocar un apellido';
               return null;
@@ -155,45 +156,57 @@ class _RegisterForm extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async{
-                if(!registerProvider.formRegisterKey.currentState!.validate()) return;
-                
-                registerProvider.loading = true;
-                FocusScope.of(context).unfocus();
-
-                final navigator = Navigator.of(context);
-                final res = await registerProvider.registerUser();
-                
-                registerProvider.loading = false;
-                
-                !res 
-                  ? SnackBarWidget.showSnackBar('Usuario ya registrado')
-                  : navigator.pushNamed('confirm');
-               
-              }, 
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10), 
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(child: Center(
-                      child: registerProvider.loading
-                        ? const CircularProgressIndicator.adaptive(
-                          backgroundColor: Colors.white,
-                        )
-                        : const Text('Siguiente')
-                    )),
-                    const Icon(Icons.arrow_forward)
-                  ]
-                )
-              ),
-            ),
-          ),
+          const _RegisterButton(),
 
         ],
+      ),
+    );
+  }
+}
+
+class _RegisterButton extends StatelessWidget {
+  const _RegisterButton();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final registerProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () async{
+          if(!registerProvider.formRegisterKey.currentState!.validate()) return;
+          
+          registerProvider.loading = true;
+          FocusScope.of(context).unfocus();
+
+          final navigator = Navigator.of(context);
+          final Response res = await registerProvider.registerUser();
+          
+          registerProvider.loading = false;
+          
+          res.ok
+            ? navigator.pushNamed('confirm')
+            : SnackBarWidget.showSnackBar(res.msg);
+         
+        }, 
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10), 
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(child: Center(
+                child: registerProvider.loading
+                  ? const CircularProgressIndicator.adaptive(
+                    backgroundColor: Colors.white,
+                  )
+                  : const Text('Siguiente')
+              )),
+              const Icon(Icons.arrow_forward)
+            ]
+          )
+        ),
       ),
     );
   }
@@ -228,7 +241,7 @@ class _TextFormDateState extends State<_TextFormDate> {
           context: context, 
           initialDate: DateTime.now(), 
           firstDate: DateTime(1900), 
-          lastDate: DateTime(2150)
+          lastDate: DateTime(2150),
         );
 
         if(birthDate == null) return;

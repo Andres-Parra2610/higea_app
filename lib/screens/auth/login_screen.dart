@@ -107,7 +107,7 @@ class _LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final loginProvider = Provider.of<AuthProvider>(context);
+    final loginProvider = Provider.of<AuthProvider>(context, listen: false);
     final formValues = loginProvider.formLoginValues;
   
     return Form(
@@ -146,53 +146,70 @@ class _LoginForm extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: loginProvider.loading
-                  ? null 
-                  : () async{
-                    if(!loginProvider.formLoginKey.currentState!.validate()) return;
-                    FocusScope.of(context).unfocus();
-                    final navigator = Navigator.of(context);
-                    loginProvider.loading = true;
-
-                    final res = await loginProvider.loginUser();
-
-                    loginProvider.loading = false;
-
-                    if(!res){
-                      SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
-                    }else{
-
-                      Widget screen;
-
-                      final  Map<int, dynamic> rol =  {
-                        1: const HomeScreenAdmin(),
-                        2: const HomeDoctorScreen(),
-                        3: const IndexScreen()
-                      };
-
-                      screen = rol[loginProvider.idRol];
-
-                      navigator.pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => screen), 
-                        (route) => false
-                      );
-                    }
-
-                  }, 
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10), 
-                  child: loginProvider.loading
-                    ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
-                    : const Text('Ingresar')
-                ),
-              ),
-            )
+            const _LoginButton()
           ],
         ),
       )
+    );
+  }
+}
+
+class _LoginButton extends StatelessWidget {
+  const _LoginButton();
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final loginProvider = Provider.of<AuthProvider>(context);
+
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: loginProvider.loading
+          ? null 
+          : () async {
+
+              if(!loginProvider.formLoginKey.currentState!.validate()) return;
+
+              FocusScope.of(context).unfocus();
+
+              final navigator = Navigator.of(context);
+              
+              loginProvider.loading = true;
+
+              final res = await loginProvider.loginUser();
+
+              loginProvider.loading = false;
+
+              if(!res){
+                SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
+              }else{
+
+                Widget screen;
+
+                final  Map<int, dynamic> rol =  {
+                  1: const HomeScreenAdmin(),
+                  2: const HomeDoctorScreen(),
+                  3: const IndexScreen()
+                };
+
+                screen = rol[loginProvider.idRol];
+
+                navigator.pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => screen), 
+                  (route) => false
+                );
+              }
+
+          }, 
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10), 
+          child: loginProvider.loading
+            ? const CircularProgressIndicator.adaptive(strokeWidth: 2)
+            : const Text('Ingresar')
+        ),
+      ),
     );
   }
 }

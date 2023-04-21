@@ -32,6 +32,15 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              
+              Image(
+                image: const AssetImage('assets/email.gif'), 
+                width: media.height * 0.30,
+              ),
+
+              Text('Código de verificación', style: textTheme.headlineSmall!.copyWith(color: const Color(AppTheme.secondaryColor)), ),
+              const SizedBox(height: 10),
+
               SizedBox(
                 width: media.width * 0.85,
                 child: Text(

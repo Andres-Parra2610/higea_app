@@ -69,9 +69,6 @@ class _AppointMentAppBar extends StatelessWidget {
 
     final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
 
-    final name = doctor.nombreMedico.split(' ')[0];
-    final lastName = doctor.apellidoMedico.split(' ')[0];
-    final prefix = doctor.sexoMedico == 'F' ? 'Dra.' : 'Dr';
     final img = doctor.sexoMedico == 'F' 
           ? 'assets/doctora-avatar.jpg'
           : 'assets/doctor-avatar.jpg'; 
@@ -93,16 +90,19 @@ class _AppointMentAppBar extends StatelessWidget {
               }
             ),
             Expanded(
-              child: _TextHeader(name: name, lastName: lastName, prefix: prefix),
+              child: _TextHeader(doctor: doctor),
             ),
-            CircleAvatar(
-              radius: 30,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Image(
-                  width: double.infinity,
-                  image: AssetImage(img),
-                  fit: BoxFit.cover,
+            Hero(
+              tag: doctor.cedula,
+              child: CircleAvatar(
+                radius: 30,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image(
+                    width: double.infinity,
+                    image: AssetImage(img),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             )
@@ -116,17 +116,18 @@ class _AppointMentAppBar extends StatelessWidget {
 class _TextHeader extends StatelessWidget {
   const _TextHeader({
     Key? key, 
-    required this.name, 
-    required this.lastName, 
-    required this.prefix,
+    required this.doctor
   }) : super(key: key);
 
-  final String name;
-  final String lastName;
-  final String prefix;
-
+  final Doctor doctor;
+  
   @override
   Widget build(BuildContext context) {
+
+    final name = doctor.nombreMedico.split(' ')[0];
+    final lastName = doctor.apellidoMedico.split(' ')[0];
+    final prefix = doctor.sexoMedico == 'F' ? 'Dra.' : 'Dr';
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -431,9 +432,9 @@ class _AppoimentStatus extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               splashColor: Colors.black,
               onTap: actionText == "Cancelar"
-                ? () => _cancelAppoiment(context)
+                ? () => _alertDialog(context, 'cancelar')
                 : appoiment.idCita == 0 || actionText == "Reservar"
-                  ? () => _confirmAppoiment(context)
+                  ? () => _alertDialog(context, 'reservar')
                   : null,
 
               child: Container(
@@ -457,20 +458,15 @@ class _AppoimentStatus extends StatelessWidget {
     );
   }
 
-  _confirmAppoiment(BuildContext context) async {
+  _alertDialog(BuildContext context, String action) async {
 
-    final result = await showDialog(context: context, builder: (context) => ConfirmAppoimentWidget(appoiment: appoiment));              
-    if(result == null) return;
+    Widget alertDialog;
+    
+    action == 'cancelar' 
+      ? alertDialog = CancelAppoimentWidget(appoiment: appoiment)
+      : alertDialog = ConfirmAppoimentWidget(appoiment: appoiment);
 
-    final Response response = result;
-
-    response.ok
-      ? SnackBarWidget.showSnackBar(response.msg, AppTheme.primaryColor)
-      : SnackBarWidget.showSnackBar(response.msg);
-  }
-
-  _cancelAppoiment(BuildContext context) async {
-    final result = await showDialog(context: context, builder: (context) => CancelAppoimentWidget(appoiment: appoiment,));
+    final result = await showDialog(context: context, builder: (context) => alertDialog);              
     if(result == null) return;
 
     final Response response = result;

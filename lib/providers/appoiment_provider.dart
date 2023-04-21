@@ -1,7 +1,3 @@
-
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
@@ -18,8 +14,8 @@ class AppoimentProvider extends ChangeNotifier{
 
 
   Future getAllAppoiments() async{
-    final Map<String, dynamic> res = await AppoimentService.getAllAppoiments();
-    final result = res["results"] as List<dynamic>;
+    final Map<String, dynamic> data = await AppoimentService.getAllAppoiments();
+    final result = data['results'] as List<dynamic>;
     
     appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
     filterAppoiments = appoiments;
@@ -28,12 +24,11 @@ class AppoimentProvider extends ChangeNotifier{
   }
 
   Future<List<Appoiment>> showAppoimentByPatient(int ci) async{
-    final Map<String, dynamic> res = await AppoimentService.getPendingAppoimentByPatient(ci);
+    final Map<String, dynamic> data = await AppoimentService.getPendingAppoimentByPatient(ci);
 
+    if(data['ok'] == false) return [];
 
-    if(res['ok'] == false) return [];
-
-    final result = res["results"] as List<dynamic>;
+    final result = data['results'] as List<dynamic>;
 
     return List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
   } 
@@ -48,7 +43,6 @@ class AppoimentProvider extends ChangeNotifier{
     final showCompleteDate = Helpers.completeDate(doctor.fechas![0]);
     
     await showAppoiment(ci, currentDay, showCompleteDate);
-    
 
     return doctor;
   }
@@ -60,7 +54,7 @@ class AppoimentProvider extends ChangeNotifier{
 
     final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi, day);
 
-    final result = res["results"] as List<dynamic>;
+    final result = res['results'] as List<dynamic>;
     
     appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
 

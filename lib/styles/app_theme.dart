@@ -42,6 +42,9 @@ class AppTheme{
       ),
     ),
 
+
+    scaffoldBackgroundColor: Colors.white,
+
     textTheme: const TextTheme(
       headlineSmall: TextStyle(
         fontWeight: FontWeight.w900,

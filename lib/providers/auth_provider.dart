@@ -57,15 +57,15 @@ class AuthProvider extends ChangeNotifier{
       final user = jsonEncode(data['user']);
       final preferences = UserPreferences.setUser = user;
 
-      if(data["idRol"] == 3){
+      if(data['idRol'] == 3){
         idRol = 3;
         UserPreferences.setIdRol = idRol;
         currentUser = User.fromRawJson(preferences);
-      }else if(data["idRol"] == 2){
+      }else if(data['idRol'] == 2){
         idRol = 2;
         UserPreferences.setIdRol = idRol;
         currentDoctor = Doctor.fromRawJson(preferences);
-      }else if(data["idRol"] == 1){
+      }else if(data['idRol'] == 1){
         idRol = 1;
         UserPreferences.setIdRol = idRol;
         currentAdmin = Admin.fromRawJson(user);
@@ -78,15 +78,11 @@ class AuthProvider extends ChangeNotifier{
   } 
 
 
-  Future registerUser() async{
+  Future<Response> registerUser() async{
 
     Map<String, dynamic> data = await AuthService.registerUser(formRegisterValues);
 
-    if(data['ok'] == false){
-      return false;
-    }
-
-    return true;
+    return Response.fromJson(data);
   }
 
   Future confirmEmail(String codeVerication) async{

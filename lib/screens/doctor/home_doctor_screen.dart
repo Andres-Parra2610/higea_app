@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/screens/screens.dart';
@@ -42,6 +41,7 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
         ],
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: FutureBuilder(
           future: calendarProvider.getEventsFromBd(currentDoctor.cedula),
           builder: (context, AsyncSnapshot<Map<String, List<Appoiment>>> snapshot) {
@@ -121,7 +121,7 @@ class _CalendarEventes extends StatelessWidget {
 
         Text(
           'Lista de citas', 
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.bold, 
             color: const Color(AppTheme.primaryColor)
           ),
@@ -151,6 +151,7 @@ class _AppoimentList extends StatelessWidget {
 
 
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: value.length,
       itemBuilder:(context, index) {
@@ -192,12 +193,12 @@ class _AppoimentItem extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              format.format(appoiment.fechaCita),
+              '${appoiment.fechaCitaStr}',
               style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
             )
           ),
           Text(
-            Helpers.transformHour(appoiment.horaCita),
+            appoiment.horaCitaStr,
             style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
           )
         ],

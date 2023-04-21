@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
@@ -40,6 +39,7 @@ class AppoimentsDetails extends StatelessWidget {
         ),
     
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.horizontalPadding),
             child: Column(

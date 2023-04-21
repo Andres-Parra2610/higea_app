@@ -35,9 +35,9 @@ class _Especialities extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    
     final textTheme = Theme.of(context).textTheme;
-    final doctorProvider = Provider.of<DoctorProvider>(context);
+    
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.horizontalPadding),
@@ -47,52 +47,65 @@ class _Especialities extends StatelessWidget {
         children: [
           Text('Todas las especialidades', style: textTheme.titleLarge,),
 
-          FutureBuilder(
-            future: doctorProvider.showSpecialities(),
-            builder: (context, AsyncSnapshot<List<Speciality>> snapshot){
-          
-              if(!snapshot.hasData){
-                return const Center(
-                  heightFactor: 10,
-                  child: CircularProgressIndicator.adaptive()
-                );
-              }
-          
-              List<Speciality> specialities = snapshot.data!;
-          
-              if(doctorProvider.searchSpeciality.isNotEmpty){
-                final txt = doctorProvider.searchSpeciality.toLowerCase();
-                specialities = specialities.where((speciality) => 
-                  speciality.nombreEspecialidad.toLowerCase().contains(txt)
-                ).toList();
-              }
-          
-              if(specialities.isEmpty){
-                return SizedBox(
-                  height:size.height - size.height * 0.28 - (kBottomNavigationBarHeight + AppTheme.horizontalPadding * 2.5),
-                  child: const NotFoundWidget(text: 'Sin resultados', icon: Icons.search_off,),
-                );
-              }
-
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.0,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 2.5,
-                ), 
-                itemCount: specialities.length, //snapshot.data!.length,
-                itemBuilder: (_, index){
-                  final Speciality speciality = specialities[index];
-                  return CardWidget(speciality: speciality);
-                }
-              );
-            }
-          )
+          const _SpecialitiesFutureBuilder()
         ],
       )
+    );
+  }
+}
+
+class _SpecialitiesFutureBuilder extends StatelessWidget {
+  const _SpecialitiesFutureBuilder();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+    final doctorProvider = Provider.of<DoctorProvider>(context);
+
+    return FutureBuilder(
+      future: doctorProvider.showSpecialities(),
+      builder: (context, AsyncSnapshot<List<Speciality>> snapshot){
+    
+        if(!snapshot.hasData){
+          return const Center(
+            heightFactor: 10,
+            child: CircularProgressIndicator.adaptive()
+          );
+        }
+    
+        List<Speciality> specialities = snapshot.data!;
+    
+        if(doctorProvider.searchSpeciality.isNotEmpty){
+          final txt = doctorProvider.searchSpeciality.toLowerCase();
+          specialities = specialities.where((speciality) => 
+            speciality.nombreEspecialidad.toLowerCase().contains(txt)
+          ).toList();
+        }
+    
+        if(specialities.isEmpty){
+          return SizedBox(
+            height:size.height - size.height * 0.28 - (kBottomNavigationBarHeight + AppTheme.horizontalPadding * 2.5),
+            child: const NotFoundWidget(text: 'Sin resultados', icon: Icons.search_off,),
+          );
+        }
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.0,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 2.5,
+          ), 
+          itemCount: specialities.length, //snapshot.data!.length,
+          itemBuilder: (_, index){
+            final Speciality speciality = specialities[index];
+            return CardWidget(speciality: speciality);
+          }
+        );
+      }
     );
   }
 }
