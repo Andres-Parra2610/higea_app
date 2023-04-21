@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/screens/screens.dart';
+import 'package:higea_app/widgets/widgets.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({
@@ -29,13 +29,7 @@ class CardWidget extends StatelessWidget {
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
                 child: Hero(
                   tag: speciality.idespecialidad,
-                  child: Image(
-                    image: speciality.imagenEspecialidad!.isEmpty 
-                      ? const AssetImage('assets/no-image.jpg')
-                      : NetworkImage(speciality.imagenEspecialidad!) as ImageProvider,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  child: LoadImageWidget(imgUrl: speciality.imagenEspecialidad!)
                 ),
               ),
             ),

@@ -23,10 +23,7 @@ class AppoimentsDetails extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: ()async {
-        final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
-        historyProvider.switchValue = false;
-        historyProvider.writing = false;
-        historyProvider.switchError = '';
+        Provider.of<HistoryProvider>(context, listen: false).clearProvider();
         return Future.value(true);
       },
       child: Scaffold(
@@ -73,7 +70,10 @@ class AppoimentsDetails extends StatelessWidget {
     
                 ListTile(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (_)=> HistoryListWidget(patient: patient)));
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (_)=> HistoryListWidget(patient: patient, isDoctor: true))
+                    );
                   },
                   contentPadding: const EdgeInsets.all(0),
                   title: const Text('Nombre', style: TextStyle(fontSize: 14)),
@@ -261,7 +261,7 @@ class _SwitchFinish extends StatelessWidget {
       children: [
         SwitchListTile.adaptive(
           contentPadding: EdgeInsets.zero,
-          value: history.idhistorial != null ? true : historyProvider.switchValue, 
+          value: history.idhistorial != null || historyProvider.saved ? true : historyProvider.switchValue, 
           onChanged:  (value) => historyProvider.switchValue = value,
           title: const Text('¿Finalizar cita?', style: TextStyle(fontSize: 15)),
           activeColor: const Color(AppTheme.primaryColor),

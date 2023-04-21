@@ -11,7 +11,7 @@ const PendingAppoimentsScreen({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){
 
-    final appoimentProvider = Provider.of<AppoimentProvider>(context);
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
     final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser;
 
     return Scaffold(

@@ -6,10 +6,15 @@ import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HistoryListWidget extends StatelessWidget {
-const HistoryListWidget({ Key? key, required this.patient }) : super(key: key);
+const HistoryListWidget({ 
+  Key? key, 
+  required this.patient, 
+  this.isDoctor = false
+}) : super(key: key);
 
 
   final User patient;
+  final bool? isDoctor;
 
   @override
   Widget build(BuildContext context){
@@ -37,7 +42,7 @@ const HistoryListWidget({ Key? key, required this.patient }) : super(key: key);
               return const Center(child: NotFoundWidget(text: 'Sin historias médicas', icon: Icons.history_edu));
             }
 
-            return  _PatientHistoryList(snapshot.data!);
+            return  _PatientHistoryList(snapshot.data!, isDoctor!);
           }
         ),
       ),
@@ -46,12 +51,14 @@ const HistoryListWidget({ Key? key, required this.patient }) : super(key: key);
 }
 
 class _PatientHistoryList extends StatelessWidget {
-  const _PatientHistoryList(this.histories);
+  const _PatientHistoryList(this.histories, this.isDoctor);
 
   final List<History> histories;
+  final bool isDoctor;
 
   @override
   Widget build(BuildContext context) {
+
     return ListView.builder(
       itemCount: histories.length,
       itemBuilder: (context, index){
@@ -63,7 +70,7 @@ class _PatientHistoryList extends StatelessWidget {
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryDetailsWidget(history: history)));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryDetailsWidget(history: history, isDoctor: isDoctor,)));
               },
               title: Text(
                 history.nombreEspecialidad!, 

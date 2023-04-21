@@ -11,6 +11,7 @@ class HistoryProvider extends ChangeNotifier{
   bool _switchValue = false;
   bool _loading = false;
   bool _writing = false;
+  bool _saved = false;
   String _switchError = '';
 
 
@@ -19,6 +20,7 @@ class HistoryProvider extends ChangeNotifier{
   bool get switchValue => _switchValue;
   bool get loading => _loading;
   bool get writing => _writing;
+  bool get saved => _saved;
   String get switchError => _switchError;
 
   set switchValue(bool value){
@@ -38,6 +40,11 @@ class HistoryProvider extends ChangeNotifier{
       _writing = value;
       notifyListeners();
     }
+  }
+
+  set saved(bool value){
+    _saved = value;
+    notifyListeners();
   }
 
   set switchError(String value){
@@ -75,8 +82,17 @@ class HistoryProvider extends ChangeNotifier{
     final Map<String, dynamic> res = await AppoimentService.setHistory(currentHistory, id);
 
     loading = false;
+    saved = true;
 
     return res['msg'];
+  }
+
+
+  void clearProvider(){
+    switchValue = false;
+    writing = false;
+    switchError = '';
+    saved = false;
   }
 
 

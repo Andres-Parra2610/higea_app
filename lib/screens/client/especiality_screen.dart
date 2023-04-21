@@ -4,6 +4,7 @@ import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/screens/screens.dart';
 import 'package:higea_app/styles/app_theme.dart';
+import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class EspecialityScreen extends StatelessWidget {
@@ -81,12 +82,7 @@ class _EspecialistAppBar extends StatelessWidget {
         ),
         background: Hero(
           tag: speciality.idespecialidad,
-          child: Image(
-            image: speciality.imagenEspecialidad!.isEmpty
-            ? const AssetImage('assets/no-image.jpg')
-            : NetworkImage(speciality.imagenEspecialidad!) as ImageProvider,
-            fit: BoxFit.cover,
-          ),
+          child: LoadImageWidget(imgUrl: speciality.imagenEspecialidad!)
         )
       ),
     );

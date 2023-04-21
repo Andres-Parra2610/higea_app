@@ -1,3 +1,4 @@
+export 'package:higea_app/widgets/load_image_widget.dart';
 export 'package:higea_app/widgets/platform_widget.dart';
 export 'package:higea_app/widgets/history_details_widget.dart';
 export 'package:higea_app/widgets/history_list_widget.dart';
