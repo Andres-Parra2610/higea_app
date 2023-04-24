@@ -58,13 +58,12 @@ class DoctorProvider extends ChangeNotifier{
     return doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
   }
 
-  Future showAllDoctors() async{
+  Future<List<Doctor>> showAllDoctors() async{
     final Map<String, dynamic> response = await DoctorServices.getAllDoctors();
     if(response["ok"] == false) return doctors = [];
 
     final results = response['results'] as List<dynamic>;
-    doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
-    notifyListeners();
+    return List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
   }
 
   Future getSpecialitiesToDropDown() async{

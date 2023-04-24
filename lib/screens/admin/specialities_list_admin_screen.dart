@@ -231,7 +231,9 @@ class _SpecialityImage extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child:  Image(
-          image: image!.isNotEmpty ? NetworkImage(image!) : const AssetImage('assets/no-image.jpg') as ImageProvider,
+          image: image!.isNotEmpty && image!.startsWith('https') 
+            ? NetworkImage(image!) 
+            : const AssetImage('assets/no-image.jpg') as ImageProvider,
           width: 150,
           height: 200,
           fit: BoxFit.cover,

@@ -74,6 +74,7 @@ class _AddSpecialityBody extends StatelessWidget {
 
     final Speciality speciality = specialityProvider.currentSpeciality;
     final bool isLoading = specialityProvider.isLoading;
+    
 
     return SizedBox(
       width: 500,
@@ -103,14 +104,14 @@ class _AddSpecialityBody extends StatelessWidget {
                 const SizedBox(height: 20),
 
 
-                if(speciality.imagenEspecialidad != '' && specialityProvider.pickedImage == null)
+                if(speciality.imagenEspecialidad != '' && specialityProvider.pickedImage == null && speciality.imagenEspecialidad!.startsWith('https'))
                   Image(
                     image: NetworkImage(speciality.imagenEspecialidad!),
                     width: double.infinity,
                     height: 300,
                     fit: BoxFit.cover,
                   )
-                else if(specialityProvider.pickedImage != null)
+                else if(specialityProvider.pickedImage != null && !speciality.imagenEspecialidad!.startsWith('https'))
                   Image.memory(
                     specialityProvider.pickedImage!.bytes!,
                     width: double.infinity,

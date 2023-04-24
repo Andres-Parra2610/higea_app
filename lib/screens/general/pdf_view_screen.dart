@@ -30,7 +30,7 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
 
   Future _getPdfBytes() async {
 
-    final url = Uri.http(widget.port, '/reports/${widget.url}', widget.params);
+    final url = Uri.https(widget.port, '/reports/${widget.url}', widget.params);
     final response = await http.readBytes(url);
     pdfBytes = response;
     setState(() {});

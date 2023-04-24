@@ -26,50 +26,51 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
   }
 
   @override
-  void initState() {
-    Provider.of<DoctorProvider>(context, listen: false).showAllDoctors();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context){
 
     final doctorProvider = Provider.of<DoctorProvider>(context);
-    final List<Doctor> doctors = doctorProvider.doctors;
-
-    if(doctorProvider.doctors.isEmpty){
-      return const Center(child: CircularProgressIndicator());
-    }
 
     return Column(
       children: [
+        
+        FutureBuilder(
+          future: doctorProvider.showAllDoctors(),
+          builder: (context, AsyncSnapshot<List<Doctor>> snapshot) {
 
-        PaginatedDataTable(
-          header: const Text('Lista de médicos de la fundación'),
-          actions: _actionDoctorDataTable(doctorProvider),
-          source: _DoctorsDataTableSource(doctors, selectedRows, onSelectRow),
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Expanded(
-                child: Text('Cédula del doctor'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Nombre del doctor'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Fechas laborales'),
-              )
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text('Horas laborales'),
-              )
-            ),
-          ], 
+            if(!snapshot.hasData){
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final List<Doctor> doctors = snapshot.data!; 
+
+            return PaginatedDataTable(
+              header: const Text('Lista de médicos de la fundación'),
+              actions: _actionDoctorDataTable(doctorProvider),
+              source: _DoctorsDataTableSource(doctors, selectedRows, onSelectRow),
+              columns: const <DataColumn>[
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Cédula del doctor'),
+                  )
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Nombre del doctor'),
+                  )
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Fechas laborales'),
+                  )
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Horas laborales'),
+                  )
+                ),
+              ], 
+            );
+          }
         )
       ],
     );
