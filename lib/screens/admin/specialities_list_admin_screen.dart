@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 
 class SpecialitiesListAdminScreen extends StatelessWidget {
 
-
-
   const SpecialitiesListAdminScreen({ Key? key }) : super(key: key);
 
   @override
@@ -95,81 +93,107 @@ class _SpecialitiesDataTableState extends State<_SpecialitiesDataTable> {
 
 
   List<Widget> _specialityActions(BuildContext context, DoctorProvider doctorProvider) {
-
     final List<Speciality> specialities = doctorProvider.specialities;
-    
-
     return [
-
       if(selectedRows.isEmpty)
-        TextButton(
+         _AddSpecialityButton(doctorProvider) 
+      
+      else if(selectedRows.length == 1)
+        _ActionButtons(specialities: specialities, selectedRows: selectedRows, doctorProvider: doctorProvider,)
+
+    ];
+  }
+}
+
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons({
+    required this.specialities,
+    required this.selectedRows,
+    required this.doctorProvider
+  });
+
+  final List<Speciality> specialities;
+  final List<int> selectedRows;
+  final DoctorProvider doctorProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
           onPressed: () async{
-            final  res = await showDialog(context: context, builder: (_) => AlertSpecialityWidget(
-              speciality:Speciality(idespecialidad: 0, nombreEspecialidad: '', imagenEspecialidad: ''))
+            final Speciality speciality = specialities.firstWhere((spe) => selectedRows[0] == spe.idespecialidad);
+
+            final res = await showDialog(context: context, builder: (_) => AlertSpecialityWidget(
+              speciality: speciality)
             );
 
             if(res == null) return;
             
             if(res){
               doctorProvider.render = true;
-              SnackBarWidget.showSnackBar('La especialidad se ha agregado correctamente', AppTheme.primaryColor);
+              SnackBarWidget.showSnackBar('La especialidad se ha editado correctamente', AppTheme.primaryColor);
             }else{
-              SnackBarWidget.showSnackBar('La especialidad ya existe');
+              SnackBarWidget.showSnackBar('Ocurrió un error al editar la especialidad');
             }
 
-
           }, 
-          child: const Text('Agregar especialidad')
-        ) 
-      
-      else if(selectedRows.length == 1)
-        Row(
-          children: [
-            IconButton(
-              onPressed: () async{
-                final Speciality speciality = specialities.firstWhere((spe) => selectedRows[0] == spe.idespecialidad);
+          icon: const Icon(Icons.edit),
+          tooltip: 'Editar especialidad',
+        ),
+        IconButton(
+          onPressed: () async{
+            final int id = selectedRows[0];
+            final res = await showDialog(context: context, builder: (_) => AlertDeleteSpecialityWidget(id: id));
 
-                final res = await showDialog(context: context, builder: (_) => AlertSpecialityWidget(
-                  speciality: speciality)
-                );
+            if(res == null) return;
 
-                if(res == null) return;
-                
-                if(res){
-                  doctorProvider.render = true;
-                  SnackBarWidget.showSnackBar('La especialidad se ha editado correctamente', AppTheme.primaryColor);
-                }else{
-                  SnackBarWidget.showSnackBar('Ocurrió un error al editar la especialidad');
-                }
-
-              }, 
-              icon: const Icon(Icons.edit),
-              tooltip: 'Editar especialidad',
-            ),
-            IconButton(
-              onPressed: () async{
-                final int id = selectedRows[0];
-                final res = await showDialog(context: context, builder: (_) => AlertDeleteSpecialityWidget(id: id));
-
-                if(res == null) return;
-
-                if(res){
-                  selectedRows.remove(selectedRows[0]);
-                  doctorProvider.render = true;
-                  SnackBarWidget.showSnackBar('La especialidad se ha eliminado correctamente', AppTheme.primaryColor);
-                }else{
-                  SnackBarWidget.showSnackBar('Ocurrió un error al eliminar la especialidad');
-                }
-              }, 
-              icon: const Icon(Icons.delete),
-              tooltip: 'Eliminar especialidad',
-            )
-          ],
+            if(res){
+              selectedRows.remove(selectedRows[0]);
+              doctorProvider.render = true;
+              SnackBarWidget.showSnackBar('La especialidad se ha eliminado correctamente', AppTheme.primaryColor);
+            }else{
+              SnackBarWidget.showSnackBar('Ocurrió un error al eliminar la especialidad');
+            }
+          }, 
+          icon: const Icon(Icons.delete),
+          tooltip: 'Eliminar especialidad',
         )
-
-    ];
+      ],
+    );
   }
 }
+
+class _AddSpecialityButton extends StatelessWidget {
+  const _AddSpecialityButton(this.doctorProvider);
+
+  final DoctorProvider doctorProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () async{
+        final  res = await showDialog(context: context, builder: (_) => AlertSpecialityWidget(
+          speciality:Speciality(idespecialidad: 0, nombreEspecialidad: '', imagenEspecialidad: ''))
+        );
+
+        if(res == null) return;
+        
+        if(res){
+          doctorProvider.render = true;
+          SnackBarWidget.showSnackBar('La especialidad se ha agregado correctamente', AppTheme.primaryColor);
+        }else{
+          SnackBarWidget.showSnackBar('La especialidad ya existe');
+        }
+
+
+      }, 
+      child: const Text('Agregar especialidad')
+    );
+  }
+}
+
+
 
 class _SpecialityDataTableSource extends DataTableSource{  
 
