@@ -1,3 +1,6 @@
+export 'package:higea_app/screens/general/edit_profile_screen.dart';
+export 'package:higea_app/screens/client/guest_form_screen.dart';
+export 'package:higea_app/screens/client/guests_screen.dart';
 export 'package:higea_app/screens/client/pending_appoiments_screen.dart';
 export 'package:higea_app/screens/admin/reports_admin_screen.dart';
 export 'package:higea_app/screens/admin/patient_list_admin_screen.dart';
@@ -20,6 +23,7 @@ export 'package:higea_app/screens/auth/confirm_email_screen.dart';
 export 'package:higea_app/screens/auth/register_screen.dart';
 export 'package:higea_app/screens/auth/login_screen.dart';
 export 'package:higea_app/screens/general/pdf_view_screen.dart';
+
 
 
 

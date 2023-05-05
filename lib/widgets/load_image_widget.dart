@@ -21,7 +21,7 @@ const LoadImageWidget({ Key? key, required this.imgUrl }) : super(key: key);
 
     return CachedNetworkImage(
       imageUrl: imgUrl,
-        placeholder: (context, url) => const BlurHash(hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj'),
+      placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
       errorWidget: (context, url, error) => const Icon(Icons.error),
       fadeInDuration: const Duration(milliseconds: 500),
       width: double.infinity,

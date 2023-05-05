@@ -18,6 +18,7 @@ const HistoryDetailsWidget({
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Detalle de la historia médica'),
         elevation: 0,
       ),
 
@@ -28,13 +29,15 @@ const HistoryDetailsWidget({
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              const Center(child: Text('Información de la historia médica')),
-              const SizedBox(height: 20,),
-
-              _SpanText(mainText: '#Número de cita: ', secondText: '${history.idhistorial}',),
+              _SpanText(mainText: '#Número de historia: ', secondText: '${history.idhistorial}',),
               const Divider(),
 
-              _SpanText(mainText: 'Nombre del paciente: ', secondText: '${history.nombrePaciente} ${history.apellidoPaciente}'),
+              _SpanText(
+                mainText: 'Nombre del paciente: ', 
+                secondText: history.nombreInvitado != null 
+                  ? '${history.nombreInvitado} ${history.apellidoInvitado}'
+                  : '${history.nombrePaciente} ${history.apellidoPaciente}',
+              ),
               const Divider(),
 
               _SpanText(mainText: 'Especialidad atendida: ', secondText: '${history.nombreEspecialidad}'),

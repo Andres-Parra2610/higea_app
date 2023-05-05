@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:higea_app/models/models.dart';
 
 class User {
     User({
@@ -9,15 +10,17 @@ class User {
         required this.telefonoPaciente,
         required this.fechaNacimientoPaciente,
         this.activo,
+        this.invitados
     });
 
     final int cedula;
-    final String nombrePaciente;
-    final String apellidoPaciente;
-    final String correo;
-    final String telefonoPaciente;
     final DateTime fechaNacimientoPaciente;
     final int? activo;
+    String nombrePaciente;
+    String apellidoPaciente;
+    String correo;
+    String telefonoPaciente;
+    List<Guest>? invitados;
 
 
     User.empty() : 
@@ -41,7 +44,16 @@ class User {
         telefonoPaciente: json["telefono_paciente"],
         fechaNacimientoPaciente: DateTime.parse(json["fecha_nacimiento_paciente"]),
         activo: json["activo"] ?? 0,
+        invitados: json["invitados"]
     );
+
+
+    Map<String, dynamic> toJson() => {
+      'name': nombrePaciente,
+      'lastName': apellidoPaciente,
+      'email': correo,
+      'phone': telefonoPaciente,
+    };
 
 
 }

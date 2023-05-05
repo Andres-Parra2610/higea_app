@@ -1,3 +1,5 @@
+export 'package:higea_app/widgets/delete_guest_widget.dart';
+export 'package:higea_app/widgets/text_form_date_picker_widget.dart';
 export 'package:higea_app/widgets/load_image_widget.dart';
 export 'package:higea_app/widgets/platform_widget.dart';
 export 'package:higea_app/widgets/history_details_widget.dart';
@@ -16,6 +18,7 @@ export 'package:higea_app/widgets/confirm_appoiment_widget.dart';
 export 'package:higea_app/widgets/card_widget.dart';
 export 'package:higea_app/widgets/navigation_bar_widget.dart';
 export 'package:higea_app/widgets/not_found_widget.dart';
+
 
 
 

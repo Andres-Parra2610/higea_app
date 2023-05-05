@@ -8,15 +8,17 @@ import 'package:higea_app/services/services.dart';
 class AuthProvider extends ChangeNotifier{
 
 
+  final GlobalKey<FormState> formEditUserKey = GlobalKey<FormState>();
+
   //Datos del formulatio de inicio de sesión
-  GlobalKey<FormState> formLoginKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formLoginKey = GlobalKey<FormState>();
   Map<String, dynamic> formLoginValues = {
     'ci': '',
     'password': ''
   };
 
   //Datos del formluario de registro de usuario
-  GlobalKey<FormState> formRegisterKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formRegisterKey = GlobalKey<FormState>();
   Map <String, dynamic> formRegisterValues = {
     'name': '',
     'lastName': '',
@@ -30,6 +32,7 @@ class AuthProvider extends ChangeNotifier{
   late User currentUser;
   late Doctor currentDoctor;
   late Admin currentAdmin;
+  late User tempUser;
   int idRol = 0;
 
   bool _loading = false;
@@ -98,6 +101,20 @@ class AuthProvider extends ChangeNotifier{
     final createGlobalUser = User.fromRawJson(preferences);
     currentUser = createGlobalUser;
     return true;
+  }
+
+
+  Future<Response> editUser() async{
+    final Response data = await PatientService.editPatient(currentUser.cedula, tempUser);
+
+    if(data.ok){
+      final preferences = UserPreferences.setUser = jsonEncode(data.result);
+      currentUser = User.fromRawJson(preferences); 
+      tempUser = currentUser;
+      notifyListeners();
+    }
+
+    return data;
   }
 
 

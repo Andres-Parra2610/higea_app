@@ -54,17 +54,21 @@ class _PendingAppoimentList extends StatelessWidget {
 
         final Appoiment appoiment = appoiments[index];
         final Doctor doctor = appoiment.doctor!;
+        final User user = appoiment.user!;
+        final Guest? guest = appoiment.invitado;
 
         return ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
-          title: Text(
-            'Doctor(a): ${doctor.nombreMedico} ${doctor.apellidoMedico}',
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              fontWeight: FontWeight.normal,
-            ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 5),
+
+          title:Text(
+            guest != null 
+              ? 'Paciente: ${guest.nombreInvitado} ${guest.apellidoInvitado}'
+              : 'Paciente: ${user.nombrePaciente} ${user.apellidoPaciente}',
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)
           ),
+          
           subtitle: Text(
-            '${appoiment.fechaCitaStr}',
+            '$Doctor(a): ${doctor.nombreMedico} - ${appoiment.fechaCitaStr}',
             style: Theme.of(context).textTheme.labelMedium!.copyWith(
               color: Colors.black45
             ),

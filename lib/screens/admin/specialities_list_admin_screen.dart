@@ -132,9 +132,9 @@ class _ActionButtons extends StatelessWidget {
             
             if(res){
               doctorProvider.render = true;
-              SnackBarWidget.showSnackBar('La especialidad se ha editado correctamente', AppTheme.primaryColor);
+              SnackBarWidget.showSnackBar('La especialidad se ha editado correctamente');
             }else{
-              SnackBarWidget.showSnackBar('Ocurrió un error al editar la especialidad');
+              SnackBarWidget.showSnackBar('Ocurrió un error al editar la especialidad', false);
             }
 
           }, 
@@ -151,9 +151,9 @@ class _ActionButtons extends StatelessWidget {
             if(res){
               selectedRows.remove(selectedRows[0]);
               doctorProvider.render = true;
-              SnackBarWidget.showSnackBar('La especialidad se ha eliminado correctamente', AppTheme.primaryColor);
+              SnackBarWidget.showSnackBar('La especialidad se ha eliminado correctamente');
             }else{
-              SnackBarWidget.showSnackBar('Ocurrió un error al eliminar la especialidad');
+              SnackBarWidget.showSnackBar('Ocurrió un error al eliminar la especialidad', false);
             }
           }, 
           icon: const Icon(Icons.delete),
@@ -181,9 +181,9 @@ class _AddSpecialityButton extends StatelessWidget {
         
         if(res){
           doctorProvider.render = true;
-          SnackBarWidget.showSnackBar('La especialidad se ha agregado correctamente', AppTheme.primaryColor);
+          SnackBarWidget.showSnackBar('La especialidad se ha agregado correctamente');
         }else{
-          SnackBarWidget.showSnackBar('La especialidad ya existe');
+          SnackBarWidget.showSnackBar('La especialidad ya existe', false);
         }
 
 

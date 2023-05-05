@@ -170,7 +170,7 @@ class _RegisterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final registerProvider = Provider.of<AuthProvider>(context, listen: false);
+    final registerProvider = Provider.of<AuthProvider>(context);
 
     return SizedBox(
       width: double.infinity,
@@ -184,11 +184,11 @@ class _RegisterButton extends StatelessWidget {
           final navigator = Navigator.of(context);
           final Response res = await registerProvider.registerUser();
           
-          registerProvider.loading = false;
-          
           res.ok
             ? navigator.pushNamed('confirm')
-            : SnackBarWidget.showSnackBar(res.msg);
+            : SnackBarWidget.showSnackBar(res.msg, false);
+
+          registerProvider.loading = false;
          
         }, 
         child: Padding(
@@ -212,56 +212,27 @@ class _RegisterButton extends StatelessWidget {
   }
 }
 
-class _TextFormDate extends StatefulWidget {
+class _TextFormDate extends StatelessWidget {
   const _TextFormDate({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<_TextFormDate> createState() => _TextFormDateState();
-}
-
-class _TextFormDateState extends State<_TextFormDate> {
-
-  final TextEditingController _dateController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
 
     final registerFormValues = Provider.of<AuthProvider>(context, listen: false).formRegisterValues;
-
-    return TextFormField(
-      controller: _dateController,
-      decoration: const InputDecoration(
-        labelText: 'Fecha de nacimiento'
-      ),
-      readOnly: true,
-      onTap: () async{
-        DateTime? birthDate = await showDatePicker(
-          context: context, 
-          initialDate: DateTime.now(), 
-          firstDate: DateTime(1900), 
-          lastDate: DateTime(2150),
-        );
-
-        if(birthDate == null) return;
-        
-        String dateFormat = DateFormat('dd/MM/yyyy').format(birthDate);
-        String dateFormatToBd = DateFormat('yyyy-MM-dd').format(birthDate);
-
-        _dateController.text = dateFormat;
-        registerFormValues['birthDate'] = dateFormatToBd;
-      },
-      validator: (value){
+    return TextFormDatePickerWidget(
+      validate: (value){
         if(value!.trim().isEmpty) return 'Por favor seleccione una fecha';
-
         final DateTime date = DateFormat('dd/MM/yyyy').parse(value);
         final DateTime now = DateTime.now();
         final age = now.year - date.year - ((now.month > date.month || (now.month == date.month && now.day >= date.day)) ? 0 : 1); 
-
         if(age < 18) return 'Debe ser mayor de edad para usar la aplicación';
 
-        return null; 
+
+        String formatToBd = DateFormat("yyyy-MM-dd").format(DateFormat("dd/MM/yyyy").parse(value));
+        registerFormValues['birthDate'] = formatToBd;
+        return null;
       },
     );
   }

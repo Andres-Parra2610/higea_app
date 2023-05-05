@@ -120,24 +120,63 @@ class _CustomHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final size = MediaQuery.of(context).size;
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.horizontalPadding),
-      height: size.height * 0.28,
       width: double.infinity,
       decoration: AppTheme.boxGradient(),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
             
             _ClientName(),
+
+            SizedBox(height: 20),
+
+            _TextRecordatory(),
           
             _SearchField()
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TextRecordatory extends StatelessWidget {
+  const _TextRecordatory();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
+    final user = Provider.of<AuthProvider>(context, listen: false).currentUser;
+
+    return FutureBuilder(
+      future: appoimentProvider.showAppoimentByPatient(user.cedula),
+      builder: (context, AsyncSnapshot<List<Appoiment>> snapshot) {
+
+        if(!snapshot.hasData) return const SizedBox();
+
+        if(snapshot.data!.isEmpty) return const SizedBox();
+
+        return Column(
+          children: const [
+            Text(
+              'Recuerda que tienes citas pendientes, ¡no las olvides!',
+              style: TextStyle(
+                fontSize: 17, 
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+
+            SizedBox(height: 25)
+          ],
+        );
+      }
     );
   }
 }
@@ -154,20 +193,18 @@ class _ClientName extends StatelessWidget {
     final name = user.nombrePaciente.split(' ')[0];
     final lastName = user.apellidoPaciente.split(' ')[0];
 
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Bienvenido',
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.normal)
-          ),
-          Text(
-            '$name $lastName',
-            style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white)
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Bienvenido',
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white, fontWeight: FontWeight.normal)
+        ),
+        Text(
+          '$name $lastName',
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white)
+        ),
+      ],
     );
   }
 }

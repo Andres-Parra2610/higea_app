@@ -166,12 +166,9 @@ class _DoctorItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding, vertical: 8),
       child: Row(
         children: [
-          Hero(
-            tag: doctor.cedula,
-            child: CircleAvatar(
-              backgroundImage: AssetImage(img),
-              radius: 25,
-            ),
+          CircleAvatar(
+            backgroundImage: AssetImage(img),
+            radius: 25,
           ),
 
           const SizedBox(width: 40),

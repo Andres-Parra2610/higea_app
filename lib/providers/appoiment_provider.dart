@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
@@ -6,11 +7,14 @@ import 'package:intl/intl.dart';
 
 class AppoimentProvider extends ChangeNotifier{
 
+  final GlobalKey<FormState> confirmAppoimentForm = GlobalKey<FormState>();
   List<Appoiment> appoiments = [];
   List<Appoiment> filterAppoiments = [];
+  List<Appoiment> pendingAppoiment = [];
+  String selectedGuest = '';
   bool loading = false;
   String date = '';
-
+  bool _insertAppoiment = true;
 
 
   Future getAllAppoiments() async{
@@ -24,13 +28,18 @@ class AppoimentProvider extends ChangeNotifier{
   }
 
   Future<List<Appoiment>> showAppoimentByPatient(int ci) async{
+
+    if(pendingAppoiment.isNotEmpty && !_insertAppoiment) return pendingAppoiment;
+
     final Map<String, dynamic> data = await AppoimentService.getPendingAppoimentByPatient(ci);
 
     if(data['ok'] == false) return [];
 
-    final result = data['results'] as List<dynamic>;
+    final result = data['result'] as List<dynamic>;
 
-    return List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+    pendingAppoiment = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
+    _insertAppoiment = false;
+    return pendingAppoiment;
   } 
 
   Future<Doctor> showDoctorDatesWork(ci) async{
@@ -64,22 +73,38 @@ class AppoimentProvider extends ChangeNotifier{
   }
 
 
-  Future<Response> newApoiment(Appoiment newAppoiment) async{
+  Future newApoiment(Appoiment newAppoiment) async{
 
-    final Map<String, dynamic> data = await AppoimentService.insetAppoiment(newAppoiment);
+    Map<String, dynamic> data; 
+
+    selectedGuest != newAppoiment.cedulaPaciente.toString() 
+      ? newAppoiment.cedulaInvitado = selectedGuest
+      : newAppoiment.cedulaInvitado = null;
+
+    newAppoiment.idCita == 0
+      ? data = await AppoimentService.insertAppoiment(newAppoiment)
+      : data = await AppoimentService.insertExistAppoiment(newAppoiment);
+    
 
     final response = Response.fromJson(data);
 
     if(response.ok){
-      final Appoiment succesAppoiment = Appoiment.fromJson(data["result"]);
+      final Appoiment succesAppoiment = Appoiment.fromJson(response.result);
       
       await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
     }
 
-    return response;
+    final List<PendingNotificationRequest> list = await NotificationService.notificationsPlugin.pendingNotificationRequests();
 
-    //final List list = await NotificationService.notificationsPlugin.pendingNotificationRequests();
+    for (var notification in list) {
+      print(notification.id);
+    }
+
+    _insertAppoiment = true;
+    return response; 
+
   }
+
 
   Future<Response> cancelAppoiment(appoimentId) async{
     final Map<String, dynamic> data = await AppoimentService.cancelAppoiment(appoimentId);
@@ -93,23 +118,12 @@ class AppoimentProvider extends ChangeNotifier{
     return response;
   }
 
-  Future<Response> updateAppoiment(appoimentId, patientCi) async{
-
-    final Map<String, dynamic> data = await AppoimentService.insertExistAppoiment(appoimentId, patientCi);
-
-    final response = Response.fromJson(data);
-
-    if(response.ok){
-      final Appoiment succesAppoiment = Appoiment.fromJson(data["result"]);
-
-      await NotificationService.showNotification(succesAppoiment.idCita!, succesAppoiment.fechaCita);
-    }
 
 
-    return response;
-
+  void onChangeGuest(String? value){
+    selectedGuest = value!;
+    notifyListeners();
   }
-
 
   void searchAppoimentByDate(date){
     filterAppoiments = appoiments.where((appoiment){
@@ -121,6 +135,14 @@ class AppoimentProvider extends ChangeNotifier{
     }).toList();
 
     notifyListeners();
+  }
+
+  void closeSession(){
+    appoiments = [];
+    pendingAppoiment = [];
+    filterAppoiments = [];
+    selectedGuest = '';
+    date = '';
   }
 
 

@@ -15,14 +15,22 @@ const ProfileScreen({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){
 
-    final User user = Provider.of<AuthProvider>(context, listen: false).currentUser;
-
+    final User user = Provider.of<AuthProvider>(context).currentUser;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil de usuario'),
         elevation: 0,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (_)=> const EditProfileScreen()));
+            }, 
+            icon: const Icon(Icons.edit), 
+            iconSize: 22,
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -68,17 +76,22 @@ const ProfileScreen({ Key? key }) : super(key: key);
               ),
 
 
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 5),
-                onTap: (){
+              _ActionText(
+                title: 'Mis citas médicas pendientes',
+                onNavigate: (){
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const PendingAppoimentsScreen()));
                 },
-                title: const Text(
-                  'Mis citas médicas pentiendes', 
-                  style: TextStyle(fontSize: 14, color: Color(AppTheme.primaryColor)),
-                ),
-                trailing: const Icon(Icons.keyboard_arrow_right_outlined),
               ),
+
+              const SizedBox(height: 15),
+
+              _ActionText(
+                title: 'Invitados', 
+                onNavigate: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const GuestsScreen()));
+                }
+              ),
+
 
               const SizedBox(height: 15),
 
@@ -95,6 +108,29 @@ const ProfileScreen({ Key? key }) : super(key: key);
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ActionText extends StatelessWidget {
+  const _ActionText({
+    required this.title,
+    required this.onNavigate
+  });
+
+  final String title;
+  final VoidCallback onNavigate;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+      onTap: onNavigate,
+      title: Text(
+        title, 
+        style: const TextStyle(fontSize: 14, color: Color(AppTheme.primaryColor)),
+      ),
+      trailing: const Icon(Icons.keyboard_arrow_right_outlined),
     );
   }
 }
@@ -139,6 +175,9 @@ class _ConfirmLogout extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
+
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
       title: const Text('¿Cerrar sesión de tu cuenta?'),
@@ -152,6 +191,7 @@ class _ConfirmLogout extends StatelessWidget{
           onPressed: () async{
             final navigator = Navigator.of(context);
             await UserPreferences.deleteUser();
+            appoimentProvider.closeSession();
             navigator.pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => const SessionScreen()), 
               (route) => false

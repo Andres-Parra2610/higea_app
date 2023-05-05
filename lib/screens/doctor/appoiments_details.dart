@@ -9,11 +9,13 @@ class AppoimentsDetails extends StatelessWidget {
   const AppoimentsDetails({ 
     Key? key ,
     required this.patient, 
-    required this.appoiment
+    required this.appoiment,
+    required this.guest
   }) : super(key: key);
 
   final User patient;
   final Appoiment appoiment;
+  final Guest? guest;
 
   @override
   Widget build(BuildContext context){
@@ -32,7 +34,10 @@ class AppoimentsDetails extends StatelessWidget {
           titleTextStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18, color: Color(AppTheme.primaryColor)),
           backgroundColor: Colors.white,
           elevation: 0.5,
-          automaticallyImplyLeading: false,
+          leading: IconButton(icon: const Icon(Icons.arrow_back), color: const Color(AppTheme.primaryColor), onPressed: (){
+            Provider.of<HistoryProvider>(context, listen: false).clearProvider();
+            Navigator.pop(context);
+          }),
         ),
     
         body: SingleChildScrollView(
@@ -50,41 +55,34 @@ class AppoimentsDetails extends StatelessWidget {
                 const Center(child: Text('Información de la cita', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
     
                 const SizedBox(height: 30),
-                Row(
-                  children: [
-                    const Expanded(child: Text('Cédula del paciente')),
-                    Text('${patient.cedula}', style: textStyle,)
-                  ],
+
+                Visibility(
+                  visible: guest != null,
+                  child: _InfoList(title: 'Cédula del usuario o representante', info: '${patient.cedula}'),
                 ),
+
+                guest != null ? const Divider() : Container(),
+
+                _InfoList(title: 'Cédula del paciente', info: guest != null ? '${guest!.cedula}' : '${patient.cedula}'),
     
                 const Divider(),
     
-                Row(
-                  children: [
-                    const Expanded(child: Text('Fecha y hora de la cita')),
-                    Text('${appoiment.fechaCitaStr} ${appoiment.horaCitaStr}',  style: textStyle)
-                  ],
-                ),
+                _InfoList(title: 'Fecha y hora de la cita', info: '${appoiment.fechaCitaStr} ${appoiment.horaCitaStr}'),
+                
     
                 const SizedBox(height: 30),
     
-                ListTile(
-                  onTap: (){
-                    Navigator.push(
-                      context, 
-                      MaterialPageRoute(builder: (_)=> HistoryListWidget(patient: patient, isDoctor: true))
-                    );
-                  },
-                  contentPadding: const EdgeInsets.all(0),
-                  title: const Text('Nombre', style: TextStyle(fontSize: 14)),
-                  subtitle: Text('${patient.nombrePaciente} ${patient.apellidoPaciente}', style: textStyle,),
-                  trailing: const Text('Ver historial >', style: TextStyle(fontSize: 12)),
-                ),
+                _NavigateToHistory(patient: patient, textStyle: textStyle, guest: guest,),
     
                 const SizedBox(height: 30),
     
-                const Text('Correo'),
+                Text( guest != null ? 'Correo del representante' : 'Correo'),
                 Text(patient.correo,  style: textStyle),
+
+                const SizedBox(height: 30),
+
+                Text( guest != null ? 'Teléfono del representante' : 'Correo'),
+                Text('0${patient.telefonoPaciente}',  style: textStyle),
     
                 const SizedBox(height: 30),
     
@@ -95,6 +93,61 @@ class AppoimentsDetails extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _NavigateToHistory extends StatelessWidget {
+  const _NavigateToHistory({
+    required this.patient,
+    required this.guest,
+    required this.textStyle,
+  });
+
+  final User patient;
+  final Guest? guest;
+  final TextStyle textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: (){
+        Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (_)=> HistoryListWidget(patient: patient, isDoctor: true, guest: guest,))
+        );
+      },
+      contentPadding: const EdgeInsets.all(0),
+      title: const Text('Nombre', style: TextStyle(fontSize: 14)),
+      subtitle: Text(
+        guest != null 
+          ? '${guest!.nombreInvitado} ${guest!.apellidoInvitado}'
+          : '${patient.nombrePaciente} ${patient.apellidoPaciente}',
+        style: textStyle,
+      ),
+      trailing: const Text('Ver historial >', style: TextStyle(fontSize: 12)),
+    );
+  }
+}
+
+class _InfoList extends StatelessWidget {
+  const _InfoList({
+    required this.title,
+    required this.info,
+  });
+
+  final String title;
+  final String info;
+
+  @override
+  Widget build(BuildContext context) {
+    const TextStyle textStyle = TextStyle(color: Colors.black45);
+
+    return Row(
+      children: [
+        Expanded(child: Text(title)),
+        Text(info, style: textStyle,)
+      ],
     );
   }
 }
@@ -234,7 +287,7 @@ class _SavedButton extends StatelessWidget {
 
         final String msg = await historyProvider.finishAppoiment(id);
 
-        SnackBarWidget.showSnackBar(msg, AppTheme.primaryColor);
+        SnackBarWidget.showSnackBar(msg);
         
       }, 
       child: const Text('Guardar')

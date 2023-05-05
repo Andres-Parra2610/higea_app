@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
@@ -9,12 +11,13 @@ class HistoryListWidget extends StatelessWidget {
 const HistoryListWidget({ 
   Key? key, 
   required this.patient, 
-  this.isDoctor = false
+  this.isDoctor = false,
+  this.guest
 }) : super(key: key);
 
-
   final User patient;
-  final bool? isDoctor;
+  final bool isDoctor;
+  final Guest? guest;
 
   @override
   Widget build(BuildContext context){
@@ -42,7 +45,7 @@ const HistoryListWidget({
               return const Center(child: NotFoundWidget(text: 'Sin historias médicas', icon: Icons.history_edu));
             }
 
-            return  _PatientHistoryList(snapshot.data!, isDoctor!);
+            return  _PatientHistoryList(snapshot.data!, isDoctor, guest, patient);
           }
         ),
       ),
@@ -51,19 +54,34 @@ const HistoryListWidget({
 }
 
 class _PatientHistoryList extends StatelessWidget {
-  const _PatientHistoryList(this.histories, this.isDoctor);
+  const _PatientHistoryList(this.histories, this.isDoctor, this.guest, this.patient);
 
   final List<History> histories;
   final bool isDoctor;
+  final User patient;
+  final Guest? guest;
 
   @override
   Widget build(BuildContext context) {
 
+    List<History> filterHistories = histories;
+
+    
+    if(isDoctor && guest!= null){
+      filterHistories = filterHistories.where((history) => history.cedulaInvitado == guest!.cedula).toList();
+    }else if(isDoctor){
+      filterHistories = filterHistories.where((history) => history.cedulaInvitado == null).toList();
+    }
+
+    if(filterHistories.isEmpty){
+      return const Center(child: NotFoundWidget(text: 'Sin historias médicas', icon: Icons.history_edu));
+    }
+
     return ListView.builder(
-      itemCount: histories.length,
+      itemCount: filterHistories.length,
       itemBuilder: (context, index){
 
-        final History history = histories[index];
+        final History history = filterHistories[index];
         
         return Column(
           children: [
@@ -73,11 +91,13 @@ class _PatientHistoryList extends StatelessWidget {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryDetailsWidget(history: history, isDoctor: isDoctor,)));
               },
               title: Text(
-                history.nombreEspecialidad!, 
+                history.nombreInvitado != null 
+                  ? 'Paciente: ${history.nombreInvitado} ${history.apellidoInvitado}'
+                  : 'Paciente: ${history.nombrePaciente} ${history.apellidoPaciente}',
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)
               ),
               subtitle: Text(
-                '${history.fechaCitaStr} - ${history.horaCitaStr}',
+                'Visto con: ${history.nombreEspecialidad},  ${history.fechaCitaStr} - ${history.horaCitaStr}',
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
               ),
               trailing: const Icon(Icons.keyboard_arrow_right_outlined),

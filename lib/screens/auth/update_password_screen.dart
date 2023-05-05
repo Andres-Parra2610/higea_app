@@ -118,11 +118,11 @@ class _UpdatePasswordFormState extends State<_UpdatePasswordForm> {
                 final res = await recoveryProvider.newPassword();
 
                 if(res){
-                  SnackBarWidget.showSnackBar('La contraseña fué cambiada con éxito', AppTheme.primaryColor);
+                  SnackBarWidget.showSnackBar('La contraseña fué cambiada con éxito');
                   await Future.delayed(const Duration(seconds: 3));
                   navigator.popUntil((route) => route.isFirst);
                 }else{
-                  SnackBarWidget.showSnackBar('Un error ha ocurrido al cambiar la contraseña');
+                  SnackBarWidget.showSnackBar('Un error ha ocurrido al cambiar la contraseña', false);
                 }
 
                 setState(()=> isLoading = false);

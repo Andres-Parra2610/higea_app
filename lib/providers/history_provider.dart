@@ -70,7 +70,7 @@ class HistoryProvider extends ChangeNotifier{
 
     if(res['ok'] == false) return [];
 
-    final historyList = res['results'] as List<dynamic>;
+    final historyList = res['result'] as List<dynamic>;
     histories = historyList.map((e) => History.fromJson(e)).toList();
     return histories;
   }

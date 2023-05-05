@@ -13,6 +13,9 @@ class History {
         this.apellidoPaciente,
         this.nombreMedico,
         this.apellidoMedico,
+        this.cedulaInvitado,
+        this.nombreInvitado,
+        this.apellidoInvitado,
         this.nombreEspecialidad,
         this.notaMedica,
         this.observaciones,
@@ -25,7 +28,10 @@ class History {
     final String? apellidoPaciente;
     final String? nombreMedico;
     final String? apellidoMedico;
+    final String? cedulaInvitado;
     final String? nombreEspecialidad;
+    final String? nombreInvitado;
+    final String? apellidoInvitado;
     String? notaMedica;
     String? observaciones;
 
@@ -43,6 +49,9 @@ class History {
         nombrePaciente: json["nombre_paciente"],
         apellidoPaciente: json["apellido_paciente"],
         nombreMedico: json["nombre_medico"],
+        cedulaInvitado: json["cedula_invitado"],
+        nombreInvitado: json["nombre_invitado"],
+        apellidoInvitado: json["apellido_invitado"],
         apellidoMedico: json["apellido_medico"],
         nombreEspecialidad: json["nombre_especialidad"],
         notaMedica: json["nota_medica"],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:higea_app/providers/guest_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:higea_app/providers/appoiment_provider.dart';
@@ -23,18 +24,13 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
 
   bool isLoading = false;
 
-
-
   @override
   Widget build(BuildContext context){
 
-    final appoimetnProvider = Provider.of<AppoimentProvider>(context, listen: false);
-
-    var textStyle = const TextStyle(fontSize: 18);
-    final String appoimentHour = Helpers.transformHour(widget.appoiment.horaCita);
-    final String appoimentDate = DateFormat('dd-MM-yyyy').format(widget.appoiment.fechaCita);
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
     final User user = User.fromRawJson(UserPreferences.user);
     final Appoiment currentAppoiment = widget.appoiment;
+    currentAppoiment.cedulaPaciente = user.cedula;
     final String appoimentToBd = currentAppoiment.fechaCita.toString().split(' ')[0];
   
     return AlertDialog(
@@ -50,69 +46,195 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
           onPressed: isLoading 
             ? null 
             : () async{
+                if(!appoimentProvider.confirmAppoimentForm.currentState!.validate()) return;
+
                 setState(() => isLoading = true);
                 final navigator = Navigator.of(context);
-                widget.appoiment.cedulaPaciente = user.cedula;
-                final Response res = currentAppoiment.idCita == 0 
-                  ? await appoimetnProvider.newApoiment(widget.appoiment)
-                  : await appoimetnProvider.updateAppoiment(currentAppoiment.idCita, user.cedula);
+
+                final Response res = await appoimentProvider.newApoiment(currentAppoiment);
+
                 setState(() => isLoading = false);
-                await appoimetnProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimetnProvider.date);
+
+                await appoimentProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimentProvider.date);
+
                 navigator.pop(res);
+
               },
           child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
         ),
       ],
       title: Text('Detalles de la cita médica', style: Theme.of(context).textTheme.titleLarge,),
-      content: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.55,
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Text('Paciente', style: textStyle,),
-
-              
-              TextFormField(
-                initialValue: '${user.nombrePaciente} ${user.apellidoPaciente}',
-                readOnly: true,
-              ),
-
-              const SizedBox(height: 20),
-
-              Text('Email', style: textStyle,),
-              TextFormField(
-                initialValue: user.correo,
-                readOnly: true,
-              ),
-
-              const SizedBox(height: 20),
-
-              Text('Fecha', style: textStyle,),
-              TextFormField(
-                initialValue: appoimentDate,
-                readOnly: true,
-              ),
-
-              const SizedBox(height: 20),
-
-              Text('Hora', style: textStyle,),
-              TextFormField(
-                initialValue: appoimentHour,
-                readOnly: true,
-              ),
-
-              const SizedBox(height: 30),
-
-              isLoading
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : Container()
-            ],
-          ),
-        ),
-      )
+      
+      content: _ConfirmAppoimentBody(currentAppoiment, user, isLoading)
     );
   }
 }
+
+class _ConfirmAppoimentBody extends StatelessWidget {
+  const _ConfirmAppoimentBody(this.currentAppoiment, this.user, this.isLoading);
+
+  final Appoiment currentAppoiment;
+  final User user;
+  final bool isLoading; 
+
+  @override
+  Widget build(BuildContext context) {
+
+    final String appoimentHour = Helpers.transformHour(currentAppoiment.horaCita);
+    final String appoimentDate = DateFormat('dd-MM-yyyy').format(currentAppoiment.fechaCita);
+
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: _BodyForm(user, appoimentDate, appoimentHour,  isLoading),
+    );
+  }
+}
+
+class _BodyForm extends StatelessWidget {
+  const _BodyForm(
+     this.user,
+     this.appoimentDate,
+     this.appoimentHour,
+     this.isLoading,
+    );
+
+  final User user;
+  final String appoimentDate;
+  final String appoimentHour;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+
+    const textStyle = TextStyle(fontSize: 16);
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
+
+    return Form(
+      key: appoimentProvider.confirmAppoimentForm,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+
+          _GuestBuilder(user: user),
+
+          const SizedBox(height: 20),
+
+          const Text('Email principal del usuario', style: textStyle,),
+          TextFormField(
+            initialValue: user.correo,
+            readOnly: true,
+          ),
+
+          const SizedBox(height: 20),
+
+          const Text('Fecha', style: textStyle,),
+          TextFormField(
+            initialValue: appoimentDate,
+            readOnly: true,
+          ),
+
+          const SizedBox(height: 20),
+
+          const Text('Hora', style: textStyle,),
+          TextFormField(
+            initialValue: appoimentHour,
+            readOnly: true,
+          ),
+
+          const SizedBox(height: 30),
+
+          isLoading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : Container()
+        ],
+      ),
+    );
+  }
+}
+
+class _GuestBuilder extends StatelessWidget {
+  const _GuestBuilder({
+    required this.user,
+  });
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final guestProvider = Provider.of<GuestProvider>(context, listen: false);
+
+    return FutureBuilder(
+      future: guestProvider.showGuestByPaTient(user.cedula),
+      builder:(context, AsyncSnapshot<List<Guest>> snapshot){
+
+        if(!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+
+        final List<Guest> guests = snapshot.data!;
+
+        if(guests.isEmpty){
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Paciente ', style: TextStyle(fontSize: 16)),
+              TextFormField(
+                initialValue: user.nombrePaciente,
+                readOnly: true,
+              )
+            ],
+          );
+        }
+
+        return  _DropDownGuest(guests);
+
+      },
+    );
+  }
+}
+
+
+class _DropDownGuest extends StatelessWidget {
+  const _DropDownGuest(this.guests);
+
+  final List<Guest> guests;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
+    final User user = User.fromRawJson(UserPreferences.user);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Por favor selecciona al paciente', style: TextStyle(fontSize: 18)),
+
+        DropdownButtonFormField(
+          items: [
+            DropdownMenuItem(
+              value: user.cedula.toString(),
+              child: Text('${user.nombrePaciente} ${user.apellidoPaciente} (yo)'),
+            ),
+            ...guests.map((guest){
+              return DropdownMenuItem(
+                value: guest.cedula,
+                child: Text('${guest.nombreInvitado} ${guest.apellidoInvitado}'),
+              );
+            }).toList()
+          ],
+
+          onChanged: (value){
+           appoimentProvider.onChangeGuest(value);
+          },
+
+          validator: (value) {
+            if(value == null || value.trim().isEmpty) return 'Por favor seleccione un paciente';
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+}
+

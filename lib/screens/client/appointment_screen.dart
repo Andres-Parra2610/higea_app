@@ -92,20 +92,17 @@ class _AppointMentAppBar extends StatelessWidget {
             Expanded(
               child: _TextHeader(doctor: doctor),
             ),
-            Hero(
-              tag: doctor.cedula,
-              child: CircleAvatar(
-                radius: 30,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image(
-                    width: double.infinity,
-                    image: AssetImage(img),
-                    fit: BoxFit.cover,
-                  ),
+            /* CircleAvatar(
+              radius: 30,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image(
+                  width: double.infinity,
+                  image: AssetImage(img),
+                  fit: BoxFit.cover,
                 ),
               ),
-            )
+            ) */
           ],
         ),
       ),
@@ -470,9 +467,7 @@ class _AppoimentStatus extends StatelessWidget {
     if(result == null) return;
 
     final Response response = result;
-
-    response.ok
-      ? SnackBarWidget.showSnackBar(response.msg, AppTheme.primaryColor)
-      : SnackBarWidget.showSnackBar(response.msg);
+    
+    SnackBarWidget.showSnackBar(response.msg, response.ok);
   }
 }

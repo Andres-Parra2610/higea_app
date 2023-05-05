@@ -159,9 +159,9 @@ class _AppoimentList extends StatelessWidget {
         final appoiment = value[index];
         final User patient = value[index].user!;
         final DateFormat format = DateFormat('dd-MM-yyyy');
+        final Guest? guest = value[index].invitado;
 
-
-        return _AppoimentItem(patient: patient, appoiment: appoiment, format: format);
+        return _AppoimentItem(patient: patient, appoiment: appoiment, format: format, guest: guest,);
       },
     );
   }
@@ -172,21 +172,27 @@ class _AppoimentItem extends StatelessWidget {
     required this.patient,
     required this.appoiment,
     required this.format,
+    required this.guest
   });
 
   final User patient;
   final Appoiment appoiment;
   final DateFormat format;
+  final Guest? guest;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: AppTheme.horizontalPadding),
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (_) => AppoimentsDetails(patient: patient, appoiment: appoiment)));
+        Navigator.push(context, MaterialPageRoute(
+          builder: (_) => AppoimentsDetails(patient: patient, appoiment: appoiment, guest: guest,)
+        ));
       },
       title: Text(
-        '${patient.nombrePaciente} ${patient.apellidoPaciente}',
+        guest != null
+          ? '${guest!.nombreInvitado} ${guest!.apellidoInvitado}'
+          : '${patient.nombrePaciente} ${patient.apellidoPaciente}',
         style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)
       ),
       subtitle: Row(

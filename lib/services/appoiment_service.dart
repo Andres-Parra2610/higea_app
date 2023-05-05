@@ -19,12 +19,12 @@ class AppoimentService {
   }
 
 
-  static Future insetAppoiment(Appoiment appoiment) async{
+  static Future insertAppoiment(Appoiment appoiment) async{
 
     final url = Uri.parse('$server/appoiment/new');
-    final response = await http.post(url, body: appoiment.toJson());
+    final response = await http.post(url, body: jsonEncode(appoiment.toJson()), headers: {'Content-Type': 'application/json'});
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    return data;
+    return data; 
   }
   
   static Future cancelAppoiment(appoimentId) async{
@@ -34,9 +34,9 @@ class AppoimentService {
     return data;
   }
 
-  static Future insertExistAppoiment(appoimentId, patientCi) async{
-    final url = Uri.parse('$server/appoiment/update/$appoimentId/$patientCi');
-    final response = await http.put(url);
+  static Future insertExistAppoiment(Appoiment appoiment) async{
+    final url = Uri.parse('$server/appoiment/update');
+    final response = await http.put(url, body: jsonEncode(appoiment.toJson()), headers: {'Content-Type': 'application/json'});
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     return data;
   }

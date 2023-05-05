@@ -42,6 +42,7 @@ class MyAppState extends StatelessWidget{
         ChangeNotifierProvider(create: (context) => CalendarProvider()),
         ChangeNotifierProvider(create: (context) => HistoryProvider()),
         ChangeNotifierProvider(create: (context) => PatientProvider()),
+        ChangeNotifierProvider(create: (context) => GuestProvider()),
       ],
       child: const MyApp(),
     );

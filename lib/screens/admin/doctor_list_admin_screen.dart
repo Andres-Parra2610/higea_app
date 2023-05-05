@@ -88,9 +88,9 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
 
                 if(res){
                   doctorProvider.showAllDoctors();
-                  SnackBarWidget.showSnackBar('El doctor se ha agregado correctamente', AppTheme.primaryColor);
+                  SnackBarWidget.showSnackBar('El doctor se ha agregado correctamente');
                 }else{
-                  SnackBarWidget.showSnackBar('Error al agregar el doctor');
+                  SnackBarWidget.showSnackBar('Error al agregar el doctor', false);
                 }
               },
               child: const Text('Agregar médico')
@@ -108,9 +108,9 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
 
                     if(res){
                       doctorProvider.showAllDoctors();
-                      SnackBarWidget.showSnackBar('El doctor se ha editado correctamente', AppTheme.primaryColor);
+                      SnackBarWidget.showSnackBar('El doctor se ha editado correctamente');
                     }else{
-                      SnackBarWidget.showSnackBar('Error al editar el doctor');
+                      SnackBarWidget.showSnackBar('Error al editar el doctor', false);
                     }
 
                   }, 
@@ -127,9 +127,9 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
                     if(res){
                       selectedRows.remove(selectedRows[0]);
                       doctorProvider.showAllDoctors();
-                      SnackBarWidget.showSnackBar('El doctor se ha eliminado correctamente', AppTheme.primaryColor);
+                      SnackBarWidget.showSnackBar('El doctor se ha eliminado correctamente');
                     }else{
-                      SnackBarWidget.showSnackBar('Error al eliminar el doctor');
+                      SnackBarWidget.showSnackBar('Error al eliminar el doctor', false);
                     }
                   }, 
                   icon: const Icon(Icons.delete),

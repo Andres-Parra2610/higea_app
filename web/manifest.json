@@ -1,6 +1,6 @@
 {
-    "name": "higea_app",
-    "short_name": "higea_app",
+    "name": "higea",
+    "short_name": "higea",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
