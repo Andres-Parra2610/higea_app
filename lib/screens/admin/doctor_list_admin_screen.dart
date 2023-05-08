@@ -102,6 +102,7 @@ class _DoctorListAdminScreenState extends State<DoctorListAdminScreen> {
                 IconButton(
                   onPressed: () async{
                     final Doctor doctor = doctorProvider.doctors.firstWhere((doc) => selectedRows[0] == doc.cedula);
+
                     final res = await showDialog(context: context, builder: (_) => AlertDoctorWidget(doctor: doctor, title: 'Editar médico', isEdit: true,));
 
                     if(res == null) return;

@@ -8,13 +8,18 @@ const ReportsAdminScreen({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
     
-        const Text('Generar reportes', style: TextStyle(fontSize: 18),),
+        const Align(
+          alignment: Alignment.topLeft,
+          child:  Text('Generar reportes', style: TextStyle(fontSize: 18),
+          )
+        ),
     
         Wrap(
+          alignment: WrapAlignment.spaceBetween,
+    
+          spacing: 0,
           children: [
             const ReportButton(
               title: 'Citas',
@@ -22,7 +27,7 @@ const ReportsAdminScreen({ Key? key }) : super(key: key);
               url: 'paciente-frecuente',
               child: Text('Cliente más frecuente de la fundación'),
             ),
-
+    
             ReportButton(
               tap: false,
               title: 'Citas por mes',
@@ -33,21 +38,21 @@ const ReportsAdminScreen({ Key? key }) : super(key: key);
                 }
               ),
             ),
-
+    
             const ReportButton(
               title: 'Médicos',
               url: 'doctors',
               icon: Icons.health_and_safety,
               child: Text('Todos los médicos de la fundación'),
             ),
-
+    
             const ReportButton(
               title: 'Médicos',
               url: 'doctor-more-visited',
               icon: Icons.health_and_safety,
               child: Text('Médicos con más pacientes atendidos'),
             ),
-
+    
             ReportButton(
               tap: false,
               title: 'Consultas de médico por mes',
@@ -62,7 +67,7 @@ const ReportsAdminScreen({ Key? key }) : super(key: key);
                 }
               ),
             ),
-
+    
             const ReportButton(
               title: 'Especialidades',
               url: 'specialities',

@@ -63,7 +63,8 @@ class DoctorProvider extends ChangeNotifier{
     if(response["ok"] == false) return doctors = [];
 
     final results = response['results'] as List<dynamic>;
-    return List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
+    doctors = List<Doctor>.from(results.map((x) => Doctor.fromJson(x)));
+    return doctors;
   }
 
   Future getSpecialitiesToDropDown() async{

@@ -19,7 +19,6 @@ class TextFormDatePickerWidget extends StatelessWidget {
       controller: _dateController,
       decoration: const InputDecoration(labelText: 'Fecha de nacimiento'),
       readOnly: true,
-      onChanged: (value) => print(value),
       onTap: () async{
         final DateTime? date = await showDialog(context: context, builder: (_) => _AlertDatePicker());
 

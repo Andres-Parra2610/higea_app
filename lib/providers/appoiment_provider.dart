@@ -19,7 +19,7 @@ class AppoimentProvider extends ChangeNotifier{
 
   Future getAllAppoiments() async{
     final Map<String, dynamic> data = await AppoimentService.getAllAppoiments();
-    final result = data['results'] as List<dynamic>;
+    final result = data['result'] as List<dynamic>;
     
     appoiments = List<Appoiment>.from(result.map((a) => Appoiment.fromJson(a)));
     filterAppoiments = appoiments;

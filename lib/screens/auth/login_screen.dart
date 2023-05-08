@@ -183,7 +183,7 @@ class _LoginButton extends StatelessWidget {
               loginProvider.loading = false;
 
               if(!res){
-                SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos');
+                SnackBarWidget.showSnackBar('Usuario o contraseña incorrectos', false);
               }else{
 
                 Widget screen;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
+import 'package:higea_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PatientListAdminScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class PatientListAdminScreen extends StatelessWidget {
         }
 
         return PaginatedDataTable(
-          source: _PatientDataTable(snapshot.data!),
+          source: _PatientDataTable(snapshot.data!, context),
           columns: const <DataColumn>[
             DataColumn(
               label: Expanded(
@@ -42,6 +43,11 @@ class PatientListAdminScreen extends StatelessWidget {
                 child: Text('Teléfono del paciente'),
               )
             ),
+            DataColumn(
+              label: Expanded(
+                child: Text(''),
+              )
+            ),
           ], 
         );
       }
@@ -52,9 +58,10 @@ class PatientListAdminScreen extends StatelessWidget {
 
 class _PatientDataTable extends DataTableSource{
 
-  _PatientDataTable( this.user);
+  _PatientDataTable( this.user, this.context);
 
   final List<User> user;
+  final BuildContext context;
 
   @override
   DataRow? getRow(int index) {
@@ -67,7 +74,13 @@ class _PatientDataTable extends DataTableSource{
         DataCell(Text(data.cedula.toString())),
         DataCell(Text('${data.nombrePaciente.split(' ')[0]} ${data.apellidoPaciente.split(' ')[0]}')),
         DataCell(Text(data.correo)),
-        DataCell(Text(data.telefonoPaciente))
+        DataCell(Text(data.telefonoPaciente)),
+        DataCell(TextButton(
+          onPressed: (){
+            showDialog(context: context, builder: (_)=> AlertViewUserList(patientCi: data.cedula, title: 'Lista de invitados de ${data.nombrePaciente}',));
+          },
+          child: const Text('Invitados'),
+        ))
       ]
     );
   }
