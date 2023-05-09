@@ -131,7 +131,7 @@ class _AppoimentDataTableSource extends DataTableSource{
     final Guest? guest = data[index].invitado;
     final Doctor doctor = data[index].doctor!;
     final date = Helpers.completeDateFromDateTime(appoiment.fechaCita);
-    final hour = Helpers.transformHour(appoiment.horaCita);
+    final hour = Helpers.transHour(appoiment.horaCita);
 
     return DataRow.byIndex(
       index: index,

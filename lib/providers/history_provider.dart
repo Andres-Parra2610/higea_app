@@ -76,6 +76,13 @@ class HistoryProvider extends ChangeNotifier{
   }
 
 
+  Future inattentiveAppoiment(int id) async{
+
+    final Response res = await AppoimentService.makeInattentiveAppoiment(id);
+    return res;
+  }
+
+
   Future<String> finishAppoiment(int id) async{
 
     loading = true;

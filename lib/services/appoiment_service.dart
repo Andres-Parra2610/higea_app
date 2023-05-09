@@ -70,4 +70,12 @@ class AppoimentService {
     final data =  jsonDecode(response.body) as Map<String, dynamic>;
     return data;
   }
+
+
+  static Future makeInattentiveAppoiment(int id) async{
+    final url = Uri.parse('$server/appoiment/inattentive/$id');
+    final response = await http.put(url);
+    final data =  jsonDecode(response.body) as Map<String, dynamic>;
+    return Response.fromJson(data);
+  } 
 }

@@ -22,7 +22,7 @@ const DeleteGuestWidget({ Key? key, required this.guest }) : super(key: key);
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16),),
+          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14),),
         ),
 
         TextButton(
@@ -31,7 +31,7 @@ const DeleteGuestWidget({ Key? key, required this.guest }) : super(key: key);
             final Response res = await guestProvider.deleteGuest(guest.cedula!);
             navigator.pop(res);
           }, 
-          child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
+          child: const Text('Aceptar', style: TextStyle(fontSize: 14),),
         )
       ],
 

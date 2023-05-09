@@ -136,14 +136,15 @@ class _TextFormCi extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         child: isEditable 
-          ? Text(guestProvider.guestData.cedula!)
-          : Text('${user.cedula} - 0${guestProvider.lastDigits}'),
+          ? Text(guestProvider.guestData.cedula!, style: const TextStyle(fontSize: 14),)
+          : Text('${user.cedula} - 0${guestProvider.lastDigits}', style: const TextStyle(fontSize: 14),),
       );
     }
 
     return TextFormField(
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
       readOnly: isEditable,
-      initialValue: guestProvider.guestData.cedula,
+      initialValue: isEditable ? guestProvider.guestData.cedula : '',
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(labelText: 'Cédula'),
       inputFormatters: [FilteringTextInputFormatter.digitsOnly ],
@@ -168,6 +169,7 @@ class _BodyForm extends StatelessWidget {
     return Column(
       children: [
         TextFormField(
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
           initialValue: guestProvider.guestData.nombreInvitado,
           decoration: const InputDecoration(labelText: 'Nombre(s)'),
           inputFormatters: [ FilteringTextInputFormatter.deny(RegExp(r'[0-9]')) ],
@@ -181,6 +183,7 @@ class _BodyForm extends StatelessWidget {
         const SizedBox(height: 20),
 
         TextFormField(
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
           initialValue: guestProvider.guestData.apellidoInvitado,
           decoration: const InputDecoration(labelText: 'Apellido(s)'),
           inputFormatters: [ FilteringTextInputFormatter.deny(RegExp(r'[0-9]')) ],
@@ -194,6 +197,7 @@ class _BodyForm extends StatelessWidget {
         const SizedBox(height: 20),
 
         TextFormDatePickerWidget(
+          
           initValue: guestProvider.guestData.fechaNacimiento,
           validate: (value){
             if(value!.trim().isEmpty) return 'Por favor seleccione una fecha';
@@ -221,6 +225,7 @@ class _SelectGuestType extends StatelessWidget {
     final User user = User.fromRawJson(UserPreferences.user);
 
     return DropdownButtonFormField(
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
       value: value,
       isExpanded: true,
       decoration: const InputDecoration(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
@@ -33,7 +34,10 @@ const PendingAppoimentsScreen({ Key? key }) : super(key: key);
               return const Center(child: NotFoundWidget(text: 'Reserva una cita médica ahora!', icon: Icons.healing_outlined));
             }
 
-            return _PendingAppoimentList(snapshot.data!);
+            return Animate(
+              effects: const [FadeEffect()],
+              child: _PendingAppoimentList(snapshot.data!)
+            );
           }
         ),        
       ),

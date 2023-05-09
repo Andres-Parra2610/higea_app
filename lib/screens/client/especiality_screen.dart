@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
@@ -123,17 +124,20 @@ class _EspecialistList extends StatelessWidget {
               
               final Doctor doctor = snapshot.data![index];
               
-              return Column(
-                children: [
-                  InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: doctor)));
-                    },
-                    child: _DoctorItem(doctor: doctor),
-                  ),
-
-                  const Divider()
-                ],
+              return Animate(
+                effects: const [FadeEffect(duration: Duration(milliseconds: 500))],
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> AppointmentScreen(doctor: doctor)));
+                      },
+                      child: _DoctorItem(doctor: doctor),
+                    ),
+              
+                    const Divider()
+                  ],
+                ),
               );
           })
         );
@@ -153,8 +157,8 @@ class _DoctorItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final startTime = Helpers.transformHour(doctor.horaInicio!);
-    final endTime = Helpers.transformHour(doctor.horaFin!);
+    final startTime = Helpers.transHour(doctor.horaInicio!);
+    final endTime = Helpers.transHour(doctor.horaFin!);
     final name = doctor.nombreMedico.split(' ')[0];
     final lastName = doctor.apellidoMedico.split(' ')[0];
     final prefix = doctor.sexoMedico == 'F' ? 'Dra.' : 'Dr';

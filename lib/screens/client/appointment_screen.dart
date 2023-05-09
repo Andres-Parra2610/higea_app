@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:higea_app/helpers/helpers.dart';
@@ -92,7 +93,7 @@ class _AppointMentAppBar extends StatelessWidget {
             Expanded(
               child: _TextHeader(doctor: doctor),
             ),
-            /* CircleAvatar(
+            CircleAvatar(
               radius: 30,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
@@ -102,7 +103,7 @@ class _AppointMentAppBar extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-            ) */
+            )
           ],
         ),
       ),
@@ -365,7 +366,14 @@ class _AviableAppoiments extends StatelessWidget {
 
         final Appoiment appoiment = appoiments[index];
 
-        return _AppoimentStatus(appoiment: appoiment);
+        final int duration = index == 0 ? 100 : (((index + 1)/11) * 1000).round();
+
+        return Animate(
+          effects: [
+            FadeEffect(delay: Duration(milliseconds: duration)),
+          ],
+          child: _AppoimentStatus(appoiment: appoiment)
+        );
       }
     );
   }
@@ -386,7 +394,7 @@ class _AppoimentStatus extends StatelessWidget {
     final currentUser = Provider.of<AuthProvider>(context, listen: false).currentUser;
     final size = MediaQuery.of(context).size;
 
-    final String appoimentHour = Helpers.transformHour(appoiment.horaCita);
+    final String appoimentHour = Helpers.transHour(appoiment.horaCita);
     String text = "Disponible";
     int bgColor = AppTheme.primaryColor;
     String actionText = "Reservar";

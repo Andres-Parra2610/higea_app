@@ -156,8 +156,8 @@ class _DoctorsDataTableSource extends DataTableSource{
 
     final Doctor doctor = data[index];
     final bool isSelected = selected.contains(doctor.cedula);
-    final startHour = Helpers.transformHour(doctor.horaInicio!);
-    final endHour = Helpers.transformHour(doctor.horaFin!);
+    final startHour = Helpers.transHour(doctor.horaInicio!);
+    final endHour = Helpers.transHour(doctor.horaFin!);
 
     return DataRow.byIndex(
       selected: isSelected,

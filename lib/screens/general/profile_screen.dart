@@ -184,7 +184,7 @@ class _ConfirmLogout extends StatelessWidget{
       actions: [
         TextButton(
           onPressed: ()=> Navigator.pop(context), 
-          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16))
+          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14))
         ),
 
         TextButton(
@@ -197,7 +197,7 @@ class _ConfirmLogout extends StatelessWidget{
               (route) => false
             );
           }, 
-          child: const Text('Aceptar', style: TextStyle(fontSize: 16))
+          child: const Text('Aceptar', style: TextStyle(fontSize: 14))
         )
       ],
     );

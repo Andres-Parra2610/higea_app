@@ -16,6 +16,7 @@ class TextFormDatePickerWidget extends StatelessWidget {
     _dateController.text = initValue ?? '';
 
     return TextFormField(
+      style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
       controller: _dateController,
       decoration: const InputDecoration(labelText: 'Fecha de nacimiento'),
       readOnly: true,
@@ -53,11 +54,11 @@ class _AlertDatePickerState extends State<_AlertDatePicker> {
       actions: [
         TextButton(
           onPressed: ()=> Navigator.pop(context),
-          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16)),
+          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14)),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, _selectedDate),
-          child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
+          child: const Text('Aceptar', style: TextStyle(fontSize: 14),),
         ),
       ],
 

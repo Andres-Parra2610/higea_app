@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
@@ -102,7 +103,11 @@ class _SpecialitiesFutureBuilder extends StatelessWidget {
           itemCount: specialities.length, //snapshot.data!.length,
           itemBuilder: (_, index){
             final Speciality speciality = specialities[index];
-            return CardWidget(speciality: speciality);
+
+            return Animate(
+              effects: const [FadeEffect()],
+              child: CardWidget(speciality: speciality)
+            );
           }
         );
       }
@@ -167,7 +172,7 @@ class _TextRecordatory extends StatelessWidget {
             Text(
               'Recuerda que tienes citas pendientes, ¡no las olvides!',
               style: TextStyle(
-                fontSize: 17, 
+                fontSize: 15, 
                 color: Colors.white,
                 fontWeight: FontWeight.bold
               ),

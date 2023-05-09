@@ -26,7 +26,6 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
         elevation: 0.5,
         actions: [
           TextButton(
-
             onPressed: (){
               UserPreferences.deleteUser();
               calendarProvider.events = {};
@@ -68,52 +67,55 @@ class _CalendarEventes extends StatelessWidget {
 
     return Column(
       children: [
-        TableCalendar( 
-          rowHeight: 40,
-          eventLoader: (day){
-            return calendarProvider.getAllEvents(day);
-          },
-          locale: 'ES_es',
-          firstDay: DateTime.utc(2010, 10, 16),
-          lastDay: DateTime.utc(2030, 3, 14),
-          focusedDay: calendarProvider.dayFocused,  
-          calendarFormat: calendarProvider.calendarFormat,
-          selectedDayPredicate: (day){
-            return isSameDay(calendarProvider.currentDay, day);
-          },
-          onDaySelected: calendarProvider.onSelectDay,
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: const Color(AppTheme.primaryColor).withOpacity(0.7),
-              shape: BoxShape.circle
-            ),
-            selectedDecoration: const BoxDecoration(
-              color:Color(AppTheme.primaryColor),
-              shape: BoxShape.circle
-            )
-          ),
-
-          headerStyle: const HeaderStyle(titleCentered: true, formatButtonVisible: false),
-          calendarBuilders: CalendarBuilders(
-            markerBuilder:(context, day, events) {
-              if(events.isNotEmpty){
-                return Container(
-                  width: 15,
-                  height: 15,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(AppTheme.secondaryColor),
-                    shape: BoxShape.circle
-                  ),
-                  child: Text(
-                    '${events.length}',
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                );
-              }
-        
-              return null;
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding - 10),
+          child: TableCalendar( 
+            rowHeight: 40,
+            eventLoader: (day){
+              return calendarProvider.getAllEvents(day);
             },
+            locale: 'ES_es',
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: calendarProvider.dayFocused,  
+            calendarFormat: calendarProvider.calendarFormat,
+            selectedDayPredicate: (day){
+              return isSameDay(calendarProvider.currentDay, day);
+            },
+            onDaySelected: calendarProvider.onSelectDay,
+            calendarStyle: CalendarStyle(
+              todayDecoration: BoxDecoration(
+                color: const Color(AppTheme.primaryColor).withOpacity(0.7),
+                shape: BoxShape.circle
+              ),
+              selectedDecoration: const BoxDecoration(
+                color:Color(AppTheme.primaryColor),
+                shape: BoxShape.circle
+              )
+            ),
+        
+            headerStyle: const HeaderStyle(titleCentered: true, formatButtonVisible: false),
+            calendarBuilders: CalendarBuilders(
+              markerBuilder:(context, day, events) {
+                if(events.isNotEmpty){
+                  return Container(
+                    width: 15,
+                    height: 15,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: Color(AppTheme.secondaryColor),
+                      shape: BoxShape.circle
+                    ),
+                    child: Text(
+                      '${events.length}',
+                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  );
+                }
+          
+                return null;
+              },
+            ),
           ),
         ),
 

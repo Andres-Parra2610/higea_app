@@ -19,28 +19,6 @@ class Helpers{
     return horaFormat;
   }
 
-  static String transformHour(String hour){
-
-    String modifiedDate = hour;
-    String format = 'am';
-    
-    if(modifiedDate.startsWith('0')){
-      modifiedDate = hour.substring(1);
-    }
-
-    int dateNumber= int.parse(modifiedDate.substring(0, modifiedDate.length - 6));
-
-    if(dateNumber > 12){
-      dateNumber = dateNumber - 12;
-      format = 'pm';
-    }
-
-    modifiedDate = "$dateNumber:00 $format";
-
-    return modifiedDate;
-  }
-
-
   static String parsedDate(String date){
     final DateTime parsedDate = DateFormat('dd/MM/yy').parse(date);
     return DateFormat('yyyy-MM-dd').format(parsedDate);
@@ -62,6 +40,25 @@ class Helpers{
     final String year = DateFormat('y').format(date);
 
     return '$nameDay, $day de $monthName $year';
+  }
+
+  static TimeOfDay stringToTime(String time){
+    final hour = int.parse(time.split(':')[0]);
+    final minute = int.parse(time.split(':')[1]);
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  static bool isSameOrAfter(DateTime date){
+    final DateTime now = DateTime.now();
+
+    return now.isAfter(date) || (now.year == date.year && now.month == date.month && now.day == date.day);
+  }
+
+  static bool compareHours(TimeOfDay time){
+    final double now = TimeOfDay.now().hour + TimeOfDay.now().minute/60.0;
+    final double target = time.hour + time.minute/60.0;
+
+    return now > target ? true : false;
   }
 
 

@@ -26,7 +26,7 @@ const AlertViewUserList({
             foregroundColor: Colors.white 
           ),
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cerrar', style: TextStyle(color: Color(AppTheme.secondaryColor))),
+          child: const Text('Cerrar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14)),
         )
       ],
       title: Text(title),

@@ -36,7 +36,7 @@ class _CancelAppoimentWidgetState extends State<CancelAppoimentWidget> {
       actions: [
         TextButton(
           onPressed: isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16),),
+          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14),),
         ),
 
         TextButton(
@@ -48,7 +48,7 @@ class _CancelAppoimentWidgetState extends State<CancelAppoimentWidget> {
             await appoimentProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimentProvider.date);
             navigator.pop(res);
           }, 
-          child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
+          child: const Text('Aceptar', style: TextStyle(fontSize: 14),),
         )
       ],
 

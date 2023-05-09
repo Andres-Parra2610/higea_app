@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
@@ -22,6 +23,8 @@ class AppoimentsDetails extends StatelessWidget {
 
     final Doctor currentDoctor = Provider.of<AuthProvider>(context, listen: false).currentDoctor;
     const TextStyle textStyle = TextStyle(color: Colors.black45);
+    final bool isFormVisible = Helpers.isSameOrAfter(appoiment.fechaCita);
+    final bool isInattentive = appoiment.citaEstado == 'inasistente' ? true : false;
 
     return WillPopScope(
       onWillPop: ()async {
@@ -41,7 +44,6 @@ class AppoimentsDetails extends StatelessWidget {
         ),
     
         body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(AppTheme.horizontalPadding),
             child: Column(
@@ -85,8 +87,15 @@ class AppoimentsDetails extends StatelessWidget {
                 Text('0${patient.telefonoPaciente}',  style: textStyle),
     
                 const SizedBox(height: 30),
-    
-                _FormAppoimentsDetalis(appoiment.idCita!),
+
+                Visibility(
+                  visible: isFormVisible,
+                  child: isInattentive 
+                    ? const Text('El paciente no asistió a la cita médica') 
+                    : _FormAppoimentsDetalis(appoiment.idCita!)  ,
+                )
+                
+                
     
               ],
             ),
@@ -249,13 +258,46 @@ class _FormAppoimentsDetalis extends StatelessWidget {
         
               const SizedBox(height: 15),
         
-              _SavedButton(history: history, id: id),
+              Row(
+                children: [
+                  _SavedButton(history: history, id: id),
+
+                  const SizedBox(width: 10),
+
+                  _CancelButton(id)
+                ],
+              ),
 
               const SizedBox(height: 30),
             ],
           ),
         );
       }
+    );
+  }
+}
+
+class _CancelButton extends StatelessWidget {
+  const _CancelButton(this.appoimentId);
+
+  final int appoimentId;
+  
+  @override
+  Widget build(BuildContext context) {
+
+    final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(backgroundColor: const Color(AppTheme.secondaryColor)),
+      onPressed:  historyProvider.currentHistory.idhistorial != null ? null : () async{
+        final navigator = Navigator.of(context);
+        final Response? res = await showDialog(context: context, builder: (_)=> CancelAppoimentDoctorWidget(appoimentId: appoimentId));
+
+        if(res == null) return;
+        SnackBarWidget.showSnackBar(res.msg, res.ok);
+        navigator.pop();
+      },
+      child: const Text('Marcar como inasistente'),
     );
   }
 }

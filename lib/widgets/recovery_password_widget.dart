@@ -20,7 +20,7 @@ const RecoveryPasswordWidget({ Key? key }) : super(key: key);
 
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Cancelar', style: TextStyle(fontSize: 16, color: Color(AppTheme.secondaryColor)))
+          child: const Text('Cancelar', style: TextStyle(fontSize: 14, color: Color(AppTheme.secondaryColor)))
         ),
 
         TextButton(
@@ -33,7 +33,7 @@ const RecoveryPasswordWidget({ Key? key }) : super(key: key);
               ? navigator.push(MaterialPageRoute(builder: (context)=> const UpdatePasswordScreen()))
               : null;
           }, 
-          child: const Text('Continuar', style: TextStyle(fontSize: 16),)
+          child: const Text('Continuar', style: TextStyle(fontSize: 14),)
         )
       ],
 

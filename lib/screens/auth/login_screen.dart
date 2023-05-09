@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:higea_app/providers/providers.dart';
@@ -33,9 +34,12 @@ const LoginScreen({ Key? key }) : super(key: key);
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 
-                  SvgPicture.asset(
-                    'assets/logo-higea.svg',
-                    width: PlatformDevice.isMobile ? 90:  110,
+                  Animate(
+                    effects: const [FadeEffect(), ScaleEffect()],
+                    child: SvgPicture.asset(
+                      'assets/logo-higea.svg',
+                      width: PlatformDevice.isMobile ? 90:  110,
+                    ),
                   ),
                   
                   const SizedBox(height: 30),

@@ -33,39 +33,40 @@ class _ConfirmAppoimentWidgetState extends State<ConfirmAppoimentWidget> {
     currentAppoiment.cedulaPaciente = user.cedula;
     final String appoimentToBd = currentAppoiment.fechaCita.toString().split(' ')[0];
   
-    return AlertDialog(
-      scrollable: true,
-      buttonPadding: const EdgeInsets.all(25),
-      insetPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
-      actions: [
-        TextButton(
-          onPressed:  isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 16)),
-        ),
-        TextButton(
-          onPressed: isLoading 
-            ? null 
-            : () async{
-                if(!appoimentProvider.confirmAppoimentForm.currentState!.validate()) return;
-
-                setState(() => isLoading = true);
-                final navigator = Navigator.of(context);
-
-                final Response res = await appoimentProvider.newApoiment(currentAppoiment);
-
-                setState(() => isLoading = false);
-
-                await appoimentProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimentProvider.date);
-
-                navigator.pop(res);
-
-              },
-          child: const Text('Aceptar', style: TextStyle(fontSize: 16),),
-        ),
-      ],
-      title: Text('Detalles de la cita médica', style: Theme.of(context).textTheme.titleLarge,),
-      
-      content: _ConfirmAppoimentBody(currentAppoiment, user, isLoading)
+    return AbsorbPointer(
+      absorbing: isLoading,
+      child: AlertDialog(
+        scrollable: true,
+        buttonPadding: const EdgeInsets.all(25),
+        insetPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar', style: TextStyle(color: Color(AppTheme.secondaryColor), fontSize: 14)),
+          ),
+          TextButton(
+            onPressed: () async{
+                  if(!appoimentProvider.confirmAppoimentForm.currentState!.validate()) return;
+    
+                  setState(() => isLoading = true);
+                  final navigator = Navigator.of(context);
+    
+                  final Response res = await appoimentProvider.newApoiment(currentAppoiment);
+    
+                  setState(() => isLoading = false);
+    
+                  await appoimentProvider.showAppoiment(currentAppoiment.cedulaMedico, appoimentToBd, appoimentProvider.date);
+    
+                  navigator.pop(res);
+    
+                },
+            child: const Text('Aceptar', style: TextStyle(fontSize: 14),),
+          ),
+        ],
+        title: Text('Detalles de la cita médica', style: Theme.of(context).textTheme.titleLarge,),
+        
+        content: _ConfirmAppoimentBody(currentAppoiment, user, isLoading)
+      ),
     );
   }
 }
@@ -80,7 +81,7 @@ class _ConfirmAppoimentBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final String appoimentHour = Helpers.transformHour(currentAppoiment.horaCita);
+    final String appoimentHour = Helpers.transHour(currentAppoiment.horaCita);
     final String appoimentDate = DateFormat('dd-MM-yyyy').format(currentAppoiment.fechaCita);
 
     return SizedBox(
@@ -106,7 +107,7 @@ class _BodyForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    const textStyle = TextStyle(fontSize: 16);
+    const textStyle = TextStyle(fontSize: 15);
     final appoimentProvider = Provider.of<AppoimentProvider>(context, listen: false);
 
     return Form(
@@ -122,6 +123,7 @@ class _BodyForm extends StatelessWidget {
 
           const Text('Email principal del usuario', style: textStyle,),
           TextFormField(
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
             initialValue: user.correo,
             readOnly: true,
           ),
@@ -130,6 +132,7 @@ class _BodyForm extends StatelessWidget {
 
           const Text('Fecha', style: textStyle,),
           TextFormField(
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
             initialValue: appoimentDate,
             readOnly: true,
           ),
@@ -138,6 +141,7 @@ class _BodyForm extends StatelessWidget {
 
           const Text('Hora', style: textStyle,),
           TextFormField(
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
             initialValue: appoimentHour,
             readOnly: true,
           ),
@@ -177,7 +181,7 @@ class _GuestBuilder extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Paciente ', style: TextStyle(fontSize: 16)),
+              const Text('Paciente ', style: TextStyle(fontSize: 15)),
               TextFormField(
                 initialValue: user.nombrePaciente,
                 readOnly: true,
@@ -208,9 +212,10 @@ class _DropDownGuest extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Por favor selecciona al paciente', style: TextStyle(fontSize: 18)),
+        const Text('Por favor selecciona al paciente', style: TextStyle(fontSize: 15)),
 
         DropdownButtonFormField(
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
           items: [
             DropdownMenuItem(
               value: user.cedula.toString(),

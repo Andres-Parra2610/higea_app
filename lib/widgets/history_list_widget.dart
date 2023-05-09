@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart';
@@ -83,27 +84,30 @@ class _PatientHistoryList extends StatelessWidget {
 
         final History history = filterHistories[index];
         
-        return Column(
-          children: [
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryDetailsWidget(history: history, isDoctor: isDoctor,)));
-              },
-              title: Text(
-                history.nombreInvitado != null 
-                  ? 'Paciente: ${history.nombreInvitado} ${history.apellidoInvitado}'
-                  : 'Paciente: ${history.nombrePaciente} ${history.apellidoPaciente}',
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)
+        return Animate(
+          effects: const [FadeEffect()],
+          child: Column(
+            children: [
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryDetailsWidget(history: history, isDoctor: isDoctor,)));
+                },
+                title: Text(
+                  history.nombreInvitado != null 
+                    ? 'Paciente: ${history.nombreInvitado} ${history.apellidoInvitado}'
+                    : 'Paciente: ${history.nombrePaciente} ${history.apellidoPaciente}',
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal)
+                ),
+                subtitle: Text(
+                  'Visto con: ${history.nombreEspecialidad},  ${history.fechaCitaStr} - ${history.horaCitaStr}',
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
+                ),
+                trailing: const Icon(Icons.keyboard_arrow_right_outlined),
               ),
-              subtitle: Text(
-                'Visto con: ${history.nombreEspecialidad},  ${history.fechaCitaStr} - ${history.horaCitaStr}',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(color: Colors.black45),
-              ),
-              trailing: const Icon(Icons.keyboard_arrow_right_outlined),
-            ),
-            const Divider()
-          ],
+              const Divider()
+            ],
+          ),
         );
       }
     );

@@ -35,6 +35,7 @@ class DoctorProvider extends ChangeNotifier{
 
   Future<List<Speciality>> showSpecialities() async{
 
+
     if(_render){
       final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
 
