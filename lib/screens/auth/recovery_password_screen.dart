@@ -22,32 +22,30 @@ const RecoveryPasswordScreen({ Key? key }) : super(key: key);
         elevation: 0,
       ),
 
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: PlatformDevice.isMobile ? 900 : 500
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+      body: SingleChildScrollView(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: PlatformDevice.isMobile ? 900 : 500
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppTheme.horizontalPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+        
+                const SizedBox(height: 20),
+                Text('Recuperar contraseña', style: TextStyle(
+                  fontSize: textTheme.headlineSmall!.fontSize, 
+                  color: const Color(AppTheme.primaryColor
+                  )
+                )),
           
-                  const SizedBox(height: 20),
-                  Text('Recuperar contraseña', style: TextStyle(
-                    fontSize: textTheme.headlineSmall!.fontSize, 
-                    color: const Color(AppTheme.primaryColor
-                    )
-                  )),
-            
-                  const SizedBox(height: 20),
-            
-                  const _FormInputCi(),
+                const SizedBox(height: 20),
           
-                 
-                ],
-              ),
+                const _FormInputCi(),
+        
+               
+              ],
             ),
           ),
         ),

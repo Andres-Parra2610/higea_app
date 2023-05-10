@@ -172,7 +172,7 @@ class _TextRecordatory extends StatelessWidget {
             Text(
               'Recuerda que tienes citas pendientes, ¡no las olvides!',
               style: TextStyle(
-                fontSize: 15, 
+                fontSize: 14, 
                 color: Colors.white,
                 fontWeight: FontWeight.bold
               ),

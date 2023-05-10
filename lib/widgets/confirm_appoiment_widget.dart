@@ -214,12 +214,18 @@ class _DropDownGuest extends StatelessWidget {
       children: [
         const Text('Por favor selecciona al paciente', style: TextStyle(fontSize: 15)),
 
+      
         DropdownButtonFormField(
+          isExpanded: true,
           style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.normal),
           items: [
             DropdownMenuItem(
               value: user.cedula.toString(),
-              child: Text('${user.nombrePaciente} ${user.apellidoPaciente} (yo)'),
+              child: Text(
+                '${user.nombrePaciente} ${user.apellidoPaciente} (yo)',
+                overflow: TextOverflow.ellipsis,
+                
+              ),
             ),
             ...guests.map((guest){
               return DropdownMenuItem(
