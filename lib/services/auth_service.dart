@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
+/// @class [AuthService]
+/// @description Servicio que trae los datos del servidor relacionados con la autentificación del usuario
+
 class AuthService{
 
   static final server = dotenv.env['SERVER_PATH'];

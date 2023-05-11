@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 
-
+/// @class [AuthProvider]
+/// @description Provider que controla los cambios de estado relacionados con el login y registro de usuario
 
 class AuthProvider extends ChangeNotifier{
 

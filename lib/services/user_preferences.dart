@@ -1,6 +1,10 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+/// @class [UserPreferences]
+/// @description Servicio que guarda los datos en el dispositivo para mantener la sesión activa
+
 class UserPreferences{
 
   static late SharedPreferences _prefers;

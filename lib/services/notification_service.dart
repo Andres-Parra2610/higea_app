@@ -2,6 +2,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+
+/// @class [NotificationService]
+/// @description Servicio que configura las notificaciones locales
+
 class NotificationService {
 
   static final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -22,6 +26,8 @@ class NotificationService {
 
 
 
+  /// @method [showNotificacion]
+  /// @description Método que guarda la notificación en el dispositivo y posteriormente la muestra
 
   static Future<void> showNotification(int idCita, DateTime date) async{
 

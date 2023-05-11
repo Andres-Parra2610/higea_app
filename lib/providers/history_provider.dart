@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 
+/// @class [HistoryProvider]
+/// @description Provider que controla los cambios de estado relacionados con las historias médicas
+
 class HistoryProvider extends ChangeNotifier{
 
   late History currentHistory;

@@ -1,6 +1,9 @@
 
 import 'dart:convert';
 
+/// @class [Speciality]
+/// @description Clase cque define el modelo de la especialidad
+
 class Speciality {
     Speciality({
         required this.idespecialidad,

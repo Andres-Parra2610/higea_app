@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:higea_app/models/models.dart';
 
+
+/// @class [User]
+/// @description Clase cque define el modelo del usuario o paciente que usará la aplicación
+
 class User {
     User({
         required this.cedula,

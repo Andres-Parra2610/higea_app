@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 
+
+/// @class [RecoveryPasswordProvider]
+/// @description Provider que controla los cambios de estado relacionados con la recuperación de contraseña
+
 class RecoveryPasswordProvider extends ChangeNotifier {
 
   final GlobalKey<FormState> userCiKey = GlobalKey<FormState>();

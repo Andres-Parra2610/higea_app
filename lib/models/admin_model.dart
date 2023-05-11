@@ -1,6 +1,10 @@
 
 import 'dart:convert';
 
+
+/// @class [Admin]
+/// @description Clase cque define el modelo del administrador
+
 class Admin{
 
   Admin({

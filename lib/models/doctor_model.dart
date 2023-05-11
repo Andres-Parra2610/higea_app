@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+
+/// @class [Doctor]
+/// @description Clase cque define el modelo del doctor
+
 class Doctor {
     Doctor({
         required this.cedula,

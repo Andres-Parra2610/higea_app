@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 
-
+/// @class [SpecialityProvider]
+/// @description Provider que controla los cambios de estado relacionados con las diferentes especialidades
+/// 
 class SpecialityProvider extends ChangeNotifier{
 
   late Speciality currentSpeciality;

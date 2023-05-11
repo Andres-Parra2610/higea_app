@@ -4,6 +4,10 @@ import 'package:higea_app/services/services.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+
+/// @class [CalendarProvider]
+/// @description Provider que controla los cambios de estado relacionados con el calendario que visualiza un médico de la aplicación
+
 class CalendarProvider extends ChangeNotifier{
 
   ValueNotifier<List<Appoiment>> selectedAppoiments = ValueNotifier([]);
@@ -14,16 +18,17 @@ class CalendarProvider extends ChangeNotifier{
   DateTime currentDay = DateTime.now();
 
 
-  Future<Map<String, List<Appoiment>>> getEventsFromBd(doctorCi) async{
+  Future<Map<String, List<Appoiment>>> getEventsFromBd(doctorCi, [bool reload = false]) async{
 
-    if(events.isNotEmpty){
+    if(reload == true){
+      final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi);
+
+      events = Map.from(res['results']).map((k, v) => MapEntry<String, List<Appoiment>>(k, List<Appoiment>.from(v.map((x) => Appoiment.fromJson(x)))));
+
+      selectedAppoiments = ValueNotifier<List<Appoiment>>(_getTodayEvents(currentDay));
+    }else if(events.isNotEmpty){
       return events;
     }
-    final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi);
-
-    events = Map.from(res['results']).map((k, v) => MapEntry<String, List<Appoiment>>(k, List<Appoiment>.from(v.map((x) => Appoiment.fromJson(x)))));
-
-    selectedAppoiments = ValueNotifier<List<Appoiment>>(_getTodayEvents(currentDay));
     return events;
   }
 

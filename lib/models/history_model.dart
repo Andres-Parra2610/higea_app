@@ -4,6 +4,11 @@ import 'dart:convert';
 
 import 'package:higea_app/helpers/helpers.dart';
 
+
+
+/// @class [History]
+/// @description Clase cque define el modelo de una historia médica
+
 class History {
     History({
         this.idhistorial,

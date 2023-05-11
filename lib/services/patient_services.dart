@@ -3,6 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:http/http.dart' as http;
 
+
+/// @class [PatientService]
+/// @description Servicio que trae los datos del servidor relacionados con los pacientes o usuarios de la aplicación
+
 class PatientService{
 
   static final server = dotenv.env['SERVER_PATH'];

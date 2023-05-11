@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 
+
+/// @class [PatientProvider]
+/// @description Provider que controla los cambios de estado relacionados con los pacientes, obtiene sólo los pacientes
+
 class PatientProvider extends ChangeNotifier{
 
 

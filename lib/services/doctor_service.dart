@@ -3,7 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:higea_app/models/models.dart';
 import 'package:http/http.dart' as http;
 
-class DoctorServices {
+
+/// @class [DoctorService]
+/// @description Servicio que trae los datos del servidor relacionados con los doctores
+
+class DoctorService {
 
   static final server = dotenv.env['SERVER_PATH'];
   static final port = dotenv.env['SERVER_PORT']!;

@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// @class [AppTheme]
+/// @description Archivo de configuración de estilos golables dentro de la aplicación
+
 class AppTheme{
 
   static const int primaryColor = 0xff005CB9;

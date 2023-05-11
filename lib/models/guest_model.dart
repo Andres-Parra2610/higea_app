@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+
+/// @class [Guest]
+/// @description Clase cque define el modelo del invitado
+
 class Guest {
   Guest({
       this.cedula,

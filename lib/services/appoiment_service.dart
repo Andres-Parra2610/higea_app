@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:higea_app/models/models.dart';
 
+
+/// @class [AppoimentService]
+/// @description Servicio que trae los datos del servidor relacionados con la citas médicas
+
 class AppoimentService {
 
   static final server = dotenv.env['SERVER_PATH'];

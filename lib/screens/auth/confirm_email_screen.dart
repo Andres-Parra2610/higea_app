@@ -86,7 +86,7 @@ class _ConfirmEmailScreenState extends State<ConfirmEmailScreen> {
                   registerProvider.loading = false;
 
                   if(!res){
-                    SnackBarWidget.showSnackBar('Código de verificación inválido');
+                    SnackBarWidget.showSnackBar('Código de verificación inválido', false);
                   }else{
                     navigator.pushAndRemoveUntil(
                       MaterialPageRoute(builder: (_) => const IndexScreen()), 

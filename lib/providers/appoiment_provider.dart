@@ -5,6 +5,10 @@ import 'package:higea_app/models/models.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:intl/intl.dart';
 
+
+/// @class [AppoimentProvider]
+/// @description Provider que controla los cambios de estado relacionados con las citas médicas
+
 class AppoimentProvider extends ChangeNotifier{
 
   final GlobalKey<FormState> confirmAppoimentForm = GlobalKey<FormState>();
@@ -44,7 +48,7 @@ class AppoimentProvider extends ChangeNotifier{
 
   Future<Doctor> showDoctorDatesWork(ci) async{
 
-    final Map<String, dynamic> response = await DoctorServices.getDoctorDatesWork(ci);
+    final Map<String, dynamic> response = await DoctorService.getDoctorDatesWork(ci);
 
     final doctor = Doctor.fromJson(response['results']);
 

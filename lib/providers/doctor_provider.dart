@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:higea_app/services/services.dart';
 import 'package:higea_app/models/models.dart';
 
-class DoctorProvider extends ChangeNotifier{
 
+/// @class [AppoimentProvider]
+/// @description Provider que controla los cambios de estado relacionados con el doctor, como eliminación, creación y a su vez
+/// de las especialidades
+
+class DoctorProvider extends ChangeNotifier{
 
   GlobalKey<FormState> formDoctorKey = GlobalKey<FormState>();
   List<Speciality> specialities = [];
@@ -37,7 +43,7 @@ class DoctorProvider extends ChangeNotifier{
 
 
     if(_render){
-      final Map<String, dynamic> response = await DoctorServices.getAllSpecialities();
+      final Map<String, dynamic> response = await DoctorService.getAllSpecialities();
 
       if(response['ok'] == false) return specialities = [];
 
@@ -52,7 +58,7 @@ class DoctorProvider extends ChangeNotifier{
   }
 
   Future<List<Doctor>> showDoctorBySpeciality(id) async{
-    final Map<String, dynamic> response = await DoctorServices.getDoctorBySpeciality(id);
+    final Map<String, dynamic> response = await DoctorService.getDoctorBySpeciality(id);
     if(response['ok'] == false) return doctors = [];
 
     final results = response['results'] as List<dynamic>;
@@ -60,7 +66,7 @@ class DoctorProvider extends ChangeNotifier{
   }
 
   Future<List<Doctor>> showAllDoctors() async{
-    final Map<String, dynamic> response = await DoctorServices.getAllDoctors();
+    final Map<String, dynamic> response = await DoctorService.getAllDoctors();
     if(response["ok"] == false) return doctors = [];
 
     final results = response['results'] as List<dynamic>;
@@ -75,7 +81,7 @@ class DoctorProvider extends ChangeNotifier{
 
   Future registerDoctor() async{
     isLoading = true;
-    final Map<String, dynamic> response = await DoctorServices.registerDoctor(doctor);
+    final Map<String, dynamic> response = await DoctorService.registerDoctor(doctor);
     if(response["ok"] == false) return false;
     isLoading = false;
     return true;
@@ -83,15 +89,18 @@ class DoctorProvider extends ChangeNotifier{
 
   Future editDoctor() async {
     isLoading = true;
-    final Map<String, dynamic> response = await DoctorServices.editDoctor(doctor);
-    if(response["ok"] == false) return false;
+    final Map<String, dynamic> response = await DoctorService.editDoctor(doctor);
+    if(response["ok"] == false){
+      isLoading = false;
+      return false;
+    }
     isLoading = false; 
     return true;
   }
 
   Future deleteDoctor(int doctorCi) async {
     isLoading = true;
-    final Map<String, dynamic> response = await DoctorServices.removeDoctor(doctorCi);
+    final Map<String, dynamic> response = await DoctorService.removeDoctor(doctorCi);
     if(response["ok"] == false) return false;
     isLoading = false; 
     return true;

@@ -1,4 +1,8 @@
 
+
+/// @class [Response]
+/// @description Clase cque define el modelo de la respuesta, es decir, cómo vendrán los datos desde la API
+
 class Response {
 
   Response({required this.ok, required this.msg, this.result});

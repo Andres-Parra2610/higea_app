@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'package:higea_app/helpers/helpers.dart';
 import 'package:higea_app/models/models.dart';
 
+
+/// @class [Appoiment]
+/// @description Clase cque define el modelo de la cita médica
+
 class Appoiment {
     Appoiment({
         required this.fechaCita,

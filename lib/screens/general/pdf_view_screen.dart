@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:universal_html/html.dart' as html;
 
+
+/// @class [PdfViewScreen]
+/// @description Pantalla que se encarga de mostrar la información del PDF enviada desde el servidor
 class PdfViewScreen extends StatefulWidget {
   PdfViewScreen({
     super.key, 
@@ -42,14 +45,15 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
     super.initState();
   }
 
-
+  /// @method [_downloadPdf]
+  /// @description Método usado para descargar el PDF, lo convierte el blob para luego transformarlo en una etiqueta HTML
   void _downloadPdf(Uint8List pdfBytes) {
     final blob = html.Blob([pdfBytes], 'application/pdf');
     final url = html.Url.createObjectUrlFromBlob(blob);
     final anchor = html.document.createElement('a') as html.AnchorElement
       ..href = url
       ..style.display = 'none'
-      ..download = 'example.pdf';
+      ..download = 'reporte.pdf';
     html.document.body!.children.add(anchor);
     anchor.click();
     html.document.body!.children.remove(anchor);

@@ -14,7 +14,7 @@ const SessionScreen({ Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context){
     
-    //UserPreferences.deleteUser();
+    /// @description Comprueba si el usuario ya ha iniciado sesión dentro de la aplicación
     if(UserPreferences.user == ''){
       Future.microtask((){
         Navigator.pushReplacement(context, PageRouteBuilder(
