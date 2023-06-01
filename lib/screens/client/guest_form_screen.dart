@@ -176,6 +176,8 @@ class _BodyForm extends StatelessWidget {
           onChanged: (value)=> guestProvider.guestData.nombreInvitado = value,
           validator: (value) {
             if(value!.trim().isEmpty) return 'Debe colocar un nombre';
+            if(value.trim().length < 3 ) return 'El nombre no puede ser tan corto';
+
             return null;
           },
         ),
@@ -190,6 +192,8 @@ class _BodyForm extends StatelessWidget {
           onChanged: (value) => guestProvider.guestData.apellidoInvitado = value,
           validator: (value) {
             if(value!.trim().isEmpty) return 'Debe colocar un apellido';
+            if(value.trim().length < 3 ) return 'El apellido no puede ser tan corto';
+
             return null;
           },
         ),

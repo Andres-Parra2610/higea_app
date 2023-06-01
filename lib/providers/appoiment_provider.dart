@@ -117,6 +117,7 @@ class AppoimentProvider extends ChangeNotifier{
 
     if(response.ok){
       await NotificationService.notificationsPlugin.cancel(appoimentId);
+      pendingAppoiment.removeWhere((appoiment) => appoiment.idCita == appoimentId);
     }
 
     return response;

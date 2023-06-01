@@ -11,6 +11,11 @@ import 'package:higea_app/providers/providers.dart';
 import 'package:higea_app/styles/app_theme.dart'; 
 import 'package:higea_app/screens/screens.dart';
 
+
+
+
+/// @function [main]
+/// @description Función principal de la aplicación, este es el punto de entrada
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +32,8 @@ void main() async{
   runApp(const MyAppState());
 }
 
-
+/// @class [MyAppState]
+/// @description Clase que sirve para crear los diferentes providers o proveedores de estado de la app
 class MyAppState extends StatelessWidget{
   const MyAppState({super.key});
 
@@ -50,6 +56,8 @@ class MyAppState extends StatelessWidget{
 
 }
 
+/// @class [MyApp]
+/// @description Clase que es la primera que muestra la app con sus diferentes configuraciones
 class MyApp extends StatelessWidget{
   const MyApp({super.key});
   
@@ -70,7 +78,6 @@ class MyApp extends StatelessWidget{
           'confirm': (_) => const ConfirmEmailScreen(),
           'home-client': (_) => const IndexScreen(),
           'session': (_) => const SessionScreen(),
-          //'recovery_password': (_) => const RecoveryPassword()
         },
       ),
     );

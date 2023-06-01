@@ -149,7 +149,7 @@ class _RegisterForm extends StatelessWidget {
             onchanged: (value) => registerProvider.formRegisterValues['password'] = value,
             validate: (value){
               if (value!.trim().isEmpty) return 'Debe colocar una contraseña';
-              if(value.trim().length < 7) return 'La contraseña debe tener mínimo 7 caracteres';
+              if(value.trim().length < 8) return 'La contraseña debe tener mínimo 8 caracteres';
               return null;
             },
           ),

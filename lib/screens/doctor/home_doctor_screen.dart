@@ -29,7 +29,6 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
             onPressed: (){
               UserPreferences.deleteUser();
               calendarProvider.events = {};
-              calendarProvider.selectedAppoiments = ValueNotifier([]);
               Navigator.pushAndRemoveUntil(
                 context, 
                 MaterialPageRoute(builder: (_) => const SessionScreen()), 
@@ -40,23 +39,18 @@ const HomeDoctorScreen({ Key? key }) : super(key: key);
           )
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: ()async{
-          await calendarProvider.getEventsFromBd(currentDoctor.cedula, true);
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: FutureBuilder(
-            future: calendarProvider.getEventsFromBd(currentDoctor.cedula),
-            builder: (context, AsyncSnapshot<Map<String, List<Appoiment>>> snapshot) {
-              
-              if(!snapshot.hasData){
-                return const Center(child: CircularProgressIndicator(),);
-              }
-      
-              return const _CalendarEventes();
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: FutureBuilder(
+          future: calendarProvider.getEventsFromBd(currentDoctor.cedula),
+          builder: (context, AsyncSnapshot<Map<String, List<Appoiment>>> snapshot) {
+            
+            if(!snapshot.hasData){
+              return const Center(child: CircularProgressIndicator(),);
             }
-          ),
+
+            return const _CalendarEventes();
+          }
         ),
       ),
     );

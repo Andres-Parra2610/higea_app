@@ -18,9 +18,9 @@ class CalendarProvider extends ChangeNotifier{
   DateTime currentDay = DateTime.now();
 
 
-  Future<Map<String, List<Appoiment>>> getEventsFromBd(doctorCi, [bool reload = false]) async{
+  Future<Map<String, List<Appoiment>>> getEventsFromBd(doctorCi) async{
 
-    if(reload == true){
+    if(events.isEmpty){
       final Map<String, dynamic> res = await AppoimentService.getAppoiments(doctorCi);
 
       events = Map.from(res['results']).map((k, v) => MapEntry<String, List<Appoiment>>(k, List<Appoiment>.from(v.map((x) => Appoiment.fromJson(x)))));

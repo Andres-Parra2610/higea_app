@@ -322,6 +322,8 @@ class _SavedButton extends StatelessWidget {
           historyProvider.switchError = 'Debe marcar la cita como finalizada';
           return;
         }
+
+        final navigator = Navigator.of(context);
         
         if(historyProvider.switchError.trim().isNotEmpty){
           historyProvider.switchError = '';
@@ -330,6 +332,7 @@ class _SavedButton extends StatelessWidget {
         final String msg = await historyProvider.finishAppoiment(id);
 
         SnackBarWidget.showSnackBar(msg);
+        navigator.pop();
         
       }, 
       child: const Text('Guardar')
